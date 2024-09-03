@@ -4,7 +4,7 @@
 
 /* TODO: Поменять на переменную */
 .inputWrapper {
-  margin-bottom: 4px;
+  margin-bottom: 0;
 }
 
 .input {
@@ -25,6 +25,7 @@
 }
 
 .error {
+  margin-top: 4px;
   color: var(--mantine-color-danger-2);
 }
 

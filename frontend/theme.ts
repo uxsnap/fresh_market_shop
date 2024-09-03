@@ -6,7 +6,9 @@ import {
   defaultVariantColorsResolver,
   Input,
   RangeSlider,
+  rem,
   Slider,
+  TextInput,
 } from "@mantine/core";
 
 import classes from "./Main.module.css";
@@ -103,6 +105,22 @@ export const theme = createTheme({
     }
   },
   components: {
+    TextInput: TextInput.extend({
+      vars: (_, props) => {
+        switch (props.size) {
+          case "md":
+            return {
+              wrapper: {
+                "--input-height": rem(40),
+                "--input-padding-x": rem(8),
+                "--input-fz": rem(12),
+              },
+            };
+          default:
+            return { wrapper: {} };
+        }
+      },
+    }),
     Input: Input.extend({
       classNames: {
         wrapper: classes.inputWrapper,
@@ -112,7 +130,6 @@ export const theme = createTheme({
 
     InputWrapper: Input.Wrapper.extend({
       classNames: {
-        
         label: classes.label,
         error: classes.error,
       },

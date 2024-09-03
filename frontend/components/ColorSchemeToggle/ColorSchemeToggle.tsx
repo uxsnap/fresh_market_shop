@@ -1,12 +1,8 @@
 "use client";
 
 import { Group } from "@mantine/core";
-import { Location } from "../Location/Location";
+import { Header } from "../Header";
 
 export function ColorSchemeToggle() {
-  return (
-    <Group justify="center" mt="xl">
-      <Location />
-    </Group>
-  );
+  return <Header />;
 }
