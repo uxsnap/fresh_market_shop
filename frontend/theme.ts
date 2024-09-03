@@ -2,23 +2,30 @@
 
 import {
   createTheme,
+  DEFAULT_THEME,
   defaultVariantColorsResolver,
-  parseThemeColor,
+  Input,
 } from "@mantine/core";
+
+import classes from "./Main.module.css";
+import { robotoFont } from "./static/roboto/Roboto";
 
 export const theme = createTheme({
   colors: {
-    accent: ["#4F463D", "#706962", "", "", "", "", "", "", "", ""],
+    accent: ["#4F463D", "#706962", "#C3C0BD", "", "", "", "", "", "", ""],
     secondary: ["#FEBDB9", "#FFA49E", "", "", "", "", "", "", "", ""],
     primary: ["#578C3E", "#B7D968", "#DCEABD", "", "", "", "", "", "", ""],
     bg: ["#F0EEEE", "#F8F8F8", "#FFFFFF", "", "", "", "", "", "", ""],
-    danger: ["#B50000", "#8A0606", "", "", "", "", "", "", "", ""],
+    danger: ["#B50000", "#8A0606", "#C23131", "", "", "", "", "", "", ""],
   },
   defaultRadius: "md",
   radius: {
     md: "8px",
   },
+  fontFamily: robotoFont.style.fontFamily,
+  fontFamilyMonospace: "Monaco, Courier, monospace",
   headings: {
+    fontFamily: `${robotoFont.style.fontFamily}, ${DEFAULT_THEME.fontFamily}`,
     sizes: {
       h1: {
         fontSize: "32px",
@@ -92,5 +99,19 @@ export const theme = createTheme({
       default:
         return defaultResolvedColors;
     }
+  },
+  components: {
+    Input: Input.extend({
+      classNames: {
+        input: classes.input,
+      },
+    }),
+
+    InputWrapper: Input.Wrapper.extend({
+      classNames: {
+        label: classes.label,
+        error: classes.error,
+      },
+    }),
   },
 });

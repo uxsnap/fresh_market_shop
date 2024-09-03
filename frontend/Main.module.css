@@ -1,0 +1,24 @@
+.label {
+  color: var(--mantine-color-accent-0);
+}
+
+.input {
+  border: 1px solid var(--mantine-color-accent-0);
+  color: var(--mantine-color-accent-0);
+
+  &:focus-within {
+    border: 1px solid var(--mantine-color-primary-0);
+  }
+
+  &::placeholder {
+    color: var(--mantine-color-accent-2);
+  }
+
+  &[data-error="true"] {
+    border-color: var(--mantine-color-danger-0);
+  }
+}
+
+.error {
+  color: var(--mantine-color-danger-2);
+}
