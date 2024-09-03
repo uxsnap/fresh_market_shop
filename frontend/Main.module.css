@@ -2,6 +2,11 @@
   color: var(--mantine-color-accent-0);
 }
 
+/* TODO: Поменять на переменную */
+.inputWrapper {
+  margin-bottom: 4px;
+}
+
 .input {
   border: 1px solid var(--mantine-color-accent-0);
   color: var(--mantine-color-accent-0);
@@ -21,4 +26,20 @@
 
 .error {
   color: var(--mantine-color-danger-2);
+}
+
+.markLabel {
+  font-weight: 500;
+  color: var(--mantine-color-accent-0);
+}
+
+.trackContainer {
+  background-color: var(--mantine-color-bg-0);
+}
+
+.thumbLabel {
+  color: var(--mantine-color-accent-0);
+  font-weight: 400;
+  background-color: transparent;
+  top: -1.75rem;
 }

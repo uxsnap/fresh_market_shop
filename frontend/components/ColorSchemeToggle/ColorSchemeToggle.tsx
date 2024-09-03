@@ -6,12 +6,7 @@ import { Glass } from "../icons/Glass";
 export function ColorSchemeToggle() {
   return (
     <Group justify="center" mt="xl">
-      <TextInput
-        leftSection={<Glass size={16} />}
-        placeholder="Yesss"
-        error="Dadad"
-        label="Test"
-      />
+      <TextInput placeholder="Yesss" error="Dadad" label="Test" />
     </Group>
   );
 }

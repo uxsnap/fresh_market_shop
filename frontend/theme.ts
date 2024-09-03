@@ -5,6 +5,8 @@ import {
   DEFAULT_THEME,
   defaultVariantColorsResolver,
   Input,
+  RangeSlider,
+  Slider,
 } from "@mantine/core";
 
 import classes from "./Main.module.css";
@@ -103,14 +105,23 @@ export const theme = createTheme({
   components: {
     Input: Input.extend({
       classNames: {
+        wrapper: classes.inputWrapper,
         input: classes.input,
       },
     }),
 
     InputWrapper: Input.Wrapper.extend({
       classNames: {
+        
         label: classes.label,
         error: classes.error,
+      },
+    }),
+
+    Slider: RangeSlider.extend({
+      classNames: {
+        label: classes.thumbLabel,
+        markLabel: classes.markLabel,
       },
     }),
   },
