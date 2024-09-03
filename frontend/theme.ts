@@ -1,6 +1,10 @@
 "use client";
 
-import { createTheme } from "@mantine/core";
+import {
+  createTheme,
+  defaultVariantColorsResolver,
+  parseThemeColor,
+} from "@mantine/core";
 
 export const theme = createTheme({
   colors: {
@@ -8,7 +12,7 @@ export const theme = createTheme({
     secondary: ["#FEBDB9", "#FFA49E", "", "", "", "", "", "", "", ""],
     primary: ["#578C3E", "#B7D968", "#DCEABD", "", "", "", "", "", "", ""],
     bg: ["#F0EEEE", "#F8F8F8", "#FFFFFF", "", "", "", "", "", "", ""],
-    error: ["#B50000", "", "", "", "", "", "", "", "", ""],
+    danger: ["#B50000", "#8A0606", "", "", "", "", "", "", "", ""],
   },
   defaultRadius: "md",
   radius: {
@@ -35,5 +39,58 @@ export const theme = createTheme({
         fontSize: "12px",
       },
     },
+  },
+  variantColorResolver: (input) => {
+    const defaultResolvedColors = defaultVariantColorsResolver(input);
+
+    switch (input.variant) {
+      case "accent":
+        return {
+          ...defaultResolvedColors,
+          color: "var(--mantine-color-white)",
+          background: "var(--mantine-color-accent-0)",
+          hover: "var(--mantine-color-accent-1)",
+        };
+      case "accent-reverse":
+        return {
+          ...defaultResolvedColors,
+          color: "var(--mantine-color-accent-0)",
+          border: "1px solid var(--mantine-color-accent-0)",
+          background: "var(--mantine-color-bg-2)",
+          hover: "var(--mantine-color-bg-0)",
+        };
+      case "secondary":
+        return {
+          ...defaultResolvedColors,
+          color: "var(--mantine-color-accent-0)",
+          border: "1px solid var(--mantine-color-accent-0)",
+          background: "var(--mantine-color-secondary-0)",
+          hover: "var(--mantine-color-secondary-1)",
+        };
+      case "outline":
+        return {
+          color: "var(--mantine-color-accent-0)",
+          border: "",
+          background: "transparent",
+          hover: "transparent",
+        };
+      case "danger":
+        return {
+          ...defaultResolvedColors,
+          color: "var(--mantine-color-white)",
+          background: "var(--mantine-color-danger-0)",
+          hover: "var(--mantine-color-danger-1)",
+        };
+      case "dashed":
+        return {
+          ...defaultResolvedColors,
+          color: "var(--mantine-color-accent-0)",
+          border: "1px dashed var(--mantine-color-accent-0)",
+          background: "transparent",
+          hover: "transparent",
+        };
+      default:
+        return defaultResolvedColors;
+    }
   },
 });

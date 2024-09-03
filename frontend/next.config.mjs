@@ -1,7 +1,7 @@
-import bundleAnalyzer from '@next/bundle-analyzer';
+import bundleAnalyzer from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === "true",
 });
 
 export default withBundleAnalyzer({
@@ -10,6 +10,6 @@ export default withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   experimental: {
-    optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },
 });

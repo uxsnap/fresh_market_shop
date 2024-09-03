@@ -8,11 +8,24 @@ export function ColorSchemeToggle() {
 
   return (
     <Group justify="center" mt="xl">
-      <Button color="secondary.0" onClick={() => setColorScheme("light")}>
+      <Button variant="accent" onClick={() => setColorScheme("light")}>
         Сохранить
       </Button>
-      {/* <Button onClick={() => setColorScheme("dark")}>Dark</Button>
-      <Button onClick={() => setColorScheme("auto")}>Auto</Button> */}
+      <Button variant="accent-reverse" onClick={() => setColorScheme("light")}>
+        Тупо
+      </Button>
+      <Button variant="secondary" onClick={() => setColorScheme("light")}>
+        Тупо
+      </Button>
+      <Button variant="outline" onClick={() => setColorScheme("light")}>
+        Тупо
+      </Button>
+      <Button variant="danger" onClick={() => setColorScheme("light")}>
+        Тупо
+      </Button>
+      <Button variant="dashed" onClick={() => setColorScheme("light")}>
+        Тупо
+      </Button>
     </Group>
   );
 }
