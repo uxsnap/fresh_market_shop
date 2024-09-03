@@ -1,0 +1,10 @@
+lib-cov
+lcov.info
+pids
+logs
+results
+node_modules
+.node_history
+.next/
+yarn.lock
+package-lock.json
