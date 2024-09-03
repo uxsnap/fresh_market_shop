@@ -1,0 +1,9 @@
+.root {
+  cursor: pointer;
+  border-radius: 8px;
+  border: 1px solid var(--mantine-color-accent-0);
+
+  &:hover {
+    background-color: var(--mantine-color-bg-0);
+  }
+}

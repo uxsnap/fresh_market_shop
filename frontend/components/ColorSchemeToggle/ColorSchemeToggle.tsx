@@ -1,12 +1,12 @@
 "use client";
 
-import { Group, TextInput } from "@mantine/core";
-import { Glass } from "../icons/Glass";
+import { Group } from "@mantine/core";
+import { Location } from "../Location/Location";
 
 export function ColorSchemeToggle() {
   return (
     <Group justify="center" mt="xl">
-      <TextInput placeholder="Yesss" error="Dadad" label="Test" />
+      <Location />
     </Group>
   );
 }
