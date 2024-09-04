@@ -1,0 +1,5 @@
+.button {
+  &:hover {
+    background: var(--mantine-color-primary-1) !important;
+  }
+}

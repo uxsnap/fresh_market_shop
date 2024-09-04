@@ -142,4 +142,11 @@ export const theme = createTheme({
       },
     }),
   },
+  other: {
+    fontWeights: {
+      regular: 400,
+      medium: 500,
+      bold: 700,
+    },
+  },
 });
