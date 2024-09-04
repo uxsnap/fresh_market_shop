@@ -1,5 +1,7 @@
 .label {
   color: var(--mantine-color-accent-0);
+  font-weight: 400;
+  font-size: 10px;
 }
 
 /* TODO: Поменять на переменную */
