@@ -1,0 +1,15 @@
+.root {
+  border-bottom: 1px solid var(--mantine-color-bg-1);
+}
+
+.userButton {
+  svg {
+    fill: var(--mantine-color-accent-0);  
+  }
+
+  &:hover {
+    svg {
+      fill: var(--mantine-color-secondary-0);
+    }
+  }
+}
