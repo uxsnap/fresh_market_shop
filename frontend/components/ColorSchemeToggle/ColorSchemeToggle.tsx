@@ -1,12 +1,12 @@
 "use client";
 
 import { Container } from "@mantine/core";
-import { ItemCard } from "../ItemCard";
+import { ItemList } from "../ItemList";
 
 export function ColorSchemeToggle() {
   return (
     <Container p={10}>
-      <ItemCard />
+      <ItemList />
     </Container>
   );
 }

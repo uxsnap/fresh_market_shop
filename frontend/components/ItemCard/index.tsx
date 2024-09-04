@@ -1,11 +1,4 @@
-import {
-  Card,
-  Image,
-  Text,
-  Button,
-  Group,
-  Container,
-} from "@mantine/core";
+import { Card, Image, Text, Button, Group, Container } from "@mantine/core";
 import { useCounter } from "@mantine/hooks";
 import { Counter } from "../Counter";
 
@@ -43,7 +36,7 @@ export const ItemCard = ({ type = "default" }: Props) => {
   const [count, handlers] = useCounter(0, { min: 0, max: 10 });
 
   return (
-    <Card p={8} maw={maw} radius="md" withBorder>
+    <Card p={8} miw={maw} radius="md" withBorder>
       <Card.Section>
         <Image
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-8.png"
