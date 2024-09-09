@@ -1,4 +1,4 @@
-export const Gains = () => {
+export const Grains = () => {
   return (
     <svg
       width="24"

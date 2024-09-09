@@ -1,0 +1,8 @@
+.item {
+  cursor: pointer;
+  border-radius: 8px;
+  
+  &:hover {
+    background: var(--mantine-color-primary-2);
+  }
+}
