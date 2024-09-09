@@ -131,6 +131,7 @@ export const theme = createTheme({
 
     InputWrapper: Input.Wrapper.extend({
       classNames: {
+        root: classes.inputWrapperRoot,
         label: classes.label,
         error: classes.error,
       },
