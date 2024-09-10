@@ -3,8 +3,19 @@ import { YMaps, Map as YandexMap, Placemark } from "@pbe/react-yandex-maps";
 import { Glass } from "../icons/Glass";
 
 import styles from "./Map.module.css";
+import { useState } from "react";
 
 export const Map = () => {
+  const [coordinates, setCoordinates] = useState<number[][]>([[]]);
+
+  const mapOptions = {
+    iconLayout: "default#image",
+    iconImageHref:
+      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEzLjExMDkgMjMuNEMxNS41MTU2IDIwLjM5MDYgMjEgMTMuMDk2OSAyMSA5QzIxIDQuMDMxMjUgMTYuOTY4OCAwIDEyIDBDNy4wMzEyNSAwIDMgNC4wMzEyNSAzIDlDMyAxMy4wOTY5IDguNDg0MzggMjAuMzkwNiAxMC44ODkxIDIzLjRDMTEuNDY1NiAyNC4xMTcyIDEyLjUzNDQgMjQuMTE3MiAxMy4xMTA5IDIzLjRaTTEyIDZDMTIuNzk1NiA2IDEzLjU1ODcgNi4zMTYwNyAxNC4xMjEzIDYuODc4NjhDMTQuNjgzOSA3LjQ0MTI5IDE1IDguMjA0MzUgMTUgOUMxNSA5Ljc5NTY1IDE0LjY4MzkgMTAuNTU4NyAxNC4xMjEzIDExLjEyMTNDMTMuNTU4NyAxMS42ODM5IDEyLjc5NTYgMTIgMTIgMTJDMTEuMjA0NCAxMiAxMC40NDEzIDExLjY4MzkgOS44Nzg2OCAxMS4xMjEzQzkuMzE2MDcgMTAuNTU4NyA5IDkuNzk1NjUgOSA5QzkgOC4yMDQzNSA5LjMxNjA3IDcuNDQxMjkgOS44Nzg2OCA2Ljg3ODY4QzEwLjQ0MTMgNi4zMTYwNyAxMS4yMDQ0IDYgMTIgNloiIGZpbGw9IiM0RjQ2M0QiLz4KPC9zdmc+Cg==",
+    iconImageSize: [30, 42],
+    iconColor: "#4F463D",
+  };
+
   return (
     <Modal.Root opened={true} onClose={close}>
       <Modal.Overlay />
@@ -68,11 +79,12 @@ export const Map = () => {
             <YandexMap
               width="100%"
               height={450}
+              onClick={(e: any) => setCoordinates(e.get("coords"))}
               defaultState={{ center: [55.75, 37.57], zoom: 9 }}
             >
-              <Placemark defaultProperties={{
-                
-              }} defaultGeometry={[55.751574, 37.573856]} />
+              {coordinates.length && (
+                <Placemark geometry={coordinates} options={mapOptions} />
+              )}
             </YandexMap>
           </YMaps>
         </Modal.Body>
