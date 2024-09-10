@@ -1,12 +1,12 @@
 "use client";
 
-import { Container, TextInput } from "@mantine/core";
-import { Map } from "../Map";
+import { Container } from "@mantine/core";
+import { Recipe } from "../Recipe";
 
 export function ColorSchemeToggle() {
   return (
     <Container p={10}>
-      <Map />
+      <Recipe />
     </Container>
   );
 }

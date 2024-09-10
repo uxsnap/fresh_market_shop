@@ -25,12 +25,13 @@ export const theme = createTheme({
   defaultRadius: "md",
   radius: {
     md: "8px",
+    lg: "12px",
   },
   fontFamily: robotoFont.style.fontFamily,
   fontFamilyMonospace: "Monaco, Courier, monospace",
   headings: {
     fontFamily: `${robotoFont.style.fontFamily}, ${DEFAULT_THEME.fontFamily}`,
-    
+
     sizes: {
       h1: {
         fontSize: "32px",
