@@ -1,4 +1,7 @@
-export const CircleOk = () => {
+import { IconProps } from "@/types";
+import { rem } from "@mantine/core";
+
+export const CircleOk = ({ size, fill, ...other }: IconProps) => {
   return (
     <svg
       width="20"
@@ -6,6 +9,8 @@ export const CircleOk = () => {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ width: rem(size), height: rem(size) }}
+      {...other}
     >
       <g clipPath="url(#clip0_71_1001)">
         <path

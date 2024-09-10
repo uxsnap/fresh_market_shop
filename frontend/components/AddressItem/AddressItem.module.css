@@ -1,0 +1,9 @@
+.root {
+  cursor: pointer;
+  border-color: var(--mantine-color-accent-0);
+  border-width: 0.5px;
+
+  &.active {
+    border-color: var(--mantine-color-primary-0);
+  }
+}
