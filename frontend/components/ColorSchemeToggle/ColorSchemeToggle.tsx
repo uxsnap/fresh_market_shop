@@ -1,12 +1,12 @@
 "use client";
 
 import { Container } from "@mantine/core";
-import { Recipe } from "../Recipe";
+import { Avatar } from "../Avatar";
 
 export function ColorSchemeToggle() {
   return (
     <Container p={10}>
-      <Recipe />
+      <Avatar />
     </Container>
   );
 }
