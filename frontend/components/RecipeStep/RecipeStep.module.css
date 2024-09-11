@@ -1,0 +1,9 @@
+.root {
+  border-radius: 8px;
+  border: 1px solid var(--mantine-color-accent-2);
+}
+
+.img {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
