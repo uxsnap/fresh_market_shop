@@ -1,6 +1,7 @@
 import { IconProps } from "@/types";
+import { rem } from "@mantine/core";
 
-export const Menu = ({ ...others }: IconProps) => {
+export const Menu = ({ size, ...others }: IconProps) => {
   return (
     <svg
       width="20"
@@ -8,6 +9,7 @@ export const Menu = ({ ...others }: IconProps) => {
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      style={{ width: rem(size), height: rem(size) }}
       {...others}
     >
       <path

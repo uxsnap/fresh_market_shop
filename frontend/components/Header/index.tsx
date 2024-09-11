@@ -7,16 +7,30 @@ import { User } from "../icons/User";
 import styles from "./Header.module.css";
 import { CartButton } from "./components/CartButton";
 
-export const Header = () => {
+type Props = {
+  onNavbar: () => void;
+};
+
+export const Header = ({ onNavbar }: Props) => {
   return (
-    <Flex mx="auto" maw={1454} className={styles.root} align="center" mah={82} px={20} py={20} justify="space-between">
-      <Group>
-        <Button h={38} w={38} px={8} variant="secondary">
-          <Menu />
+    <Flex
+      mx="auto"
+      maw={1454}
+      className={styles.root}
+      align="center"
+      mah={82}
+      px={20}
+      py={20}
+      justify="space-between"
+    >
+      <Group w="100%" wrap="nowrap">
+        <Button onClick={onNavbar} h={38} w={38} px={8} variant="secondary">
+          <Menu size={24} />
         </Button>
 
         <TextInput
-          miw={400}
+          w="100%"
+          maw={400}
           size="md"
           leftSection={<Glass size={16} />}
           placeholder="Поиск товаров"
@@ -27,7 +41,7 @@ export const Header = () => {
         <DeliveryTime />
       </Group>
 
-      <Group gap={24} align="center">
+      <Group wrap="nowrap" gap={24} align="center">
         <CartButton />
 
         <Button
