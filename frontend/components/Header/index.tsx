@@ -9,13 +9,14 @@ import { CartButton } from "./components/CartButton";
 
 export const Header = () => {
   return (
-    <Flex className={styles.root} align="center" mah={82} px={20} py={20} justify="space-between">
+    <Flex mx="auto" maw={1454} className={styles.root} align="center" mah={82} px={20} py={20} justify="space-between">
       <Group>
         <Button h={38} w={38} px={8} variant="secondary">
           <Menu />
         </Button>
 
         <TextInput
+          miw={400}
           size="md"
           leftSection={<Glass size={16} />}
           placeholder="Поиск товаров"

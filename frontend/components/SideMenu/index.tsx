@@ -28,7 +28,7 @@ const menu = [
 
 export const SideMenu = () => {
   return (
-    <Container>
+    <Container m={0} p={0}>
       <Stack gap={20}>
         <Title c="accent.0" order={2}>
           Каталог
