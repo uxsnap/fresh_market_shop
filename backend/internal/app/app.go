@@ -6,8 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/uxsnap/fresh_market_shop/internal/router"
 )
 
 type App struct {
@@ -15,12 +14,8 @@ type App struct {
 }
 
 func New() *App {
-	r := chi.NewRouter()
-
-	r.Use(middleware.Timeout(60 * time.Second))
-
 	return &App{
-		router: r,
+		router: router.New(),
 	}
 }
 
@@ -55,6 +50,4 @@ func (a *App) Start(ctx context.Context) error {
 
 		return server.Shutdown(timeout)
 	}
-
-	return nil
 }
