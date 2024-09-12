@@ -1,0 +1,14 @@
+.wrapper,
+.day {
+  color: var(--mantine-color-accent-0);
+}
+
+.weekdaysRow {
+  color: var(--mantine-color-accent-2);
+}
+
+.day {
+  &[data-selected="true"] {
+    background-color: var(--mantine-color-primary-1);
+  }
+}

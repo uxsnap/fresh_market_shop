@@ -1,0 +1,23 @@
+.icon {
+  transition: all 0.5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &.rotated {
+    transform: rotate(180deg);
+  }
+}
+
+.option {
+  border-radius: 4px;
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &[aria-selected="true"] {
+    background-color: var(--mantine-color-primary-2);
+  }
+}

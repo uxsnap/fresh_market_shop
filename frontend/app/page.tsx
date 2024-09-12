@@ -1,12 +1,13 @@
 "use client";
 
-import { RecipeModal } from "@/components/RecipeModal";
+import { DateInput } from "@/components/DateInput";
+import { Select } from "@/components/Select";
 import { Container } from "@mantine/core";
 
 export default function HomePage() {
   return (
     <Container p={10}>
-      <RecipeModal />
+      <Select />
     </Container>
   );
 }
