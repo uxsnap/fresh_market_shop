@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/uxsnap/fresh_market_shop/internal/db"
 	"github.com/uxsnap/fresh_market_shop/internal/router"
 )
 
@@ -13,10 +14,16 @@ type App struct {
 	router http.Handler
 }
 
-func New() *App {
-	return &App{
-		router: router.New(),
+func New() (*App, error) {
+	db, err := db.New()
+
+	if err != nil {
+		return nil, err
 	}
+
+	return &App{
+		router: router.New(db),
+	}, nil
 }
 
 func (a *App) Start(ctx context.Context) error {
