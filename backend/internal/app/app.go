@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/uxsnap/fresh_market_shop/internal/db"
-	"github.com/uxsnap/fresh_market_shop/internal/router"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/db"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/router"
 )
 
 type App struct {
