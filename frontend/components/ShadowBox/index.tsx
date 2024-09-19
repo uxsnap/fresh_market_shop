@@ -1,10 +1,13 @@
-import { Paper } from "@mantine/core";
+import { Paper, PaperProps } from "@mantine/core";
 
 import styles from "./ShadowBox.module.css";
 import { PropsWithChildren } from "react";
 
-export const ShadowBox = ({ children }: PropsWithChildren) => (
-  <Paper radius={12} className={styles.root}>
+export const ShadowBox = ({
+  children,
+  ...rest
+}: PropsWithChildren<PaperProps>) => (
+  <Paper radius={12} className={styles.root} {...rest}>
     {children}
   </Paper>
 );

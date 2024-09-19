@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Stack } from "@mantine/core";
 import { AddressItem } from "../AddressItem";
 import { Plus } from "../icons/Plus";
