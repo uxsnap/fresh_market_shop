@@ -56,7 +56,7 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     ccal INT,
-    price NUMERIC(10, 2) NOT NULL,
+    price INT NOT NULL,
     stock_quantity INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
