@@ -2,59 +2,25 @@ package app
 
 import (
 	"context"
-	"fmt"
-	"net/http"
-	"time"
 
-	"github.com/uxsnap/fresh_market_shop/internal/db"
-	"github.com/uxsnap/fresh_market_shop/internal/router"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/config"
+	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
 )
 
 type App struct {
-	router http.Handler
+	httpServer *deliveryHttp.Server
 }
 
-func New() (*App, error) {
-	db, err := db.New()
-
-	if err != nil {
-		return nil, err
-	}
+func New() *App {
+	// убрать внутрь service provider
+	// _, _ = db.New()
 
 	return &App{
-		router: router.New(db),
-	}, nil
+		httpServer: deliveryHttp.New(config.NewHttpConfig()),
+	}
 }
 
-func (a *App) Start(ctx context.Context) error {
-	ch := make(chan error, 1)
-
-	server := http.Server{
-		Addr:    ":8000",
-		Handler: a.router,
-	}
-
-	go func() {
-		fmt.Println("Server is listening")
-
-		err := server.ListenAndServe()
-
-		if err != nil {
-			ch <- fmt.Errorf("cannot start http server! %w", err)
-		}
-
-		close(ch)
-	}()
-
-	select {
-	case err := <-ch:
-		return err
-	case <-ctx.Done():
-		fmt.Println("\n === Server is shutting down. === ")
-
-		timeout, cancel := context.WithTimeout(context.Background(), time.Second*10)
-		defer cancel()
-
-		return server.Shutdown(timeout)
-	}
+func (a *App) Run(ctx context.Context) {
+	a.httpServer.Run(ctx)
+	<-ctx.Done()
 }
