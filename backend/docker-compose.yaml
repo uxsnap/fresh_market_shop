@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 volumes:
   postgres_volume:
@@ -14,3 +14,10 @@ services:
       - "${PG_PORT}:5432"
     volumes:
       - postgres_volume:/var/lib/postgresql/data
+  migrator:
+    build:
+      context: .
+      dockerfile: migration.Dockerfile
+    restart: on-failure
+    environment:
+      DB_HOST: pg

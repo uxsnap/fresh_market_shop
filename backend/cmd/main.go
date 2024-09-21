@@ -8,7 +8,7 @@ import (
 	"syscall"
 
 	"github.com/joho/godotenv"
-	"github.com/uxsnap/fresh_market_shop/backend/internal/app"
+	"github.com/uxsnap/fresh_market_shop/internal/app"
 )
 
 func main() {
