@@ -5,8 +5,20 @@ import { Glass } from "../icons/Glass";
 import styles from "./Map.module.css";
 import { useState } from "react";
 
-export const Map = () => {
+type Props = {
+  opened?: boolean;
+  onClose: () => void;
+};
+
+export const Map = ({ opened = false, onClose }: Props) => {
   const [coordinates, setCoordinates] = useState<number[][]>([[]]);
+  const [maps, setMaps] = useState(null);
+  const [address, setAddress] = useState("");
+
+  const handleClose = () => {
+    close();
+    onClose();
+  };
 
   const mapOptions = {
     iconLayout: "default#image",
@@ -16,8 +28,31 @@ export const Map = () => {
     iconColor: "#4F463D",
   };
 
+  const getGeoLocation = (e: any) => {
+    const coord = e.get("target").getCenter();
+
+    // @ts-ignore
+    const resp = maps.geocode(coord);
+
+    // @ts-ignore
+    resp.then((res) => {
+      setAddress(res.geoObjects.get(0).getAddressLine());
+    });
+  };
+
+  const onLoad = (map: any) => {
+    setMaps(map);
+  };
+
+  const handleCoords = (e: any) => {
+    const coords = e.get("coords");
+
+    getGeoLocation(e);
+    setCoordinates(coords);
+  };
+
   return (
-    <Modal.Root opened={true} onClose={close}>
+    <Modal.Root opened={opened} onClose={handleClose}>
       <Modal.Overlay />
 
       <Modal.Content miw={800}>
@@ -32,7 +67,8 @@ export const Map = () => {
               <TextInput
                 size="md"
                 leftSection={<Glass size={16} />}
-                placeholder="Поиск товаров"
+                placeholder="Поиск адреса"
+                value={address}
               />
             </Group>
 
@@ -75,12 +111,18 @@ export const Map = () => {
             />
           </Group>
 
-          <YMaps>
+          <YMaps
+            query={{
+              apikey: process.env.NEXT_PUBLIC_YMAP_API,
+            }}
+          >
             <YandexMap
+              modules={["geolocation", "geocode"]}
               width="100%"
               height={450}
-              onClick={(e: any) => setCoordinates(e.get("coords"))}
-              defaultState={{ center: [55.75, 37.57], zoom: 9 }}
+              onClick={handleCoords}
+              defaultState={{ center: [55.75, 37.57], zoom: 15 }}
+              onLoad={(ymaps: any) => onLoad(ymaps)}
             >
               {coordinates.length && (
                 <Placemark geometry={coordinates} options={mapOptions} />
