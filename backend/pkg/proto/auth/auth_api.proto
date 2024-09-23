@@ -1,0 +1,87 @@
+syntax="proto3";
+
+package auth;
+
+option go_package = "github.com/balobas/auth_service/pkg/auth_v1;auth_v1";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+
+service Auth {
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc UpdateUser(UpdateUserRequest) returns (JwtResponse); // required accessJwt in ctx
+    rpc GetUser(GetUserRequest) returns (GetUserResponse); // required accessJwt in ctx
+    rpc Delete(DeleteUserRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
+
+    rpc Login(LoginRequest) returns (JwtResponse);
+    rpc Logout(LogoutRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
+    rpc Refresh(RefreshRequest) returns (JwtResponse);
+
+    rpc Verify(VerifyRequest) returns (google.protobuf.Empty);
+    rpc VerifyEmail(VerifyEmailRequest) returns (google.protobuf.Empty);
+}
+
+enum Role {
+    user = 0;
+    admin = 1;
+}
+
+message RegisterRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    string uid = 1;
+}
+
+message UpdateUserRequest {
+    string uid = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message GetUserRequest {
+    string uid = 1;
+    string email = 2;
+}
+
+message GetUserResponse {
+    string uid = 1;
+    string email = 2;
+    Role role = 3;
+    repeated string permissions = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message DeleteUserRequest {
+    string uid = 1;
+}
+
+message VerifyEmailRequest {
+    string token = 1;
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message JwtResponse {
+    string accessJwt = 1;
+    string refreshJwt = 2;
+}
+
+message LogoutRequest {
+    string uid = 1;
+}
+
+message RefreshRequest {
+    string refreshJwt = 1;
+}
+
+message VerifyRequest {
+    string jwt = 1;
+}
