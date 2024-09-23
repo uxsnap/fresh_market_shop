@@ -30,6 +30,7 @@ func New(cfg Config) *Handler {
 		middleware.Timeout(60*time.Second),
 	)
 
+	h.router.Route("/health", h.HealthSubrouter)
 	h.router.Route("/category", h.CategoriesSubrouter)
 
 	return h

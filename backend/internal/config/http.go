@@ -9,8 +9,8 @@ type ConfigHTTP struct {
 
 func NewConfigHTTP() *ConfigHTTP {
 	return &ConfigHTTP{
-		port: os.Getenv("SERVICE_HOST"),
-		host: os.Getenv("SERVICE_PORT"),
+		host: os.Getenv("SERVICE_HOST"),
+		port: os.Getenv("SERVICE_PORT"),
 	}
 }
 

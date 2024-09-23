@@ -27,7 +27,7 @@ func (a *App) Run(ctx context.Context) {
 func (a *App) RunHTTPServer(ctx context.Context) {
 	ch := make(chan error, 1)
 
-	addr := a.serviceProvider.ConfigExternalApi().AuthServiceGrpcHost() + ":" + a.serviceProvider.ConfigExternalApi().AuthServiceGrpcPort()
+	addr := a.serviceProvider.ConfigHTTP().ServiceHost() + ":" + a.serviceProvider.configHTTP.ServicePort()
 
 	server := http.Server{
 		Addr:    addr,
@@ -35,7 +35,7 @@ func (a *App) RunHTTPServer(ctx context.Context) {
 	}
 
 	go func() {
-		fmt.Println("Server is listening")
+		fmt.Printf("Server is listening on port %v \n", a.serviceProvider.configHTTP.ServicePort())
 
 		err := server.ListenAndServe()
 
