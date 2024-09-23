@@ -1,12 +1,5 @@
 package repositoryPostgres
 
-import (
-	"context"
-	"os"
-
-	"github.com/jackc/pgx/v5/pgxpool"
-)
-
 // func New() (*pgxpool.Pool, error) {
 // 	pool, err := pgxpool.New(context.Background(), os.Getenv("PG_DSN"))
 
