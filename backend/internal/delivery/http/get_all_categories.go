@@ -4,6 +4,6 @@ import (
 	"net/http"
 )
 
-func (s *Server) getAllCategories(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getAllCategories(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("test"))
 }

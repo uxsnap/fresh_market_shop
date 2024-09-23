@@ -2,25 +2,65 @@ package app
 
 import (
 	"context"
-
-	"github.com/uxsnap/fresh_market_shop/backend/internal/config"
-	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
+	"fmt"
+	"log"
+	"net/http"
+	"time"
 )
 
 type App struct {
-	httpServer *deliveryHttp.Server
+	serviceProvider *serviceProvider
 }
 
 func New() *App {
-	// убрать внутрь service provider
-	// _, _ = db.New()
 
 	return &App{
-		httpServer: deliveryHttp.New(config.NewConfigHTTP()),
+		serviceProvider: newServiceProvider(),
 	}
 }
 
 func (a *App) Run(ctx context.Context) {
-	a.httpServer.Run(ctx)
+	a.RunHTTPServer(ctx)
 	<-ctx.Done()
+}
+
+func (a *App) RunHTTPServer(ctx context.Context) {
+	ch := make(chan error, 1)
+
+	addr := a.serviceProvider.ConfigExternalApi().AuthServiceGrpcHost() + ":" + a.serviceProvider.ConfigExternalApi().AuthServiceGrpcPort()
+
+	server := http.Server{
+		Addr:    addr,
+		Handler: a.serviceProvider.HandlerHTTP(ctx),
+	}
+
+	go func() {
+		fmt.Println("Server is listening")
+
+		err := server.ListenAndServe()
+
+		if err != nil {
+			ch <- fmt.Errorf("cannot start http server! %w", err)
+		}
+
+		close(ch)
+	}()
+
+	go func() {
+		select {
+		case err := <-ch:
+			log.Printf("http server canceled with error %v", err)
+			return
+		case <-ctx.Done():
+			fmt.Println("\n === Server is shutting down. === ")
+
+			timeout, cancel := context.WithTimeout(context.Background(), time.Second*10)
+			defer cancel()
+
+			if err := server.Shutdown(timeout); err != nil {
+				log.Printf("http server shutdown error %v", err)
+			}
+			return
+		}
+	}()
 }
