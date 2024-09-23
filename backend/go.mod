@@ -4,7 +4,6 @@ go 1.21.6
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/balobas/dbClient v0.0.2
 	github.com/georgysavva/scany v1.2.2
 	github.com/go-chi/chi v1.5.5
 	github.com/jackc/pgconn v1.14.3

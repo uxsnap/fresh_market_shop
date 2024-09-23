@@ -1,10 +1,6 @@
 # github.com/Masterminds/squirrel v1.5.4
 ## explicit; go 1.14
 github.com/Masterminds/squirrel
-# github.com/balobas/dbClient v0.0.2
-## explicit; go 1.21.4
-github.com/balobas/dbClient
-github.com/balobas/dbClient/pg
 # github.com/georgysavva/scany v1.2.2
 ## explicit; go 1.14
 github.com/georgysavva/scany/dbscan
