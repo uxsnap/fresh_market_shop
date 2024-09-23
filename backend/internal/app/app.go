@@ -16,7 +16,7 @@ func New() *App {
 	// _, _ = db.New()
 
 	return &App{
-		httpServer: deliveryHttp.New(config.NewHttpConfig()),
+		httpServer: deliveryHttp.New(config.NewConfigHTTP()),
 	}
 }
 

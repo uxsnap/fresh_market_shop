@@ -7,13 +7,15 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/joho/godotenv"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/app"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/config"
 )
 
+const defaultEnvPath = ".env"
+
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal("Error loading .env file")
+	if err := config.Init(defaultEnvPath); err != nil {
+		log.Fatal(err)
 	}
 
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

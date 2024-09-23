@@ -12,8 +12,8 @@ import (
 )
 
 type ServerConfig interface {
-	HttpHost() string
-	HttpPort() string
+	ServiceHost() string
+	ServicePort() string
 }
 
 type Server struct {
@@ -44,7 +44,7 @@ func (s *Server) Run(ctx context.Context) {
 	ch := make(chan error, 1)
 
 	server := http.Server{
-		Addr:    s.config.HttpHost() + ":" + s.config.HttpPort(),
+		Addr:    s.config.ServiceHost() + ":" + s.config.ServicePort(),
 		Handler: s.router,
 	}
 
