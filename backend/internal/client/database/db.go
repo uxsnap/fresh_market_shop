@@ -1,4 +1,4 @@
-package client
+package DBclient
 
 import (
 	"context"

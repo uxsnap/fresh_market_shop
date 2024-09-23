@@ -1,6 +1,10 @@
 # github.com/Masterminds/squirrel v1.5.4
 ## explicit; go 1.14
 github.com/Masterminds/squirrel
+# github.com/georgysavva/scany v1.2.2
+## explicit; go 1.14
+github.com/georgysavva/scany/dbscan
+github.com/georgysavva/scany/pgxscan
 # github.com/go-chi/chi v1.5.5
 ## explicit; go 1.16
 github.com/go-chi/chi
@@ -32,23 +36,10 @@ github.com/jackc/pgtype
 ## explicit; go 1.17
 github.com/jackc/pgx/v4
 github.com/jackc/pgx/v4/internal/sanitize
-# github.com/jackc/pgx/v5 v5.7.1
-## explicit; go 1.21
-github.com/jackc/pgx/v5
-github.com/jackc/pgx/v5/internal/iobufpool
-github.com/jackc/pgx/v5/internal/pgio
-github.com/jackc/pgx/v5/internal/sanitize
-github.com/jackc/pgx/v5/internal/stmtcache
-github.com/jackc/pgx/v5/pgconn
-github.com/jackc/pgx/v5/pgconn/ctxwatch
-github.com/jackc/pgx/v5/pgconn/internal/bgreader
-github.com/jackc/pgx/v5/pgproto3
-github.com/jackc/pgx/v5/pgtype
-github.com/jackc/pgx/v5/pgxpool
-# github.com/jackc/puddle/v2 v2.2.2
-## explicit; go 1.19
-github.com/jackc/puddle/v2
-github.com/jackc/puddle/v2/internal/genstack
+github.com/jackc/pgx/v4/pgxpool
+# github.com/jackc/puddle v1.3.0
+## explicit; go 1.12
+github.com/jackc/puddle
 # github.com/joho/godotenv v1.5.1
 ## explicit; go 1.12
 github.com/joho/godotenv
@@ -64,9 +55,6 @@ github.com/pkg/errors
 # golang.org/x/crypto v0.27.0
 ## explicit; go 1.20
 golang.org/x/crypto/pbkdf2
-# golang.org/x/sync v0.8.0
-## explicit; go 1.18
-golang.org/x/sync/semaphore
 # golang.org/x/text v0.18.0
 ## explicit; go 1.18
 golang.org/x/text/cases
