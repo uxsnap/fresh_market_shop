@@ -11,11 +11,6 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL
 );
 
-CREATE TABLE cities_handbook (
-    uid uuid PRIMARY KEY,
-    name VARCHAR(20) NOT NULL
-);
-
 -- Создание таблицы "addresses" для хранения адресов доставки пользователей с широтой и долготой
 CREATE TABLE delivery_addresses (
     uid uuid PRIMARY KEY,
@@ -63,10 +58,9 @@ CREATE TABLE products (
 );
 
 CREATE TABLE product_photos (
-    product_uid uuid NOT NULL,
-    photo_external_uid uuid NOT NULL,
-    order_idx INT,
-    created_at TIMESTAMP NOT NULL
+    id uuid NOT NULL,
+    product_uid uuid NOT NULL REFERENCES products(uid) ON DELETE SET NULL,
+    img_path TEXT NOT NULl
 );
 
 -- Создание таблицы "recipes" для хранения рецептов, где используются продукты
