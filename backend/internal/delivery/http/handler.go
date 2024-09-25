@@ -22,12 +22,14 @@ type Handler struct {
 
 func New(
 	cfg Config,
+	authService AuthService,
 	productsService ProductsService,
 	categoriesService CategoriesService,
 ) *Handler {
 	h := &Handler{
 		router:            chi.NewRouter(),
 		config:            cfg,
+		authService:       authService,
 		productsService:   productsService,
 		categoriesService: categoriesService,
 	}
