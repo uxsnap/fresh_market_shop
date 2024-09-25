@@ -44,6 +44,7 @@ func New(
 
 	h.router.Route("/health", h.HealthSubrouter)
 	h.router.Route("/category", h.CategoriesSubrouter)
+	h.router.Route("/auth", h.AuthSubrouter)
 
 	return h
 }
