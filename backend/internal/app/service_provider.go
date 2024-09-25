@@ -115,6 +115,7 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 	if sp.handlerHTTP == nil {
 		sp.handlerHTTP = deliveryHttp.New(
 			nil,
+			sp.AuthClient(ctx),
 			sp.ProductsService(ctx),
 			sp.CategoriesService(ctx),
 		)

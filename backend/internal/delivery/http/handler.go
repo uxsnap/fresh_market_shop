@@ -15,18 +15,21 @@ type Handler struct {
 	router *chi.Mux
 	config Config
 
+	authService       AuthService
 	productsService   ProductsService
 	categoriesService CategoriesService
 }
 
 func New(
 	cfg Config,
+	authService AuthService,
 	productsService ProductsService,
 	categoriesService CategoriesService,
 ) *Handler {
 	h := &Handler{
 		router:            chi.NewRouter(),
 		config:            cfg,
+		authService:       authService,
 		productsService:   productsService,
 		categoriesService: categoriesService,
 	}
