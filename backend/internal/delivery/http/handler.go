@@ -14,12 +14,21 @@ type Config interface {
 type Handler struct {
 	router *chi.Mux
 	config Config
+
+	productsService   ProductsService
+	categoriesService CategoriesService
 }
 
-func New(cfg Config) *Handler {
+func New(
+	cfg Config,
+	productsService ProductsService,
+	categoriesService CategoriesService,
+) *Handler {
 	h := &Handler{
-		router: chi.NewRouter(),
-		config: cfg,
+		router:            chi.NewRouter(),
+		config:            cfg,
+		productsService:   productsService,
+		categoriesService: categoriesService,
 	}
 
 	h.router.Use(
