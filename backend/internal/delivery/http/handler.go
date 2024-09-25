@@ -15,6 +15,7 @@ type Handler struct {
 	router *chi.Mux
 	config Config
 
+	authService       AuthService
 	productsService   ProductsService
 	categoriesService CategoriesService
 }

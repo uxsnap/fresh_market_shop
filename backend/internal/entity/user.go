@@ -24,6 +24,14 @@ func (u *User) PermissionsStrings() []string {
 	return res
 }
 
+func PermissionsFromStrings(ps []string) []UserPermission {
+	perms := make([]UserPermission, len(ps))
+	for i := 0; i < len(ps); i++ {
+		perms[i] = UserPermission(ps[i])
+	}
+	return perms
+}
+
 type UserPermission string
 
 const (
