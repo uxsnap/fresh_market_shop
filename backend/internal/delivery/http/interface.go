@@ -18,3 +18,15 @@ type ProductsService interface {
 type CategoriesService interface {
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 }
+
+type AuthService interface {
+	Register(ctx context.Context, email string, password string) (uuid.UUID, error)
+	UpdateUser(ctx context.Context, uid uuid.UUID, email string, password string) (accessJwt string, refreshJwt string, err error)
+	GetUser(ctx context.Context, uid uuid.UUID, email string) (entity.User, error)
+	DeleteUser(ctx context.Context, uid uuid.UUID) error
+	Login(ctx context.Context, email string, password string) (accessJwt string, refreshJwt string, err error)
+	Logout(ctx context.Context, uid uuid.UUID) error
+	Refresh(ctx context.Context, refreshToken string) (accessJwt string, refreshJwt string, err error)
+	VerifyJwt(ctx context.Context, token string) error
+	VerifyEmail(ctx context.Context, token string) error
+}
