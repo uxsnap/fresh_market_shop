@@ -1,6 +1,6 @@
 package entity
 
-import "github.com/google/uuid"
+import uuid "github.com/satori/go.uuid"
 
 type Category struct {
 	Uuid        uuid.UUID
