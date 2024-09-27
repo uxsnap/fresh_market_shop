@@ -12,7 +12,7 @@ service Auth {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc UpdateUser(UpdateUserRequest) returns (JwtResponse); // required accessJwt in ctx
     rpc GetUser(GetUserRequest) returns (GetUserResponse); // required accessJwt in ctx
-    rpc Delete(DeleteUserRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
+    rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
 
     rpc Login(LoginRequest) returns (JwtResponse);
     rpc Logout(LogoutRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
@@ -20,6 +20,8 @@ service Auth {
 
     rpc Verify(VerifyRequest) returns (google.protobuf.Empty);
     rpc VerifyEmail(VerifyEmailRequest) returns (google.protobuf.Empty);
+
+    rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse);
 }
 
 enum Role {
@@ -84,4 +86,11 @@ message RefreshRequest {
 
 message VerifyRequest {
     string jwt = 1;
+}
+
+message HealthCheckResponse {
+    string status = 1;
+    string gitTag = 2;
+    string gitBranch = 3;
+    google.protobuf.Timestamp upTime = 4;
 }

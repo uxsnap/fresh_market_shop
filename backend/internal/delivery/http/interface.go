@@ -29,4 +29,5 @@ type AuthService interface {
 	Refresh(ctx context.Context, refreshToken string) (accessJwt string, refreshJwt string, err error)
 	VerifyJwt(ctx context.Context, token string) error
 	VerifyEmail(ctx context.Context, token string) error
+	HealthCheck(ctx context.Context) entity.AuthServiceHealthCheck
 }

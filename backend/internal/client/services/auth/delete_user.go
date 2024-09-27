@@ -14,7 +14,7 @@ func (c *AuthClient) DeleteUser(ctx context.Context, accessJwt string, uid uuid.
 
 	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, accessJwt)
 
-	if _, err := c.client.Delete(ctx, &auth_v1.DeleteUserRequest{
+	if _, err := c.client.DeleteUser(ctx, &auth_v1.DeleteUserRequest{
 		Uid: uid.String(),
 	}); err != nil {
 		log.Printf("failed to delete user with uid %s", uid)
