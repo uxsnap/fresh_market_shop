@@ -9,8 +9,8 @@ import (
 	clientAuthService "github.com/uxsnap/fresh_market_shop/backend/internal/client/services/auth"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/config"
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
-	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/categories"
-	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/products"
+	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
+	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
 	ucCategories "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/categories"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
 )
