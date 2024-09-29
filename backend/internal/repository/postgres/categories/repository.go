@@ -5,7 +5,7 @@ import (
 
 	DBclient "github.com/uxsnap/fresh_market_shop/backend/internal/client/database"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
-	repositoryPostgres "github.com/uxsnap/fresh_market_shop/backend/internal/repository"
+	repositoryPostgres "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres"
 )
 
 type CategoriesRepository struct {
