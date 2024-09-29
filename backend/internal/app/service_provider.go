@@ -11,8 +11,8 @@ import (
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/categories"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/products"
-	categoriesService "github.com/uxsnap/fresh_market_shop/backend/internal/service/categories"
-	productsService "github.com/uxsnap/fresh_market_shop/backend/internal/service/products"
+	ucCategories "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/categories"
+	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
 )
 
 type serviceProvider struct {
@@ -26,8 +26,8 @@ type serviceProvider struct {
 	productsRepository   *repositoryProducts.ProductsRepository
 	categoriesRepository *repositoryCategories.CategoriesRepository
 
-	productsService   *productsService.ProductsService
-	categoriesService *categoriesService.CategoriesService
+	ucProducts        *ucProducts.UseCaseProducts
+	ucCategories *ucCategories.UseCaseCategories
 
 	handlerHTTP *deliveryHttp.Handler
 }
@@ -93,22 +93,22 @@ func (sp *serviceProvider) CategoriesRepository(ctx context.Context) *repository
 	return sp.categoriesRepository
 }
 
-func (sp *serviceProvider) ProductsService(ctx context.Context) *productsService.ProductsService {
-	if sp.productsService == nil {
-		sp.productsService = productsService.New(
+func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
+	if sp.ucProducts == nil {
+		sp.ucProducts = ucProducts.New(
 			sp.ProductsRepository(ctx),
 		)
 	}
-	return sp.productsService
+	return sp.ucProducts
 }
 
-func (sp *serviceProvider) CategoriesService(ctx context.Context) *categoriesService.CategoriesService {
-	if sp.categoriesService == nil {
-		sp.categoriesService = categoriesService.New(
+func (sp *serviceProvider) CategoriesService(ctx context.Context) *ucCategories.UseCaseCategories {
+	if sp.ucCategories == nil {
+		sp.ucCategories = ucCategories.New(
 			sp.CategoriesRepository(ctx),
 		)
 	}
-	return sp.categoriesService
+	return sp.ucCategories
 }
 
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {

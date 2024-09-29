@@ -1,4 +1,4 @@
-package categoriesService
+package useCaseCategories
 
 import (
 	"context"
@@ -6,19 +6,19 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-type CategoriesService struct {
+type UseCaseCategories struct {
 	categoriesRepository CategoriesRepository
 }
 
 func New(
 	categoriesRepository CategoriesRepository,
-) *CategoriesService {
-	return &CategoriesService{
+) *UseCaseCategories {
+	return &UseCaseCategories{
 		categoriesRepository: categoriesRepository,
 	}
 }
 
 // переедут в файлы
-func (s *CategoriesService) GetAllCategories(ctx context.Context) ([]entity.Category, error) {
+func (s *UseCaseCategories) GetAllCategories(ctx context.Context) ([]entity.Category, error) {
 	return s.categoriesRepository.GetAllCategories(ctx)
 }

@@ -1,4 +1,4 @@
-package categoriesService
+package useCaseCategories
 
 import (
 	"context"

@@ -1,4 +1,4 @@
-package productsService
+package useCaseProducts
 
 import (
 	"context"
