@@ -6,6 +6,10 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters"
+	authSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/auth"
+	categorySubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/category"
+	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
 )
 
 type Config interface {
@@ -15,23 +19,23 @@ type Handler struct {
 	router *chi.Mux
 	config Config
 
-	authService       AuthService
-	productsService   ProductsService
-	categoriesService CategoriesService
+	deps subrouters.SubrouterDeps
 }
 
 func New(
 	cfg Config,
-	authService AuthService,
-	productsService ProductsService,
-	categoriesService CategoriesService,
+	authService subrouters.AuthService,
+	productsService subrouters.ProductsService,
+	categoriesService subrouters.CategoriesService,
 ) *Handler {
 	h := &Handler{
-		router:            chi.NewRouter(),
-		config:            cfg,
-		authService:       authService,
-		productsService:   productsService,
-		categoriesService: categoriesService,
+		router: chi.NewRouter(),
+		config: cfg,
+		deps: subrouters.SubrouterDeps{
+			AuthService:       authService,
+			ProductsService:   productsService,
+			CategoriesService: categoriesService,
+		},
 	}
 
 	h.router.Use(
@@ -42,9 +46,9 @@ func New(
 		middleware.Timeout(60*time.Second),
 	)
 
-	h.router.Route("/health", h.HealthSubrouter)
-	h.router.Route("/category", h.CategoriesSubrouter)
-	h.router.Route("/auth", h.AuthSubrouter)
+	h.router.Route("/health", healthSubrouter.New(h.deps))
+	h.router.Route("/category", categorySubrouter.New(h.deps))
+	h.router.Route("/auth", authSubrouter.New(h.deps))
 
 	return h
 }

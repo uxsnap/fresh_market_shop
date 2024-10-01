@@ -1,14 +1,16 @@
-package deliveryHttp
+package authSubrouter
 
 import (
 	"context"
 	"net/http"
+
+	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
 // TODO: убрать этот метод отсюда, пока чисто для тестов
-func (h *Handler) VerifyJwt(w http.ResponseWriter, r *http.Request) {
+func (h *AuthSubrouter) VerifyJwt(w http.ResponseWriter, r *http.Request) {
 	var req VerifyJwtRequest
-	if err := EncodeRequest(r, &req); err != nil {
+	if err := httpUtils.EncodeRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -16,14 +18,14 @@ func (h *Handler) VerifyJwt(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	resp := VerifyJwtResponse{}
-	if err := h.authService.VerifyJwt(ctx, req.Jwt); err != nil {
+	if err := h.AuthService.VerifyJwt(ctx, req.Jwt); err != nil {
 		resp.Valid = false
 		resp.Message = err.Error()
 	} else {
 		resp.Valid = true
 	}
 
-	WriteResponseJson(w, resp)
+	httpUtils.WriteResponseJson(w, resp)
 }
 
 type VerifyJwtRequest struct {

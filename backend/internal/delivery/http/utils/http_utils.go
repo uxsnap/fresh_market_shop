@@ -1,4 +1,4 @@
-package deliveryHttp
+package httpUtils
 
 import (
 	"encoding/json"
@@ -41,11 +41,6 @@ func EncodeRequest(r *http.Request, dest interface{}) error {
 	}
 	return nil
 }
-
-const (
-	accessJwtCookieName = "accessJwt"
-	refreshJwtCookieName = "refreshJwt"
-)
 
 func NewCookie(key string, value string) *http.Cookie {
 	return &http.Cookie{
