@@ -1,6 +1,7 @@
 package pgEntity
 
 import (
+	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -147,10 +148,18 @@ func (pr *ProductRows) ToEntity() []entity.Product {
 	if len(pr.rows) == 0 {
 		return nil
 	}
-	
+
 	res := make([]entity.Product, len(pr.rows))
 	for i := 0; i < len(pr.rows); i++ {
 		res[i] = pr.rows[i].ToEntity()
 	}
 	return res
+}
+
+func (pr *ProductRow) ConditionUidEqual() sq.Eq {
+	return sq.Eq{"uid": pr.Uid}
+}
+
+func (pr *ProductRow) ConditionCategoryUidEqual() sq.Eq {
+	return sq.Eq{"category_uid": pr.CategoryUid}
 }
