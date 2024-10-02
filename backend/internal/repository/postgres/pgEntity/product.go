@@ -10,19 +10,18 @@ import (
 const ProductsTableName = "products"
 
 var productsTableFields = []string{
-	"uid", "category_uid", "name", "description", "ccal", "price", "stock_quantity", "created_at", "updated_at",
+	"uid", "category_uid", "name", "description", "ccal", "price", "created_at", "updated_at",
 }
 
 type ProductRow struct {
-	Uid           pgtype.UUID
-	CategoryUid   pgtype.UUID
-	Name          string
-	Description   string
-	Ccal          int32
-	Price         int64
-	StockQuantity int64
-	CreatedAt     pgtype.Timestamp
-	UpdatedAt     pgtype.Timestamp
+	Uid         pgtype.UUID
+	CategoryUid pgtype.UUID
+	Name        string
+	Description string
+	Ccal        int32
+	Price       int64
+	CreatedAt   pgtype.Timestamp
+	UpdatedAt   pgtype.Timestamp
 }
 
 func NewProductRow() *ProductRow {
@@ -42,7 +41,6 @@ func (p *ProductRow) FromEntity(product entity.Product) *ProductRow {
 	p.Description = product.Description
 	p.Ccal = product.Ccal
 	p.Price = product.Price
-	p.StockQuantity = product.StockQuantity
 
 	if product.CreatedAt.Unix() == 0 {
 		p.CreatedAt = pgtype.Timestamp{
@@ -70,15 +68,14 @@ func (p *ProductRow) FromEntity(product entity.Product) *ProductRow {
 
 func (p *ProductRow) ToEntity() entity.Product {
 	return entity.Product{
-		Uid:           p.Uid.Bytes,
-		CategoryUid:   p.CategoryUid.Bytes,
-		Name:          p.Name,
-		Description:   p.Description,
-		Ccal:          p.Ccal,
-		Price:         p.Price,
-		StockQuantity: p.StockQuantity,
-		CreatedAt:     p.CreatedAt.Time,
-		UpdatedAt:     p.UpdatedAt.Time,
+		Uid:         p.Uid.Bytes,
+		CategoryUid: p.CategoryUid.Bytes,
+		Name:        p.Name,
+		Description: p.Description,
+		Ccal:        p.Ccal,
+		Price:       p.Price,
+		CreatedAt:   p.CreatedAt.Time,
+		UpdatedAt:   p.UpdatedAt.Time,
 	}
 }
 
@@ -89,8 +86,7 @@ func (p *ProductRow) IdColumnName() string {
 func (p *ProductRow) Values() []interface{} {
 	return []interface{}{
 		p.Uid, p.CategoryUid, p.Name, p.Description,
-		p.Ccal, p.Price, p.StockQuantity, p.CreatedAt,
-		p.UpdatedAt,
+		p.Ccal, p.Price, p.CreatedAt, p.UpdatedAt,
 	}
 }
 
@@ -105,21 +101,20 @@ func (p *ProductRow) Table() string {
 func (p *ProductRow) Scan(row pgx.Row) error {
 	return row.Scan(
 		&p.Uid, &p.CategoryUid, &p.Name, &p.Description,
-		&p.Ccal, &p.Price, &p.StockQuantity, &p.CreatedAt,
-		&p.UpdatedAt,
+		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt,
 	)
 }
 
 func (p *ProductRow) ColumnsForUpdate() []string {
 	return []string{
-		"category_uid", "name", "description", "ccal", "price", "stock_quantity", "updated_at",
+		"category_uid", "name", "description", "ccal", "price", "updated_at",
 	}
 }
 
 func (p *ProductRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
 		p.CategoryUid, p.Name, p.Description, p.Ccal,
-		p.Price, p.StockQuantity, p.UpdatedAt,
+		p.Price, p.UpdatedAt,
 	}
 }
 

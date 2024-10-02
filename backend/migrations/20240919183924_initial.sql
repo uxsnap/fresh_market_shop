@@ -52,9 +52,14 @@ CREATE TABLE products (
     description TEXT,
     ccal INT,
     price INT NOT NULL,
-    stock_quantity INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
+);
+
+-- Создание таблицы "products_count" для хранения количества продуктов в наличии
+CREATE TABLE products_count (
+    product_uid uuid NOT NULL REFERENCES products(uid) ON DELETE CASCADE,
+    stock_quantity INT NOT NULL,
 );
 
 CREATE TABLE product_photos (
@@ -216,6 +221,7 @@ INSERT INTO products (uid, category_uid, name, description, ccal, price, stock_q
 DROP TABLE IF EXISTS recipe_products;
 DROP TABLE IF EXISTS recipes;
 DROP TABLE IF EXISTS product_photos;
+DROP TABLE IF EXISTS products_count;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS payment_cards;
