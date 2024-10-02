@@ -19,12 +19,6 @@ func New(
 	}
 }
 
-// эти методы переедут в файлы отдельные
-func (s *UseCaseProducts) CreateProduct(ctx context.Context, product entity.Product) (uuid.UUID, error) {
-	product.Uid = uuid.NewV4()
-	_ = s.productsRepository.CreateProduct(ctx, product)
-	return product.Uid, nil
-}
 
 func (s *UseCaseProducts) UpdateProduct(ctx context.Context, product entity.Product) error {
 	return nil

@@ -2,23 +2,13 @@ package useCaseCategories
 
 import (
 	"context"
+	"log"
 
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-type UseCaseCategories struct {
-	categoriesRepository CategoriesRepository
-}
-
-func New(
-	categoriesRepository CategoriesRepository,
-) *UseCaseCategories {
-	return &UseCaseCategories{
-		categoriesRepository: categoriesRepository,
-	}
-}
-
 // переедут в файлы
 func (s *UseCaseCategories) GetAllCategories(ctx context.Context) ([]entity.Category, error) {
+	log.Printf("ucCategories.GetAllCategories")
 	return s.categoriesRepository.GetAllCategories(ctx)
 }

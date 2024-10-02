@@ -79,10 +79,6 @@ func (p *ProductRow) ToEntity() entity.Product {
 	}
 }
 
-func (p *ProductRow) IdColumnName() string {
-	return "uid"
-}
-
 func (p *ProductRow) Values() []interface{} {
 	return []interface{}{
 		p.Uid, p.CategoryUid, p.Name, p.Description,

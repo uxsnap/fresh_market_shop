@@ -8,7 +8,6 @@ import (
 )
 
 type Row interface {
-	IdColumnName() string
 	Values() []interface{}
 	Columns() []string
 	Table() string
