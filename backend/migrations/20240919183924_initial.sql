@@ -41,7 +41,9 @@ CREATE TABLE payment_cards (
 CREATE TABLE categories (
     uid uuid PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT
+    description TEXT,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL
 );
 
 -- Создание таблицы "products" для хранения данных о товарах

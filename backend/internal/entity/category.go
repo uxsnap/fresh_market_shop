@@ -1,9 +1,15 @@
 package entity
 
-import uuid "github.com/satori/go.uuid"
+import (
+	"time"
+
+	uuid "github.com/satori/go.uuid"
+)
 
 type Category struct {
-	Uuid        uuid.UUID
+	Uid        uuid.UUID
 	Name        string
 	Description string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
