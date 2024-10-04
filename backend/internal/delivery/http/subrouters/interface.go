@@ -13,9 +13,7 @@ type ProductsService interface {
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, error)
 	GetProductsWithPagination(ctx context.Context, limit, offset int) ([]entity.Product, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
-}
 
-type CategoriesService interface {
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 }
 

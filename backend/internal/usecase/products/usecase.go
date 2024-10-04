@@ -8,17 +8,19 @@ import (
 )
 
 type UseCaseProducts struct {
-	productsRepository ProductsRepository
+	productsRepository   ProductsRepository
+	categoriesRepository CategoriesRepository
 }
 
 func New(
 	productsRepository ProductsRepository,
+	categoriesRepository CategoriesRepository,
 ) *UseCaseProducts {
 	return &UseCaseProducts{
-		productsRepository: productsRepository,
+		productsRepository:   productsRepository,
+		categoriesRepository: categoriesRepository,
 	}
 }
-
 
 func (s *UseCaseProducts) UpdateProduct(ctx context.Context, product entity.Product) error {
 	return nil

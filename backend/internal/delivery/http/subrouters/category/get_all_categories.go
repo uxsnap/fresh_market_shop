@@ -7,7 +7,7 @@ import (
 
 func (h *CategorySubrouter) getAllCategories(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
-	h.CategoriesService.GetAllCategories(ctx)
+	h.ProductsService.GetAllCategories(ctx)
 
 	w.Write([]byte("test"))
 }

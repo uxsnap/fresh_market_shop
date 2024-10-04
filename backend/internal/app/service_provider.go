@@ -11,7 +11,6 @@ import (
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
-	ucCategories "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/categories"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
 )
 
@@ -26,8 +25,7 @@ type serviceProvider struct {
 	productsRepository   *repositoryProducts.ProductsRepository
 	categoriesRepository *repositoryCategories.CategoriesRepository
 
-	ucProducts        *ucProducts.UseCaseProducts
-	ucCategories *ucCategories.UseCaseCategories
+	ucProducts   *ucProducts.UseCaseProducts
 
 	handlerHTTP *deliveryHttp.Handler
 }
@@ -97,18 +95,10 @@ func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseC
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
 			sp.ProductsRepository(ctx),
-		)
-	}
-	return sp.ucProducts
-}
-
-func (sp *serviceProvider) CategoriesService(ctx context.Context) *ucCategories.UseCaseCategories {
-	if sp.ucCategories == nil {
-		sp.ucCategories = ucCategories.New(
 			sp.CategoriesRepository(ctx),
 		)
 	}
-	return sp.ucCategories
+	return sp.ucProducts
 }
 
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {
@@ -117,7 +107,6 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 			nil,
 			sp.AuthClient(ctx),
 			sp.ProductsService(ctx),
-			sp.CategoriesService(ctx),
 		)
 	}
 	return sp.handlerHTTP

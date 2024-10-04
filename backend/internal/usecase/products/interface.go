@@ -34,3 +34,7 @@ type ProductsRepository interface {
 		offset uint64,
 	) ([]entity.ProductWithStockQuantity, error)
 }
+
+type CategoriesRepository interface {
+	GetAllCategories(ctx context.Context) ([]entity.Category, error)
+}

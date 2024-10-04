@@ -1,7 +1,6 @@
 package subrouters
 
 type SubrouterDeps struct {
-	AuthService       AuthService
-	ProductsService   ProductsService
-	CategoriesService CategoriesService
+	AuthService     AuthService
+	ProductsService ProductsService
 }
