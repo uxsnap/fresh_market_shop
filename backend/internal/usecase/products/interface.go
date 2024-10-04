@@ -37,7 +37,7 @@ type ProductsRepository interface {
 
 type CategoriesRepository interface {
 	CreateCategory(ctx context.Context, category entity.Category) error
-	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, error)
+	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, bool, error)
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
 	DeleteCategory(ctx context.Context, uid uuid.UUID) error

@@ -9,6 +9,7 @@ import (
 	clientAuthService "github.com/uxsnap/fresh_market_shop/backend/internal/client/services/auth"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/config"
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
@@ -25,7 +26,9 @@ type serviceProvider struct {
 	productsRepository   *repositoryProducts.ProductsRepository
 	categoriesRepository *repositoryCategories.CategoriesRepository
 
-	ucProducts   *ucProducts.UseCaseProducts
+	ucProducts *ucProducts.UseCaseProducts
+
+	txManager *transaction.Manager
 
 	handlerHTTP *deliveryHttp.Handler
 }
@@ -66,6 +69,13 @@ func (sp *serviceProvider) PgClient(ctx context.Context) DBclient.ClientDB {
 	return sp.pgClient
 }
 
+func (sp *serviceProvider) TxManager(ctx context.Context) *transaction.Manager {
+	if sp.txManager == nil {
+		sp.txManager = transaction.NewTxManager(sp.PgClient(ctx))
+	}
+	return sp.txManager
+}
+
 func (sp *serviceProvider) AuthClient(ctx context.Context) *clientAuthService.AuthClient {
 	if sp.authClient == nil {
 		client, err := clientAuthService.New(ctx, sp.ConfigExternalApi())
@@ -96,6 +106,7 @@ func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseC
 		sp.ucProducts = ucProducts.New(
 			sp.ProductsRepository(ctx),
 			sp.CategoriesRepository(ctx),
+			sp.TxManager(ctx),
 		)
 	}
 	return sp.ucProducts

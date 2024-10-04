@@ -10,8 +10,7 @@ import (
 type ProductsService interface {
 	CreateProduct(ctx context.Context, product entity.Product) (uuid.UUID, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
-	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, error)
-	GetProductsWithPagination(ctx context.Context, limit, offset int) ([]entity.Product, error)
+	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
 
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
