@@ -59,7 +59,7 @@ func (r *ProductsRepository) GetProductsWithCounts(
 	limit uint64,
 	offset uint64,
 ) ([]entity.ProductWithStockQuantity, error) {
-	log.Printf("productsRepository.GetProducts (limit: %d, offset: %d)", limit, offset)
+	log.Printf("productsRepository.GetProductsWithCounts (limit: %d, offset: %d)", limit, offset)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
