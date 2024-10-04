@@ -25,7 +25,7 @@ func (uc *UseCaseProducts) UpdateCategory(ctx context.Context, category entity.C
 
 	if !isFound {
 		log.Printf("failed to update category %s: %v", category.Uid, err)
-		return errors.Errorf("category not found", category.Uid)
+		return errors.Errorf("category %s not found", category.Uid)
 	}
 
 	category.CreatedAt = savedCategory.CreatedAt
