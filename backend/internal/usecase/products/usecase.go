@@ -5,11 +5,14 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 )
 
 type UseCaseProducts struct {
 	productsRepository   ProductsRepository
 	categoriesRepository CategoriesRepository
+
+	txManager transaction.Manager
 }
 
 func New(
