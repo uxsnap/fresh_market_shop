@@ -41,7 +41,7 @@ func (pc *ProductsCountRow) Table() string {
 }
 
 func (pc *ProductsCountRow) Scan(row pgx.Row) error {
-	return row.Scan(&pc.ProductUid, &pc.StockQuantity)
+	return row.Scan(pc.ValuesForScan()...)
 }
 
 func (pc *ProductsCountRow) ColumnsForUpdate() []string {
@@ -50,6 +50,12 @@ func (pc *ProductsCountRow) ColumnsForUpdate() []string {
 
 func (pc *ProductsCountRow) ValuesForUpdate() []interface{} {
 	return []interface{}{pc.StockQuantity}
+}
+
+func (pc *ProductsCountRow) ValuesForScan() []interface{} {
+	return []interface{}{
+		&pc.ProductUid, &pc.StockQuantity,
+	}
 }
 
 func (pc *ProductsCountRow) ConditionProductUidEqual() sq.Eq {

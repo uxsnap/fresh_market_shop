@@ -94,11 +94,15 @@ func (p *ProductRow) Table() string {
 	return ProductsTableName
 }
 
-func (p *ProductRow) Scan(row pgx.Row) error {
-	return row.Scan(
+func (p *ProductRow) ValuesForScan() []interface{} {
+	return []interface{}{
 		&p.Uid, &p.CategoryUid, &p.Name, &p.Description,
 		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt,
-	)
+	}
+}
+
+func (p *ProductRow) Scan(row pgx.Row) error {
+	return row.Scan(p.ValuesForScan()...)
 }
 
 func (p *ProductRow) ColumnsForUpdate() []string {
