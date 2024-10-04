@@ -1,4 +1,4 @@
-package categorySubrouter
+package categoriesSubrouter
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategorySubrouter) updateCategory(w http.ResponseWriter, r *http.Request) {
+func (h *CategoriesSubrouter) updateCategory(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	var category httpEntity.Category

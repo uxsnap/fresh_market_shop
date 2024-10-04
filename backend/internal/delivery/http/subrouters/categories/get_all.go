@@ -1,4 +1,4 @@
-package categorySubrouter
+package categoriesSubrouter
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategorySubrouter) getAllCategories(w http.ResponseWriter, r *http.Request) {
+func (h *CategoriesSubrouter) getAllCategories(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	categories, err := h.ProductsService.GetAllCategories(ctx)
 	if err != nil {

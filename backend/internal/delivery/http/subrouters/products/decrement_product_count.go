@@ -1,4 +1,4 @@
-package categorySubrouter
+package productsSubrouter
 
 import (
 	"context"
@@ -9,16 +9,16 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategorySubrouter) deleteCategory(w http.ResponseWriter, r *http.Request) {
+func (h *ProductsSubrouter) DecrementProductCount(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	var category httpEntity.UUID
-	if err := json.NewDecoder(r.Body).Decode(&category); err != nil {
+	var req httpEntity.ProductCount
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.ProductsService.DeleteCategory(ctx, category.Uid); err != nil {
+	if err := h.ProductsService.DecrementProductCount(ctx, req.ProductUid, req.Count); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}

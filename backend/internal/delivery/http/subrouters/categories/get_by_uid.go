@@ -1,4 +1,4 @@
-package categorySubrouter
+package categoriesSubrouter
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategorySubrouter) getCategoryByUid(w http.ResponseWriter, r *http.Request) {
+func (h *CategoriesSubrouter) getCategoryByUid(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	categoryUid, err := uuid.FromString(chi.URLParam(r, "uid"))

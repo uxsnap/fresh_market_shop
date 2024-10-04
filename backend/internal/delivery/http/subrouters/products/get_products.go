@@ -1,32 +1,31 @@
-package categorySubrouter
+package productsSubrouter
 
 import (
 	"context"
 	"net/http"
 	"strconv"
 
-	"github.com/go-chi/chi"
 	uuid "github.com/satori/go.uuid"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategorySubrouter) getCategoryProducts(w http.ResponseWriter, r *http.Request) {
+const defaultLimit = 10
+
+func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	categoryUid, err := uuid.FromString(chi.URLParam(r, "category_uid"))
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
-	}
-
 	var (
+		err error
+
 		page       int64
 		limit      uint64
 		ccalMin    int64
 		ccalMax    int64
 		withCounts bool
 	)
+
+	categoryUid := uuid.FromStringOrNil(r.URL.Query().Get("category_uid"))
 
 	reqPage := r.URL.Query().Get("page")
 	if len(reqPage) != 0 {
@@ -47,6 +46,9 @@ func (h *CategorySubrouter) getCategoryProducts(w http.ResponseWriter, r *http.R
 			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 			return
 		}
+	}
+	if limit == 0 {
+		limit = defaultLimit
 	}
 
 	reqCcalMin := r.URL.Query().Get("ccalMin")
