@@ -104,3 +104,36 @@ func (c *CategoryRow) ConditionUidEqual() sq.Eq {
 		"uid": c.Uid,
 	}
 }
+
+type CategoriesRows struct {
+	rows []*CategoryRow
+}
+
+func NewCategoriesRows() *CategoriesRows {
+	return &CategoriesRows{}
+}
+
+func (cr *CategoriesRows) ScanAll(rows pgx.Rows) error {
+	for rows.Next() {
+		newRow := &CategoryRow{}
+
+		if err := newRow.Scan(rows); err != nil {
+			return err
+		}
+		cr.rows = append(cr.rows, newRow)
+	}
+
+	return nil
+}
+
+func (cr *CategoriesRows) ToEntity() []entity.Category {
+	if len(cr.rows) == 0 {
+		return nil
+	}
+
+	res := make([]entity.Category, len(cr.rows))
+	for i := 0; i < len(cr.rows); i++ {
+		res[i] = cr.rows[i].ToEntity()
+	}
+	return res
+}
