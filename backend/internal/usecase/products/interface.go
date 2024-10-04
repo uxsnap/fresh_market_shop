@@ -17,7 +17,6 @@ type ProductsRepository interface {
 		limit uint64,
 		offset uint64,
 	) ([]entity.Product, error)
-	GetProductsByCategory(ctx context.Context, categoryUid uuid.UUID, limit uint64, offset uint64) ([]entity.Product, error)
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	DeleteProduct(ctx context.Context, productUid uuid.UUID) error

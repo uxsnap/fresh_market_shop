@@ -71,27 +71,6 @@ func (r *ProductsRepository) GetProducts(
 	return productRows.ToEntity(), nil
 }
 
-func (r *ProductsRepository) GetProductsByCategory(ctx context.Context, categoryUid uuid.UUID, limit uint64, offset uint64) ([]entity.Product, error) {
-	log.Printf("productsRepository.GetProductsByCategory (category uid: %s)", categoryUid)
-
-	productRow := pgEntity.NewProductRow().FromEntity(entity.Product{CategoryUid: categoryUid})
-	rows := pgEntity.NewProductRows()
-
-	if limit == 0 {
-		if err := r.GetSome(ctx, productRow, rows, productRow.ConditionCategoryUidEqual()); err != nil {
-			log.Printf("failed to get products by category %s: %v", categoryUid, err)
-			return nil, errors.WithStack(err)
-		}
-	} else {
-		if err := r.GetWithLimit(ctx, productRow, rows, productRow.ConditionCategoryUidEqual(), limit, offset); err != nil {
-			log.Printf("failed to get products by category %s: %v", categoryUid, err)
-			return nil, errors.WithStack(err)
-		}
-	}
-
-	return rows.ToEntity(), nil
-}
-
 func (r *ProductsRepository) GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error) {
 	log.Printf("productsRepository.GetProductByUid (uid: %s)", uid)
 

@@ -16,35 +16,6 @@ func (uc *UseCaseProducts) GetProductByUid(ctx context.Context, productUid uuid.
 	return product, isFound, errors.WithStack(err)
 }
 
-func (uc *UseCaseProducts) GetProductsByCategory(
-	ctx context.Context,
-	categoryUid uuid.UUID,
-	limit uint64,
-	offset uint64,
-) ([]entity.Product, error) {
-	log.Printf("ucProducts.GetProductsByCategory: categoryUid: %s", categoryUid)
-
-	if !uuid.Equal(categoryUid, uuid.UUID{}) {
-		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, categoryUid)
-		if err != nil {
-			log.Printf("failed to get category %s: %v", categoryUid, err)
-		}
-
-		if !categoryFound {
-			log.Printf("category %s not found", categoryUid)
-			return nil, errors.New("category not found")
-		}
-	}
-
-	products, err := uc.productsRepository.GetProductsByCategory(ctx, categoryUid, limit, offset)
-	if err != nil {
-		log.Printf("failed to get products by category %s: %v", categoryUid, err)
-		return nil, errors.WithStack(err)
-	}
-
-	return products, nil
-}
-
 func (uc *UseCaseProducts) GetProducts(
 	ctx context.Context,
 	categoryUid uuid.UUID,
