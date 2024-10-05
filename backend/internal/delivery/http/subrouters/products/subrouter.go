@@ -16,6 +16,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 
 		r.Get("/", ps.GetProducts)
 		r.Get("/{uid}", ps.GetProduct)
+		r.Get("/new", ps.getNewProducts)
 
 		r.Get("/count/{uid}", ps.GetProductCount)
 

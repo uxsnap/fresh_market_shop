@@ -2,6 +2,7 @@ package subrouters
 
 import (
 	"context"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -11,16 +12,14 @@ type ProductsService interface {
 	CreateProduct(ctx context.Context, product entity.Product) (uuid.UUID, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
-	GetProducts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsWithCounts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProducts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.Product, error)
+	GetProductsWithCounts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
 	IncrementProductCount(ctx context.Context, productUid uuid.UUID, incValue int64) error
 	DecrementProductCount(ctx context.Context, productUid uuid.UUID, decValue int64) error
 	GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error)
-
-
 
 	CreateCategory(ctx context.Context, category entity.Category) (uuid.UUID, error)
 	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, error)

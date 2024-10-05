@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -58,6 +59,8 @@ func (r *ProductsRepository) GetProductsWithCounts(
 	ccalMax int64,
 	limit uint64,
 	offset uint64,
+	createdBefore time.Time,
+	createdAfter time.Time,
 ) ([]entity.ProductWithStockQuantity, error) {
 	log.Printf("productsRepository.GetProductsWithCounts (limit: %d, offset: %d)", limit, offset)
 
@@ -88,6 +91,25 @@ func (r *ProductsRepository) GetProductsWithCounts(
 				"p.ccal": ccalMax,
 			})
 	}
+	if createdBefore.Unix() != 0 {
+		sql = sql.Where(
+			squirrel.LtOrEq{
+				"created_at": pgtype.Timestamp{
+					Time:   createdBefore,
+					Status: pgtype.Present,
+				},
+			})
+	}
+	if createdAfter.Unix() != 0 {
+		sql = sql.Where(
+			squirrel.GtOrEq{
+				"created_at": pgtype.Timestamp{
+					Time:   createdAfter,
+					Status: pgtype.Present,
+				},
+			})
+	}
+
 	if limit > 0 {
 		sql = sql.Limit(limit)
 	}

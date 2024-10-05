@@ -2,6 +2,7 @@ package useCaseProducts
 
 import (
 	"context"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -16,6 +17,8 @@ type ProductsRepository interface {
 		ccalMax int64,
 		limit uint64,
 		offset uint64,
+		createdBefore time.Time,
+		createdAfter time.Time,
 	) ([]entity.Product, error)
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
@@ -31,6 +34,8 @@ type ProductsRepository interface {
 		ccalMax int64,
 		limit uint64,
 		offset uint64,
+		createdBefore time.Time,
+		createdAfter time.Time,
 	) ([]entity.ProductWithStockQuantity, error)
 }
 

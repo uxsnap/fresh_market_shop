@@ -3,6 +3,7 @@ package useCaseProducts
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -21,6 +22,8 @@ func (uc *UseCaseProducts) GetProducts(
 	categoryUid uuid.UUID,
 	ccalMin int64,
 	ccalMax int64,
+	createdBefore time.Time,
+	createdAfter time.Time,
 	limit uint64,
 	offset uint64,
 ) ([]entity.Product, error) {
@@ -38,7 +41,7 @@ func (uc *UseCaseProducts) GetProducts(
 		}
 	}
 
-	products, err := uc.productsRepository.GetProducts(ctx, categoryUid, ccalMin, ccalMax, limit, offset)
+	products, err := uc.productsRepository.GetProducts(ctx, categoryUid, ccalMin, ccalMax, limit, offset, createdBefore, createdAfter)
 	if err != nil {
 		log.Printf("failed to get products: %v", err)
 		return nil, errors.WithStack(err)

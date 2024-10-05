@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -18,11 +19,13 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 	var (
 		err error
 
-		page       int64
-		limit      uint64
-		ccalMin    int64
-		ccalMax    int64
-		withCounts bool
+		page          int64
+		limit         uint64
+		ccalMin       int64
+		ccalMax       int64
+		createdBefore time.Time
+		createdAfter  time.Time
+		withCounts    bool
 	)
 
 	categoryUid := uuid.FromStringOrNil(r.URL.Query().Get("category_uid"))
@@ -78,11 +81,28 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 
+	reqCreatedBefore := r.URL.Query().Get("created_before")
+	if len(reqCreatedBefore) != 0 {
+		createdBefore, err = time.Parse("2006-01-02T15:04:05", reqCreatedBefore)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+	}
+	reqCreatedAfter := r.URL.Query().Get("created_after")
+	if len(reqCreatedAfter) != 0 {
+		createdAfter, err = time.Parse("2006-01-02T15:04:05", reqCreatedAfter)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+	}
+
 	offset := uint64((page - 1) * int64(limit))
 
 	if withCounts {
 		products, err := h.ProductsService.GetProductsWithCounts(
-			ctx, categoryUid, ccalMin, ccalMax, limit, offset,
+			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
@@ -102,7 +122,7 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 	}
 
 	products, err := h.ProductsService.GetProducts(
-		ctx, categoryUid, ccalMin, ccalMax, limit, offset,
+		ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
 	)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)

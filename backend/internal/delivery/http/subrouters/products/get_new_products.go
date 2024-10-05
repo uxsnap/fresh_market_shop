@@ -1,4 +1,4 @@
-package categoriesSubrouter
+package productsSubrouter
 
 import (
 	"context"
@@ -6,30 +6,26 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/go-chi/chi"
 	uuid "github.com/satori/go.uuid"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http.Request) {
+func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	categoryUid, err := uuid.FromString(chi.URLParam(r, "category_uid"))
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
-	}
-
 	var (
-		page          int64
-		limit         uint64
-		ccalMin       int64
-		ccalMax       int64
-		createdBefore time.Time
-		createdAfter  time.Time
-		withCounts    bool
+		err error
+
+		page         int64
+		limit        uint64
+		ccalMin      int64
+		ccalMax      int64
+		createdAfter time.Time
+		withCounts   bool
 	)
+
+	categoryUid := uuid.FromStringOrNil(r.URL.Query().Get("category_uid"))
 
 	reqPage := r.URL.Query().Get("page")
 	if len(reqPage) != 0 {
@@ -51,6 +47,9 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 			return
 		}
 	}
+	if limit == 0 {
+		limit = defaultLimit
+	}
 
 	reqCcalMin := r.URL.Query().Get("ccalMin")
 	if len(reqCcalMin) != 0 {
@@ -70,23 +69,6 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 		}
 	}
 
-	reqCreatedBefore := r.URL.Query().Get("created_before")
-	if len(reqCreatedBefore) != 0 {
-		createdBefore, err = time.Parse("2006-01-02T15:04:05", reqCreatedBefore)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-			return
-		}
-	}
-	reqCreatedAfter := r.URL.Query().Get("created_after")
-	if len(reqCreatedAfter) != 0 {
-		createdAfter, err = time.Parse("2006-01-02T15:04:05", reqCreatedAfter)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-			return
-		}
-	}
-
 	reqWithCounts := r.URL.Query().Get("with_counts")
 	if len(reqWithCounts) != 0 {
 		withCounts, err = strconv.ParseBool(reqWithCounts)
@@ -96,11 +78,23 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 		}
 	}
 
+	reqCreatedAfter := r.URL.Query().Get("created_after")
+	if len(reqCreatedAfter) != 0 {
+		createdAfter, err = time.Parse("2006-01-02T15:04:05", reqCreatedAfter)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+	} else {
+		// по дефолту дата создания <= 2 недель
+		createdAfter = time.Now().Add(-time.Hour*24*14).UTC()
+	}
+
 	offset := uint64((page - 1) * int64(limit))
 
 	if withCounts {
 		products, err := h.ProductsService.GetProductsWithCounts(
-			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
+			ctx, categoryUid, ccalMin, ccalMax, time.Time{}, createdAfter, limit, offset,
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
@@ -120,7 +114,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	}
 
 	products, err := h.ProductsService.GetProducts(
-		ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
+		ctx, categoryUid, ccalMin, ccalMax, time.Time{}, createdAfter, limit, offset,
 	)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
