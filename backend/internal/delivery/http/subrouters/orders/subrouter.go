@@ -13,6 +13,6 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	s := OrdersSubrouter{deps}
 
 	return func(r chi.Router) {
-		r.Get("/hostory/{user_uid}", s.getHistory)
+		r.Get("/history/{user_uid}", s.getHistory)
 	}
 }
