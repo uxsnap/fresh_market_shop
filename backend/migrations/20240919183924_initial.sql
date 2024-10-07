@@ -5,8 +5,6 @@
 CREATE TABLE users (
     uid uuid PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
-    is_deleted BOOLEAN,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );
@@ -17,7 +15,7 @@ CREATE TABLE delivery_addresses (
     user_uid uuid NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
     latitude NUMERIC(10, 8) NOT NULL,  -- Широта с точностью до 8 знаков после запятой
     longitude NUMERIC(11, 8) NOT NULL, -- Долгота с точностью до 8 знаков после запятой
-    city_uid uuid NOT NULL,
+    city_name VARCHAR(30) NOT NULL,
     street_name VARCHAR(30) NOT NULL,
     house_number INT NOT NULL,
     building INT NOT NULL,
