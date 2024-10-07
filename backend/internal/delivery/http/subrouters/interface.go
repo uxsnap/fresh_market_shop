@@ -30,9 +30,9 @@ type ProductsService interface {
 
 type AuthService interface {
 	Register(ctx context.Context, email string, password string) (uuid.UUID, error)
-	UpdateUser(ctx context.Context, accessToken string, uid uuid.UUID, email string, password string) (accessJwt string, refreshJwt string, err error)
-	GetUser(ctx context.Context, accessJwt string, uid uuid.UUID, email string) (entity.User, error)
-	DeleteUser(ctx context.Context, accessJwt string, uid uuid.UUID) error
+	UpdateAuthUser(ctx context.Context, accessToken string, uid uuid.UUID, email string, password string) (accessJwt string, refreshJwt string, err error)
+	GetAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID, email string) (entity.AuthUser, error)
+	DeleteAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID) error
 	Login(ctx context.Context, email string, password string) (accessJwt string, refreshJwt string, err error)
 	Logout(ctx context.Context, accessJwt string, uid uuid.UUID) error
 	Refresh(ctx context.Context, refreshToken string) (accessJwt string, refreshJwt string, err error)

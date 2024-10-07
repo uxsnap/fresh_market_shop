@@ -7,7 +7,7 @@ import (
 )
 
 // пока как в сервисе авторизации
-type User struct {
+type AuthUser struct {
 	Uid         uuid.UUID
 	Email       string
 	Role        UserRole
@@ -16,7 +16,7 @@ type User struct {
 	UpdatedAt   time.Time
 }
 
-func (u *User) PermissionsStrings() []string {
+func (u *AuthUser) PermissionsStrings() []string {
 	res := make([]string, len(u.Permissions))
 	for i := 0; i < len(res); i++ {
 		res[i] = string(u.Permissions[i])

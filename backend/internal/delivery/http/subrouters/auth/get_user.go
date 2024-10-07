@@ -11,7 +11,7 @@ import (
 )
 
 // TODO: rename to getUserSSO or getAuthUser
-func (h *AuthSubrouter) GetUser(w http.ResponseWriter, r *http.Request) {
+func (h *AuthSubrouter) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req GetUserRequest
 	if err := httpUtils.EncodeRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -27,7 +27,7 @@ func (h *AuthSubrouter) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	user, err := h.AuthService.GetUser(ctx, accessCookie.Value, req.Uid, req.Email)
+	user, err := h.AuthService.GetAuthUser(ctx, accessCookie.Value, req.Uid, req.Email)
 	if err != nil {
 		log.Printf("failed to get user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)

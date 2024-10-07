@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (c *AuthClient) UpdateUser(
+func (c *AuthClient) UpdateAuthUser(
 	ctx context.Context,
 	accessToken string,
 	uid uuid.UUID,

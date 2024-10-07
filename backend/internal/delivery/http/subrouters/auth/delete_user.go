@@ -9,7 +9,7 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-func (h *AuthSubrouter) DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req DeleteUserRequest
 	if err := httpUtils.EncodeRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -25,7 +25,7 @@ func (h *AuthSubrouter) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	if err := h.AuthService.DeleteUser(ctx, accessCookie.Value, req.Uid); err != nil {
+	if err := h.AuthService.DeleteAuthUser(ctx, accessCookie.Value, req.Uid); err != nil {
 		log.Printf("failed to delete user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return

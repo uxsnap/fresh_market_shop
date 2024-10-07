@@ -10,7 +10,7 @@ import (
 )
 
 // TODO: rename to updateUserSSO or updateAuthUser
-func (h *AuthSubrouter) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req UpdateUserRequest
 	if err := httpUtils.EncodeRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -26,7 +26,7 @@ func (h *AuthSubrouter) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	accessJwt, refreshJwt, err := h.AuthService.UpdateUser(ctx, accessCookie.Value, req.Uid, req.Email, req.Password)
+	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie.Value, req.Uid, req.Email, req.Password)
 	if err != nil {
 		log.Printf("failed to update user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)

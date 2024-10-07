@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (c *AuthClient) DeleteUser(ctx context.Context, accessJwt string, uid uuid.UUID) error {
+func (c *AuthClient) DeleteAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID) error {
 	log.Printf("authClient.DeleteUser: uid '%s'", uid)
 
 	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, accessJwt)

@@ -20,9 +20,9 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Post("/register", as.Register)
 
-		r.Get("/user", as.GetUser)
-		r.Post("/user", as.UpdateUser)
-		r.Delete("/user", as.DeleteUser)
+		r.Get("/user", as.GetAuthUser)
+		r.Post("/user", as.UpdateAuthUser)
+		r.Delete("/user", as.DeleteAuthUser)
 
 		r.Post("/login", as.Login)
 		r.Post("/logout", as.Logout)

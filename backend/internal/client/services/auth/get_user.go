@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func (c *AuthClient) GetUser(ctx context.Context, accessJwt string, uid uuid.UUID, email string) (entity.User, error) {
+func (c *AuthClient) GetAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID, email string) (entity.AuthUser, error) {
 	log.Printf("authClient.GetUser: uid '%s' email '%s'", uid, email)
 
 	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, accessJwt)
@@ -21,10 +21,10 @@ func (c *AuthClient) GetUser(ctx context.Context, accessJwt string, uid uuid.UUI
 	})
 	if err != nil {
 		log.Printf("failed to get user with uid '%s' email '%s': %v", uid, email, err)
-		return entity.User{}, err
+		return entity.AuthUser{}, err
 	}
 
-	return entity.User{
+	return entity.AuthUser{
 		Uid:         uuid.FromStringOrNil(resp.GetUid()),
 		Email:       resp.GetEmail(),
 		Role:        entity.UserRole(resp.GetRole().String()),
