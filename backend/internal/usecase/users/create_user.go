@@ -17,8 +17,10 @@ func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.
 		log.Printf("failed to create user: %v", err)
 		return uuid.UUID{}, err
 	}
+	if uuid.Equal(user.Uid, uuid.UUID{}) {
+		user.Uid = uuid.NewV4()
+	}
 
-	user.Uid = uuid.NewV4()
 	user.CreatedAt = time.Now().UTC()
 
 	if err := uc.usersRepository.CreateUser(ctx, user); err != nil {

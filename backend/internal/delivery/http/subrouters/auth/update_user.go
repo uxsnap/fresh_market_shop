@@ -7,9 +7,9 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-// TODO: rename to updateUserSSO or updateAuthUser
 func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req UpdateUserRequest
 	if err := httpUtils.EncodeRequest(r, &req); err != nil {
@@ -28,9 +28,16 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 
 	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie.Value, req.Uid, req.Email, req.Password)
 	if err != nil {
-		log.Printf("failed to update user: %v", err)
+		log.Printf("failed to update user %s: %v", req.Uid, err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
+	}
+
+	if err := h.UsersService.UpdateUser(ctx, entity.User{
+		Uid:   req.Uid,
+		Email: req.Email,
+	}); err != nil {
+		log.Printf("failed to update user %s in gw: %v", req.Uid, err)
 	}
 
 	w.WriteHeader(http.StatusOK)

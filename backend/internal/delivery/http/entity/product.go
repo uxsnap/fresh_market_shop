@@ -54,6 +54,6 @@ type CountResponse struct {
 }
 
 type ProductCount struct {
-	ProductUid uuid.UUID `json:"product_uid"`
+	ProductUid uuid.UUID `json:"productUid"`
 	Count      int64     `json:"count"`
 }

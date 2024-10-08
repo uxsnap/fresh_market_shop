@@ -11,6 +11,7 @@ import (
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
 	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
 	productsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/products"
+	usersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/users"
 )
 
 type Config interface {
@@ -51,6 +52,7 @@ func New(
 	h.router.Route("/health", healthSubrouter.New(h.deps))
 	h.router.Route("/categories", categoriesSubrouter.New(h.deps))
 	h.router.Route("/products", productsSubrouter.New(h.deps))
+	h.router.Route("/users", usersSubrouter.New(h.deps))
 
 	return h
 }

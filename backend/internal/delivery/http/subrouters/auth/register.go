@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
 func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +22,13 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 		log.Printf("failed to register user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
+	}
+
+	if _, err := h.UsersService.CreateUser(ctx, entity.User{
+		Uid:   uid,
+		Email: req.Email,
+	}); err != nil {
+		log.Printf("failed to create user %s in gw: %v", uid, err)
 	}
 
 	httpUtils.WriteResponseJson(w, RegisterResponse{

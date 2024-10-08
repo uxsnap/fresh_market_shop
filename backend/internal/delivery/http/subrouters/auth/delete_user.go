@@ -26,10 +26,15 @@ func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	if err := h.AuthService.DeleteAuthUser(ctx, accessCookie.Value, req.Uid); err != nil {
-		log.Printf("failed to delete user: %v", err)
+		log.Printf("failed to delete user %s: %v", req.Uid, err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
 	}
+
+	if err := h.UsersService.DeleteUser(ctx, req.Uid); err != nil {
+		log.Printf("failed to delete user %s in gw: %v", req.Uid, err)
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
 
