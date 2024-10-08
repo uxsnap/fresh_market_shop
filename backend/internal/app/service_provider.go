@@ -12,7 +12,9 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
+	repositoryUsers "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/users"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
+	ucUsers "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/users"
 )
 
 type serviceProvider struct {
@@ -25,8 +27,10 @@ type serviceProvider struct {
 
 	productsRepository   *repositoryProducts.ProductsRepository
 	categoriesRepository *repositoryCategories.CategoriesRepository
+	usersRepository      *repositoryUsers.UsersRepository
 
 	ucProducts *ucProducts.UseCaseProducts
+	ucUsers    *ucUsers.UseCaseUsers
 
 	txManager *transaction.Manager
 
@@ -101,6 +105,13 @@ func (sp *serviceProvider) CategoriesRepository(ctx context.Context) *repository
 	return sp.categoriesRepository
 }
 
+func (sp *serviceProvider) UsersRepository(ctx context.Context) *repositoryUsers.UsersRepository {
+	if sp.usersRepository == nil {
+		sp.usersRepository = repositoryUsers.New(sp.PgClient(ctx))
+	}
+	return sp.usersRepository
+}
+
 func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
@@ -112,12 +123,20 @@ func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseC
 	return sp.ucProducts
 }
 
+func (sp *serviceProvider) UsersService(ctx context.Context) *ucUsers.UseCaseUsers {
+	if sp.ucUsers == nil {
+		sp.ucUsers = ucUsers.New(sp.UsersRepository(ctx))
+	}
+	return sp.ucUsers
+}
+
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {
 	if sp.handlerHTTP == nil {
 		sp.handlerHTTP = deliveryHttp.New(
 			nil,
 			sp.AuthClient(ctx),
 			sp.ProductsService(ctx),
+			sp.UsersService(ctx),
 		)
 	}
 	return sp.handlerHTTP

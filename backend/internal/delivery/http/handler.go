@@ -27,6 +27,7 @@ func New(
 	cfg Config,
 	authService subrouters.AuthService,
 	productsService subrouters.ProductsService,
+	usersService subrouters.UsersService,
 ) *Handler {
 	h := &Handler{
 		router: chi.NewRouter(),
@@ -34,6 +35,7 @@ func New(
 		deps: subrouters.SubrouterDeps{
 			AuthService:     authService,
 			ProductsService: productsService,
+			UsersService:    usersService,
 		},
 	}
 

@@ -40,3 +40,17 @@ type AuthService interface {
 	VerifyEmail(ctx context.Context, token string) error
 	HealthCheck(ctx context.Context) entity.AuthServiceHealthCheck
 }
+
+type UsersService interface {
+	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error)
+	UpdateUser(ctx context.Context, user entity.User) error
+	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
+	DeleteUser(ctx context.Context, uid uuid.UUID) error
+
+	AddDeliveryAddress(ctx context.Context, address entity.DeliveryAddress) (uuid.UUID, error)
+	UpdateDeliveryAddress(ctx context.Context, address entity.DeliveryAddress) error
+	GetDeliveryAddress(ctx context.Context, uid uuid.UUID) (entity.DeliveryAddress, bool, error)
+	GetUserDeliveryAddresses(ctx context.Context, userUid uuid.UUID) ([]entity.DeliveryAddress, error)
+	DeleteDeliveryAddress(ctx context.Context, uid uuid.UUID) error
+	DeleteUserDeliveryAddresses(ctx context.Context, userUid uuid.UUID) error
+}
