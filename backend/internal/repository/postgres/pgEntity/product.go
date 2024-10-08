@@ -127,6 +127,7 @@ func NewProductRows() *ProductRows {
 }
 
 func (pr *ProductRows) ScanAll(rows pgx.Rows) error {
+	pr.rows = []*ProductRow{}
 	for rows.Next() {
 		newRow := &ProductRow{}
 
