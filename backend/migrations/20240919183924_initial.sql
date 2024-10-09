@@ -70,21 +70,19 @@ CREATE TABLE product_photos (
 );
 
 -- Создание таблицы "recipes" для хранения рецептов, где используются продукты
+-- products [{
+--    "name": "Хлеб",
+--    "quantity": 0.5,
+--    "measure": "gramm"
+--}]
 CREATE TABLE recipes (
     uid uuid PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
+    cooking_time INT,
+    products json,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
-);
-
--- Связь продуктов с рецептами (многие ко многим)
-CREATE TABLE recipe_products (
-    recipe_uid uuid NOT NULL REFERENCES recipes(uid) ON DELETE CASCADE,
-    product_uid uuid NOT NULL,
-    quantity NUMERIC(10, 2) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    PRIMARY KEY (recipe_uid, product_uid)
 );
 
 INSERT INTO categories (uid, name, description) VALUES 
@@ -219,7 +217,6 @@ INSERT INTO products (uid, category_uid, name, description, ccal, price, stock_q
 -- SQL в этой секции будет выполнен для отката изменений
 
 -- Удаление всех созданных таблиц
-DROP TABLE IF EXISTS recipe_products;
 DROP TABLE IF EXISTS recipes;
 DROP TABLE IF EXISTS product_photos;
 DROP TABLE IF EXISTS products_count;
