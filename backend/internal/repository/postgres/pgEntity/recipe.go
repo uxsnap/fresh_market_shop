@@ -132,6 +132,12 @@ func (rr *RecipeRow) ConditionUidEqual() sq.Eq {
 	}
 }
 
+func (rr *RecipeRow) ConditionNameLike() sq.Like {
+	return sq.Like{
+		"name": "%" + rr.Name + "%",
+	}
+}
+
 type RecipesRows struct {
 	rows []*RecipeRow
 }
