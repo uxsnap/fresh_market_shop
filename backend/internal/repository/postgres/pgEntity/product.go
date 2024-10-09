@@ -159,3 +159,9 @@ func (pr *ProductRow) ConditionUidEqual() sq.Eq {
 func (pr *ProductRow) ConditionCategoryUidEqual() sq.Eq {
 	return sq.Eq{"category_uid": pr.CategoryUid}
 }
+
+func (pr *ProductRow) ConditionNameLike() sq.Like {
+	return sq.Like{
+		"name": "%" + pr.Name + "%",
+	}
+}

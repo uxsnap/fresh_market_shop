@@ -2,7 +2,9 @@ package repositoryProducts
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -106,4 +108,64 @@ func (r *ProductsRepository) GetProductByUid(ctx context.Context, uid uuid.UUID)
 	}
 
 	return productRow.ToEntity(), true, nil
+}
+
+func (r *ProductsRepository) GetProductsByNameLike(ctx context.Context, name string) ([]entity.Product, error) {
+	log.Printf("productsRepository.GetProductsByNameLike (name: %s)", name)
+
+	productRow := pgEntity.NewProductRow().FromEntity(entity.Product{Name: name})
+	rows := pgEntity.NewProductRows()
+
+	if err := r.GetSome(ctx, productRow, rows, productRow.ConditionNameLike()); err != nil {
+		log.Printf("failed to get products by name like %s: %v", name, err)
+		return nil, errors.WithStack(err)
+	}
+
+	return rows.ToEntity(), nil
+}
+
+func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64) ([]entity.Product, error) {
+	log.Printf("productsRepository.GetProductsLikeNamesWithLimitOnEach (names: %v)", names)
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	row := pgEntity.NewProductRow()
+
+	stmt := strings.Builder{}
+	stmt.WriteString(
+		fmt.Sprintf(
+			"SELECT %s FROM products WHERE name LIKE %s LIMIT %d\n",
+			strings.Join(row.Columns(), ","), "%$1%", limit,
+		),
+	)
+	for i := 1; i < len(names); i++ {
+		stmt.WriteString("UNION\n")
+		stmt.WriteString(
+			fmt.Sprintf(
+				"SELECT %s FROM products WHERE name LIKE %s LIMIT %d\n",
+				strings.Join(row.Columns(), ","), fmt.Sprintf("%%$%d%%", i+1), limit,
+			),
+		)
+	}
+
+	args := make([]interface{}, len(names))
+	for i := 0; i < len(names); i++ {
+		args[i] = names[i]
+	}
+
+	rows, err := r.DB().Query(ctx, stmt.String(), args...)
+	if err != nil {
+		log.Printf("failed to GetProductsLikeNamesWithLimitOnEach: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	productsRows := pgEntity.NewProductRows()
+	if err := productsRows.ScanAll(rows); err != nil {
+		log.Printf("failed to GetProductsLikeNamesWithLimitOnEach: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	return productsRows.ToEntity(), nil
 }
