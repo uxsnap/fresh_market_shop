@@ -132,3 +132,40 @@ func (rr *RecipeRow) ConditionUidEqual() sq.Eq {
 	}
 }
 
+type RecipesRows struct {
+	rows []*RecipeRow
+}
+
+func NewRecipesRows() *RecipesRows {
+	return &RecipesRows{}
+}
+
+func (rr *RecipesRows) ScanAll(rows pgx.Rows) error {
+	rr.rows = []*RecipeRow{}
+	for rows.Next() {
+		newRow := &RecipeRow{}
+
+		if err := newRow.Scan(rows); err != nil {
+			return err
+		}
+		rr.rows = append(rr.rows, newRow)
+	}
+
+	return nil
+}
+
+func (rr *RecipesRows) ToEntity() ([]entity.Recipe, error) {
+	if len(rr.rows) == 0 {
+		return nil, nil
+	}
+
+	res := make([]entity.Recipe, len(rr.rows))
+	for i := 0; i < len(rr.rows); i++ {
+		val, err := rr.rows[i].ToEntity()
+		if err != nil {
+			return nil, err
+		}
+		res[i] = val
+	}
+	return res, nil
+}
