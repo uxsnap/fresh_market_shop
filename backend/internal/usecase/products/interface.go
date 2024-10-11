@@ -21,6 +21,10 @@ type ProductsRepository interface {
 		createdAfter time.Time,
 	) ([]entity.Product, error)
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
+	GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error)
+	GetProductsByNameLikeWithCounts(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error)
+	GetProductsLikeNamesWithLimitOnEachWithCounts(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	DeleteProduct(ctx context.Context, productUid uuid.UUID) error
 
@@ -42,6 +46,7 @@ type ProductsRepository interface {
 type CategoriesRepository interface {
 	CreateCategory(ctx context.Context, category entity.Category) error
 	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, bool, error)
+	GetCategoriesByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Category, error)
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
 	DeleteCategory(ctx context.Context, uid uuid.UUID) error
