@@ -14,6 +14,10 @@ type ProductsService interface {
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	GetProducts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.Product, error)
 	GetProductsWithCounts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error)
+	GetProductsByNameLikeWithCounts(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error)
+	GetProductsLikeNamesWithLimitOnEachWithCounts(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
@@ -22,6 +26,7 @@ type ProductsService interface {
 	GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error)
 
 	CreateCategory(ctx context.Context, category entity.Category) (uuid.UUID, error)
+	GetCategoriesByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Category, error)
 	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, error)
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error

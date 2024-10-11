@@ -11,6 +11,7 @@ import (
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
 	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
 	productsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/products"
+	searchSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/search"
 	usersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/users"
 )
 
@@ -53,6 +54,7 @@ func New(
 	h.router.Route("/categories", categoriesSubrouter.New(h.deps))
 	h.router.Route("/products", productsSubrouter.New(h.deps))
 	h.router.Route("/users", usersSubrouter.New(h.deps))
+	h.router.Route("/search", searchSubrouter.New(h.deps))
 
 	return h
 }
