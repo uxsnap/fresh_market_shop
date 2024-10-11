@@ -105,6 +105,12 @@ func (c *CategoryRow) ConditionUidEqual() sq.Eq {
 	}
 }
 
+func (c *CategoryRow) ConditionNameLike() sq.Like {
+	return sq.Like{
+		"name": "%" + c.Name + "%",
+	}
+}
+
 type CategoriesRows struct {
 	rows []*CategoryRow
 }

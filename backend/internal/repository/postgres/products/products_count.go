@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/Masterminds/squirrel"
@@ -69,7 +70,7 @@ func (r *ProductsRepository) GetProductsWithCounts(
 
 	sql := squirrel.Select(
 		append(withPrefix("p", productRow.Columns()), withPrefix("c", productsCountRow.Columns()[1:])...)...).
-		From(fmt.Sprintf("%s as p inner joun %s as c on p.uid=c.product_uid", productRow.Table(), productsCountRow.Table())).
+		From(fmt.Sprintf("%s as p inner join %s as c on p.uid=c.product_uid", productRow.Table(), productsCountRow.Table())).
 		PlaceholderFormat(squirrel.Dollar)
 
 	if !uuid.Equal(categoryUid, uuid.UUID{}) {
@@ -126,7 +127,114 @@ func (r *ProductsRepository) GetProductsWithCounts(
 		return nil, errors.WithStack(err)
 	}
 
-	res := make([]entity.ProductWithStockQuantity, 0, rows.CommandTag().RowsAffected())
+	res := []entity.ProductWithStockQuantity{}
+	for rows.Next() {
+		if err := rows.Scan(append(productRow.ValuesForScan(), productsCountRow.ValuesForScan()[1:]...)...); err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		res = append(res, entity.ProductWithStockQuantity{
+			Product:       productRow.ToEntity(),
+			StockQuantity: productsCountRow.Count(),
+		})
+	}
+
+	return res, nil
+}
+
+func (r *ProductsRepository) GetProductsByNameLikeWithCounts(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error) {
+	log.Printf("productsRepository.GetProductsByNameLikeWithCount (name: %s)", name)
+
+	productRow := pgEntity.NewProductRow()
+	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
+
+	sql := squirrel.Select(
+		append(withPrefix("p", productRow.Columns()), withPrefix("c", productsCountRow.Columns()[1:])...)...).
+		From(fmt.Sprintf("%s as p inner join %s as c on p.uid=c.product_uid", productRow.Table(), productsCountRow.Table())).
+		PlaceholderFormat(squirrel.Dollar).Where(squirrel.Like{"p.name": "%" + name + "%"})
+
+	if limit != 0 {
+		sql = sql.Limit(limit)
+	}
+
+	if offset != 0 {
+		sql = sql.Offset(offset)
+	}
+
+	stmt, args, err := sql.ToSql()
+
+	if err != nil {
+		log.Printf("failed to build sql for GetProductsByNameLikeWithCount name %s: %v", name, err)
+		return nil, errors.WithStack(err)
+	}
+
+	rows, err := r.DB().Query(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to GetProductsByNameLikeWithCount name %s: %v", name, err)
+	}
+
+	res := []entity.ProductWithStockQuantity{}
+	for rows.Next() {
+		if err := rows.Scan(append(productRow.ValuesForScan(), productsCountRow.ValuesForScan()[1:]...)...); err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		res = append(res, entity.ProductWithStockQuantity{
+			Product:       productRow.ToEntity(),
+			StockQuantity: productsCountRow.Count(),
+		})
+	}
+
+	return res, nil
+}
+
+func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithCounts(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error) {
+	log.Printf("productsRepository.GetProductsLikeNamesWithLimitOnEachWithCounts (names: %v)", names)
+
+	if len(names) == 0 {
+		return nil, nil
+	}
+
+	productRow := pgEntity.NewProductRow()
+	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
+
+	stmt := strings.Builder{}
+	stmt.WriteString(
+		fmt.Sprintf(
+			"SELECT %s, %s FROM %s p inner join %s c on p.uid=c.product_uid WHERE p.name LIKE %s LIMIT %d OFFSET %d\n",
+			strings.Join(withPrefix("p", productRow.Columns()), ","),
+			strings.Join(withPrefix("c", productsCountRow.Columns()[1:]), ","),
+			productRow.Table(),
+			productsCountRow.Table(),
+			"%$1%", limit, offset,
+		),
+	)
+	for i := 1; i < len(names); i++ {
+		stmt.WriteString("UNION\n")
+		stmt.WriteString(
+			fmt.Sprintf(
+				"SELECT %s, %s FROM %s p inner join %s c on p.uid=c.product_uid WHERE p.name LIKE %s LIMIT %d OFFSET %d\n",
+				strings.Join(withPrefix("p", productRow.Columns()), ","),
+				strings.Join(withPrefix("c", productsCountRow.Columns()[1:]), ","),
+				productRow.Table(),
+				productsCountRow.Table(),
+				fmt.Sprintf("%%$%d%%", i+1), limit, offset,
+			),
+		)
+	}
+
+	args := make([]interface{}, len(names))
+	for i := 0; i < len(names); i++ {
+		args[i] = names[i]
+	}
+
+	rows, err := r.DB().Query(ctx, stmt.String(), args...)
+	if err != nil {
+		log.Printf("failed to GetProductsLikeNamesWithLimitOnEachWithCount: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	res := []entity.ProductWithStockQuantity{}
 	for rows.Next() {
 		if err := rows.Scan(append(productRow.ValuesForScan(), productsCountRow.ValuesForScan()[1:]...)...); err != nil {
 			return nil, errors.WithStack(err)
