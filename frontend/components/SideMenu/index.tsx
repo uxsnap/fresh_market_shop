@@ -1,5 +1,4 @@
 import { Container, Flex, Stack, Title, Text } from "@mantine/core";
-import { Slider } from "../Slider/Slider";
 import { Salad } from "../icons/Salad";
 import { Bread } from "../icons/Bread";
 import { Fish } from "../icons/Fish";
@@ -12,21 +11,28 @@ import { Grains } from "../icons/Grains";
 import { Bean } from "../icons/Bean";
 
 import styles from "./SideMenu.module.css";
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { getCategories } from "@/api/categories/getCategories";
 
-const menu = [
-  { label: "Готовая еда", icon: Salad },
-  { label: "Хлебобулочные изделия", icon: Bread },
-  { label: "Рыба", icon: Fish },
-  { label: "Фрукты", icon: Peach },
-  { label: "Овощи", icon: Tomato },
-  { label: "Мясной отдел", icon: Meat },
-  { label: "Бакалея", icon: Grains },
-  { label: "Заправка", icon: Oil },
-  { label: "Молочные продукты", icon: Milk },
-  { label: "Топпинги", icon: Bean },
-];
+const mapNameToIcon: Record<string, React.FC> = {
+  "Готовая еда": Salad,
+  "Хлебобулочные изделия": Bread,
+  Рыба: Fish,
+  Фрукты: Peach,
+  Овощи: Tomato,
+  "Мясной отдел": Meat,
+  Бакалея: Grains,
+  Заправка: Oil,
+  "Молочные продукты": Milk,
+  Топпинги: Bean,
+};
 
 export const SideMenu = () => {
+  const { data } = useQuery({ queryKey: [], queryFn: getCategories });
+
+  console.log(data);
+
   return (
     <Container m={0} p={0}>
       <Stack gap={20}>
@@ -34,21 +40,14 @@ export const SideMenu = () => {
           Каталог
         </Title>
 
-        <Stack>
-          <Title order={4} c="accent.0">
-            Кол-во каллорий:
-          </Title>
-          <Slider />
-        </Stack>
-
-        <Stack mt={20} gap={12}>
-          {menu.map(({ label, icon: Icon }) => (
+        <Stack gap={12}>
+          {/* {menu.map(({ label, icon: Icon }) => (
             <Flex py={4} px={12} className={styles.item} key={label} gap={10}>
               <Icon />
 
               <Text c="accent.0">{label}</Text>
-            </Flex>
-          ))}
+            </Flex> */}
+          {/* ))} */}
         </Stack>
       </Stack>
     </Container>

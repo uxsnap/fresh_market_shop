@@ -13,7 +13,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	cs := CategoriesSubrouter{deps}
 
 	return func(r chi.Router) {
-		r.Get("/all", cs.getAllCategories)
+		r.Get("/", cs.getAllCategories)
 		r.Get("/{uid}", cs.getCategoryByUid)
 		r.Get("/{category_uid}/products", cs.getCategoryProducts)
 

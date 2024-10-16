@@ -39,3 +39,7 @@ local-migration-up:
 local-migration-down:
 	${LOCAL_BIN}/goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
 
+.PHONY: run
+run:
+	nodemon --watch './internal/**/*.go' --signal SIGTERM --exec 'go' run ./cmd/main.go
+
