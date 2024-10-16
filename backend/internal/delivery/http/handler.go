@@ -30,6 +30,7 @@ func New(
 	authService subrouters.AuthService,
 	productsService subrouters.ProductsService,
 	usersService subrouters.UsersService,
+	recipesService subrouters.RecipesService,
 ) *Handler {
 	h := &Handler{
 		router: chi.NewRouter(),
@@ -38,6 +39,7 @@ func New(
 			AuthService:     authService,
 			ProductsService: productsService,
 			UsersService:    usersService,
+			RecipesService:  recipesService,
 		},
 	}
 

@@ -12,8 +12,10 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
+	repositoryRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/recipes"
 	repositoryUsers "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/users"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
+	ucRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/recipes"
 	ucUsers "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/users"
 )
 
@@ -28,9 +30,11 @@ type serviceProvider struct {
 	productsRepository   *repositoryProducts.ProductsRepository
 	categoriesRepository *repositoryCategories.CategoriesRepository
 	usersRepository      *repositoryUsers.UsersRepository
+	recipesRepository    *repositoryRecipes.RecipesRepository
 
 	ucProducts *ucProducts.UseCaseProducts
 	ucUsers    *ucUsers.UseCaseUsers
+	ucRecipes  *ucRecipes.UseCaseRecipes
 
 	txManager *transaction.Manager
 
@@ -112,6 +116,13 @@ func (sp *serviceProvider) UsersRepository(ctx context.Context) *repositoryUsers
 	return sp.usersRepository
 }
 
+func (sp *serviceProvider) RecipesRepository(ctx context.Context) *repositoryRecipes.RecipesRepository {
+	if sp.recipesRepository == nil {
+		sp.recipesRepository = repositoryRecipes.New(sp.PgClient(ctx))
+	}
+	return sp.recipesRepository
+}
+
 func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
@@ -130,6 +141,13 @@ func (sp *serviceProvider) UsersService(ctx context.Context) *ucUsers.UseCaseUse
 	return sp.ucUsers
 }
 
+func (sp *serviceProvider) RecipesService(ctx context.Context) *ucRecipes.UseCaseRecipes {
+	if sp.ucRecipes == nil {
+		sp.ucRecipes = ucRecipes.New(sp.RecipesRepository(ctx))
+	}
+	return sp.ucRecipes
+}
+
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {
 	if sp.handlerHTTP == nil {
 		sp.handlerHTTP = deliveryHttp.New(
@@ -137,6 +155,7 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 			sp.AuthClient(ctx),
 			sp.ProductsService(ctx),
 			sp.UsersService(ctx),
+			sp.RecipesService(ctx),
 		)
 	}
 	return sp.handlerHTTP

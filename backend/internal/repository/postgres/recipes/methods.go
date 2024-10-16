@@ -3,7 +3,9 @@ package repositoryRecipes
 import (
 	"context"
 	"log"
+	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -72,6 +74,59 @@ func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name strin
 		return nil, errors.WithStack(err)
 	}
 	return res, nil
+}
+
+func (r *RecipesRepository) GetRecipes(
+	ctx context.Context,
+	cookingTime int64,
+	createdAfter time.Time,
+	limit uint64,
+	offset uint64,
+) ([]entity.Recipe, error) {
+	log.Printf("recipesRepository.GetRecipes: cookingTime %d createdAfter %s", cookingTime, createdAfter.String())
+
+	row := pgEntity.NewRecipeRow()
+	sql := sq.Select(row.Columns()...).
+		From(row.Table()).
+		PlaceholderFormat(sq.Dollar)
+
+	if cookingTime != 0 {
+		sql = sql.Where(sq.LtOrEq{
+			"cooking_time": cookingTime,
+		})
+	}
+	if createdAfter.Unix() != 0 {
+		sql = sql.Where(sq.GtOrEq{
+			"created_at": createdAfter,
+		})
+	}
+
+	if limit != 0 {
+		sql = sql.Limit(limit)
+	}
+	if offset != 0 {
+		sql = sql.Offset(offset)
+	}
+
+	stmt, args, err := sql.ToSql()
+	if err != nil {
+		log.Printf("failed to get recipes: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	rows, err := r.DB().Query(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to get recipes: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	recipeRows := pgEntity.NewRecipesRows()
+	if err := recipeRows.ScanAll(rows); err != nil {
+		log.Printf("failed to get recipes: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	return recipeRows.ToEntity()
 }
 
 func (r *RecipesRepository) UpdateRecipe(ctx context.Context, recipe entity.Recipe) error {

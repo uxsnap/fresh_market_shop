@@ -21,12 +21,12 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 
 		r.Get("/count/{uid}", ps.GetProductCount)
 
-		r.Post("/manage/count", ps.SetProductCount)
-		r.Post("/manage/count/inc", ps.IncrementProductCount)
-		r.Post("/manage/count/dec", ps.DecrementProductCount)
+		r.Post("/count", ps.SetProductCount)
+		r.Post("/count/inc", ps.IncrementProductCount)
+		r.Post("/count/dec", ps.DecrementProductCount)
 
-		r.Post("/manage/create", ps.CreateProduct)
-		r.Post("/manage/update", ps.UpdateProduct)
-		r.Post("/manage/delete/{uid}", ps.DeleteProduct)
+		r.Post("/", ps.CreateProduct)
+		r.Put("/", ps.UpdateProduct)
+		r.Delete("/{uid}", ps.DeleteProduct)
 	}
 }

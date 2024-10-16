@@ -59,3 +59,18 @@ type UsersService interface {
 	DeleteDeliveryAddress(ctx context.Context, uid uuid.UUID) error
 	DeleteUserDeliveryAddresses(ctx context.Context, userUid uuid.UUID) error
 }
+
+type RecipesService interface {
+	CreateRecipe(ctx context.Context, recipe entity.Recipe) (uuid.UUID, error)
+	GetRecipeByUid(ctx context.Context, uid uuid.UUID) (entity.Recipe, bool, error)
+	GetRecipesByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Recipe, error)
+	GetRecipes(
+		ctx context.Context,
+		cookingTime int64,
+		createdAfter time.Time,
+		limit uint64,
+		offset uint64,
+	) ([]entity.Recipe, error)
+	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
+	DeleteRecipe(ctx context.Context, uid uuid.UUID) error
+}
