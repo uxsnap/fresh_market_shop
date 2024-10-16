@@ -64,7 +64,7 @@ func (sp *serviceProvider) ConfigExternalApi() *config.ConfigExternalApi {
 
 func (sp *serviceProvider) PgClient(ctx context.Context) DBclient.ClientDB {
 	if sp.pgClient == nil {
-		client, err := pg.NewClient(ctx, sp.configPG.DSN())
+		client, err := pg.NewClient(ctx, sp.ConfigPG().DSN())
 		if err != nil {
 			log.Fatalf("failed to connect to postgres: %v", err)
 		}
