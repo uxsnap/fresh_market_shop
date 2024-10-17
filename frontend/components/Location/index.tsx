@@ -19,6 +19,7 @@ export const Location = () => {
         py={8}
         align="center"
         className={styles.root}
+        w="100%"
         maw={320}
         onClick={() => setIsMapOpen(true)}
       >

@@ -1,4 +1,4 @@
-import { Container, Flex, Stack, Title, Text } from "@mantine/core";
+import { Container, Stack, Title, Text, Group, Skeleton } from "@mantine/core";
 import { Salad } from "../icons/Salad";
 import { Bread } from "../icons/Bread";
 import { Fish } from "../icons/Fish";
@@ -17,7 +17,7 @@ import { getCategories } from "@/api/categories/getCategories";
 
 const mapNameToIcon: Record<string, React.FC> = {
   "Готовая еда": Salad,
-  "Хлебобулочные изделия": Bread,
+  Хлеб: Bread,
   Рыба: Fish,
   Фрукты: Peach,
   Овощи: Tomato,
@@ -29,9 +29,37 @@ const mapNameToIcon: Record<string, React.FC> = {
 };
 
 export const SideMenu = () => {
-  const { data } = useQuery({ queryKey: [], queryFn: getCategories });
+  const { data, isFetching } = useQuery({
+    queryKey: [getCategories.queryKey],
+    queryFn: getCategories,
+  });
 
-  console.log(data);
+  const renderLoader = () =>
+    Array.from({ length: 8 }, (_, ind) => (
+      <Skeleton key={ind} height={32} radius="md" />
+    ));
+
+  const renderData = () =>
+    data?.data.map(({ name }) => {
+      const Icon = mapNameToIcon[name];
+
+      return (
+        <Group
+          align="center"
+          py={4}
+          px={12}
+          className={styles.item}
+          key={name}
+          gap={10}
+        >
+          {Icon ? <Icon /> : ""}
+
+          <Text lh={1} fw={500} fz={18} c="accent.0">
+            {name}
+          </Text>
+        </Group>
+      );
+    });
 
   return (
     <Container m={0} p={0}>
@@ -41,13 +69,9 @@ export const SideMenu = () => {
         </Title>
 
         <Stack gap={12}>
-          {/* {menu.map(({ label, icon: Icon }) => (
-            <Flex py={4} px={12} className={styles.item} key={label} gap={10}>
-              <Icon />
+          {isFetching && renderLoader()}
 
-              <Text c="accent.0">{label}</Text>
-            </Flex> */}
-          {/* ))} */}
+          {!isFetching && renderData()}
         </Stack>
       </Stack>
     </Container>

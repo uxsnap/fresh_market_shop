@@ -1,15 +1,33 @@
 .root {
   border-bottom: 1px solid var(--mantine-color-bg-1);
+
+  padding: 16px;
+
+  @media (min-width: $mantine-breakpoint-md) {
+    padding: 20px;
+  }
 }
 
 .userButton {
   svg {
-    fill: var(--mantine-color-accent-0);  
+    fill: var(--mantine-color-accent-0);
   }
 
   &:hover {
     svg {
       fill: var(--mantine-color-secondary-0);
     }
+  }
+}
+
+.topSearch {
+  @media (max-width: $mantine-breakpoint-md) {
+    display: none;
+  }
+}
+
+.bottomSearch {
+  @media (min-width: $mantine-breakpoint-md) {
+    display: none;
   }
 }

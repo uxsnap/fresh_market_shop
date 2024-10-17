@@ -3,7 +3,7 @@ import { Button } from "@mantine/core";
 
 export const CartButton = () => {
   return (
-    <Button variant="accent-reverse" h={38} leftSection={<Cart />}>
+    <Button visibleFrom="sm" variant="accent-reverse" h={38} leftSection={<Cart />}>
       Корзина
     </Button>
   );

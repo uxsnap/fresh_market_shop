@@ -13,27 +13,36 @@ const queryClient = new QueryClient();
 export const MainAppShell = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
 
-  const [desktopOpened, { close, toggle: toggleDesktop }] = useDisclosure(true);
+  const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
+    useDisclosure();
+  const [desktopOpened, { toggle: toggleDesktop, close: closeDesktop }] =
+    useDisclosure(true);
 
   useEffect(() => {
     if (pathname === "/profile") {
-      close();
+      closeMobile();
+      closeDesktop();
     }
   }, [pathname]);
+
+  const handleToggle = () => {
+    toggleDesktop();
+    toggleMobile();
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
       <AppShell
-        header={{ height: 78 }}
+        header={{ height: { base: 125, md: 78 } }}
         navbar={{
           width: 300,
-          breakpoint: "sm",
-          collapsed: { desktop: !desktopOpened },
+          breakpoint: "md",
+          collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
         }}
         padding="md"
       >
         <AppShell.Header>
-          <Header onNavbar={toggleDesktop} />
+          <Header onNavbar={handleToggle} />
         </AppShell.Header>
 
         <AppShell.Navbar px={12} py={20}>
