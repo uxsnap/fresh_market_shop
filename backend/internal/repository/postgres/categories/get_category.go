@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -17,9 +18,21 @@ func (r *CategoriesRepository) GetAllCategories(ctx context.Context) ([]entity.C
 	categoryRow := pgEntity.NewCategoryRow()
 	rows := pgEntity.NewCategoriesRows()
 
-	if err := r.GetSome(ctx, categoryRow, rows, categoryRow.ConditionUidEqual()); err != nil {
+	sql, args, err := sq.Select(categoryRow.Columns()...).From(categoryRow.Table()).ToSql()
+	if err != nil {
+		log.Printf("failed to build sql query: %v", err)
+		return nil, err
+	}
+
+	rs, err := r.DB().Query(ctx, sql, args...)
+	if err != nil {
 		log.Printf("failed to get all categories: %v", err)
-		return nil, errors.WithStack(err)
+		return nil, err
+	}
+
+	if err := rows.ScanAll(rs); err != nil {
+		log.Printf("failed to get all categories: %v", err)
+		return nil, err
 	}
 
 	return rows.ToEntity(), nil

@@ -85,26 +85,6 @@ CREATE TABLE recipes (
     updated_at TIMESTAMP NOT NULL
 );
 
-INSERT INTO categories (uid, name, description) VALUES 
-('38e27c8f-570c-4d50-bf33-a0bd03afb13e', 'Хлеб', 'Хлебное описание'),
-('e069195a-ab82-4a17-ad9d-111a1dee2afd', 'Рыба', 'Рыбное описание'),
-('4fdf5c09-7c04-4853-bab3-240ae3671538', 'Фрукты', 'Фруктовое описание'),
-('82ebbd1c-dcfe-4d12-8729-bd778de4365c', 'Овощи', 'Овощи описание'),
-('23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 'Мясной отдел', 'Мясной отдел описание'),
-('4cf8fc1e-1745-4939-b434-5067684f65fb', 'Бакалея', 'Бакалея описание'),
-('36adad5c-8c71-4beb-ade3-ae6b0a10d998', 'Заправка', 'Заправка описание'),
-('038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 'Молочные продукты', 'Молочные продукты описание'),
-('1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 'Топпинги', 'Топпинги описание');
-
--- Связь продуктов с рецептами (многие ко многим)
--- CREATE TABLE recipe_products (
---     recipe_uid uuid NOT NULL REFERENCES recipes(uid) ON DELETE CASCADE,
---     product_uid uuid NOT NULL,
---     quantity NUMERIC(10, 2) NOT NULL,
---     name VARCHAR(255) NOT NULL,
---     PRIMARY KEY (recipe_uid, product_uid)
--- );
-
 INSERT INTO categories (uid, name, description, created_at,updated_at) VALUES 
 ('38e27c8f-570c-4d50-bf33-a0bd03afb13e', 'Хлеб', 'Хлебное описание', NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('e069195a-ab82-4a17-ad9d-111a1dee2afd', 'Рыба', 'Рыбное описание', NOW()::TIMESTAMP, NOW()::TIMESTAMP),
