@@ -5,8 +5,6 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { theme } from "../theme";
 import { MainAppShell } from "@/components/MainAppShell";
 
-import { DatesProvider } from "@mantine/dates";
-
 export const metadata = {
   title: "Fresh Market Shop",
 };
