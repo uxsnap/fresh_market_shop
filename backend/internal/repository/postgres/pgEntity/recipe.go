@@ -3,6 +3,7 @@ package pgEntity
 import (
 	"encoding/json"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -134,7 +135,7 @@ func (rr *RecipeRow) ConditionUidEqual() sq.Eq {
 
 func (rr *RecipeRow) ConditionNameLike() sq.Like {
 	return sq.Like{
-		"name": "%" + rr.Name + "%",
+		"LOWER(name)": "%" + strings.ToLower(rr.Name) + "%",
 	}
 }
 

@@ -1,6 +1,8 @@
 package pgEntity
 
 import (
+	"strings"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
@@ -107,7 +109,7 @@ func (c *CategoryRow) ConditionUidEqual() sq.Eq {
 
 func (c *CategoryRow) ConditionNameLike() sq.Like {
 	return sq.Like{
-		"name": "%" + c.Name + "%",
+		"LOWER(name)": "%" + strings.ToLower(c.Name) + "%",
 	}
 }
 

@@ -1,0 +1,8 @@
+.root {
+  border-radius: 8px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--mantine-color-primary-2);
+  }
+}

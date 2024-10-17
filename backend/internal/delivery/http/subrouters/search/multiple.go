@@ -41,6 +41,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	}
 
 	limitOnCategories, err = strconv.ParseUint(reqLimitOnCategories, 10, 64)
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
@@ -112,6 +113,6 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 
 type multipleSearchResponse struct {
 	Products           []httpEntity.Product          `json:"products,omitempty"`
-	Categories         []httpEntity.Category         `json:"categpries"`
+	Categories         []httpEntity.Category         `json:"categories"`
 	ProductsWithCounts []httpEntity.ProductWithCount `json:"productsWithCounts,omitempty"`
 }

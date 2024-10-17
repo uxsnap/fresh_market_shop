@@ -21,6 +21,8 @@
 }
 
 .topSearch {
+  max-width: 400px;
+
   @media (max-width: $mantine-breakpoint-md) {
     display: none;
   }

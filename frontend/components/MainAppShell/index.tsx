@@ -41,11 +41,11 @@ export const MainAppShell = ({ children }: PropsWithChildren) => {
         }}
         padding="md"
       >
-        <AppShell.Header>
+        <AppShell.Header zIndex={3}>
           <Header onNavbar={handleToggle} />
         </AppShell.Header>
 
-        <AppShell.Navbar px={12} py={20}>
+        <AppShell.Navbar zIndex={1} px={12} py={20}>
           <SideMenu />
         </AppShell.Navbar>
 
