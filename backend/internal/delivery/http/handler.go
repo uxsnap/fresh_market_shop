@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	cors "github.com/go-chi/cors"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters"
 	authSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/auth"
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
@@ -50,6 +51,15 @@ func New(
 		middleware.Recoverer,
 		middleware.Timeout(60*time.Second),
 	)
+
+	h.router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
 
 	h.router.Route("/auth", authSubrouter.New(h.deps))
 	h.router.Route("/health", healthSubrouter.New(h.deps))

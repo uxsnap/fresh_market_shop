@@ -1,4 +1,5 @@
 version: "3"
+name: "fresh_market_shop"
 
 volumes:
   postgres_volume:
@@ -6,7 +7,6 @@ volumes:
 services:
   pg:
     image: postgres:14-alpine3.17
-    container_name: fresh_market_shop_pg
     environment:
       - "POSTGRES_DB=${PG_DB}"
       - "POSTGRES_USER=${PG_USER}"
@@ -16,7 +16,6 @@ services:
     volumes:
       - postgres_volume:/var/lib/postgresql/data
   migrator:
-    container_name: fresh_market_shop_migrator
     build:
       context: .
       dockerfile: migration.Dockerfile
