@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	cors "github.com/go-chi/cors"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters"
+	assetsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/assets"
 	authSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/auth"
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
 	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
@@ -67,6 +68,7 @@ func New(
 	h.router.Route("/products", productsSubrouter.New(h.deps))
 	h.router.Route("/users", usersSubrouter.New(h.deps))
 	h.router.Route("/search", searchSubrouter.New(h.deps))
+	h.router.Route("/assets", assetsSubrouter.New(h.deps))
 
 	return h
 }

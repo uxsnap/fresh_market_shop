@@ -109,6 +109,25 @@ INSERT INTO products (uid, category_uid, name, description, ccal, price, created
 ('38e27c8f-570c-4d50-bf33-a0bd03afb11e', '38e27c8f-570c-4d50-bf33-a0bd03afb13e', 'Кукурузные хлебцы', 'Лёгкий продукт без глютена.', 37, 39, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb00e', '38e27c8f-570c-4d50-bf33-a0bd03afb13e', 'Хлеб с семенами льна', 'Полезный хлеб с высоким содержанием клетчатки и омега-3.', 44, 85, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
+insert into product_photos (id, product_uid, img_path) VALUES
+('e1c22b00-e924-4c37-a639-8bccc1aab8a2', '38e27c8f-570c-4d50-bf33-a0bd03afb99e', 'assets/bread/rye_bread_1.png'),
+('4527a2db-ed25-415e-9b9f-19d316eb1a0f', '38e27c8f-570c-4d50-bf33-a0bd03afb99e', 'assets/bread/rye_bread_2.png'),
+('277308e7-0b27-4f2f-a910-b294d7708a92', '38e27c8f-570c-4d50-bf33-a0bd03afb88e', 'assets/bread/wheat_bread_1.png'),
+('a1e90029-9c8b-4042-aaaa-fe2cd1ba081d', '38e27c8f-570c-4d50-bf33-a0bd03afb88e', 'assets/bread/wheat_bread_2.png'),
+('44fe01a9-fbc6-4c52-905a-ce089f284a53', '38e27c8f-570c-4d50-bf33-a0bd03afb77e', 'assets/bread/oat_bread_1.png'),
+('db417c1d-1537-4676-8143-3f4705a3ecf1', '38e27c8f-570c-4d50-bf33-a0bd03afb77e', 'assets/bread/oat_bread_2.png'),
+('6014ec53-81e3-4fbc-9437-c591a8f0f7bb', '38e27c8f-570c-4d50-bf33-a0bd03afb66e', 'assets/bread/spelled_bread_1.png'),
+('40ff9c43-9aa1-40e1-9f3c-b5c6a5dd5cb8', '38e27c8f-570c-4d50-bf33-a0bd03afb66e', 'assets/bread/spelled_bread_2.png'),
+('7a73a017-8f4a-4432-a69c-4ad6816f2db2', '38e27c8f-570c-4d50-bf33-a0bd03afb55e', 'assets/bread/buckwheat_bread_1.png'),
+('5ffb3ffb-6ae2-4322-b90d-d98be012a773', '38e27c8f-570c-4d50-bf33-a0bd03afb44e', 'assets/bread/rice_cake_1.png'),
+('cf1107a8-872d-4518-b2cc-3c706e39eb72', '38e27c8f-570c-4d50-bf33-a0bd03afb44e', 'assets/bread/rice_cake_2.png'),
+('6135439c-2492-4d3f-92e2-2792bae3a142', '38e27c8f-570c-4d50-bf33-a0bd03afb33e', 'assets/bread/amaranth_bread_1.png'),
+('2b22b276-5abe-46f3-b8e2-742f575a81dc', '38e27c8f-570c-4d50-bf33-a0bd03afb33e', 'assets/bread/amaranth_bread_2.png'),
+('728538c9-702d-44b0-8787-fefdd83994c4', '38e27c8f-570c-4d50-bf33-a0bd03afb22e', 'assets/bread/linen_cakes_1.png'),
+('1588e609-0a2f-4ada-85ad-b4462e65fd6d', '38e27c8f-570c-4d50-bf33-a0bd03afb22e', 'assets/bread/linen_cakes_2.png'),
+('755f8d83-0077-4ffb-ba0b-6de23052a3c9', '38e27c8f-570c-4d50-bf33-a0bd03afb11e', 'assets/bread/corn_cakes_1.png'),
+('bb565e29-30f5-45a1-8a28-d7a21383e4f5', '38e27c8f-570c-4d50-bf33-a0bd03afb00e', 'assets/bread/flax_seeds_bread_1.png');
+
 -- Рыба
 INSERT INTO products (uid, category_uid, name, description, ccal, price, created_at, updated_at) VALUES
 ('38e27c8f-570c-4d50-bf33-a0bd03afb101', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 'Лосось', 'Жирная рыба, богатая омега-3 жирными кислотами.', 208, 220, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
