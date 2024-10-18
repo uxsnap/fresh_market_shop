@@ -11,7 +11,7 @@ import (
 
 func (h *AuthSubrouter) Logout(w http.ResponseWriter, r *http.Request) {
 	var req LogoutRequest
-	if err := httpUtils.EncodeRequest(r, &req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

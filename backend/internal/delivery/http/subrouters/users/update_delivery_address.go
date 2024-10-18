@@ -2,7 +2,6 @@ package usersSubrouter
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -13,7 +12,7 @@ func (h *UsersSubrouter) updateDeliveryAddress(w http.ResponseWriter, r *http.Re
 	ctx := context.Background()
 
 	var address httpEntity.DeliveryAddress
-	if err := json.NewDecoder(r.Body).Decode(&address); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &address); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}

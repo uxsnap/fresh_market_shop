@@ -13,7 +13,7 @@ import (
 // TODO: rename to getUserSSO or getAuthUser
 func (h *AuthSubrouter) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req GetUserRequest
-	if err := httpUtils.EncodeRequest(r, &req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

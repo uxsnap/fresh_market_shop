@@ -2,7 +2,6 @@ package productsSubrouter
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -13,7 +12,7 @@ func (h *ProductsSubrouter) DecrementProductCount(w http.ResponseWriter, r *http
 	ctx := context.Background()
 
 	var req httpEntity.ProductCount
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}

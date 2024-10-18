@@ -2,7 +2,6 @@ package categoriesSubrouter
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -13,7 +12,7 @@ func (h *CategoriesSubrouter) deleteCategory(w http.ResponseWriter, r *http.Requ
 	ctx := context.Background()
 
 	var category httpEntity.UUID
-	if err := json.NewDecoder(r.Body).Decode(&category); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &category); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}

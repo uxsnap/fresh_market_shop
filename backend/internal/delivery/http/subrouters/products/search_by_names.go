@@ -2,7 +2,6 @@ package productsSubrouter
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -16,7 +15,7 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 	ctx := context.Background()
 
 	var req searchProductsByNamesRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
