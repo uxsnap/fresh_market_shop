@@ -31,27 +31,33 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	page, err = strconv.ParseInt(reqPage, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqPage) != 0 {
+		page, err = strconv.ParseInt(reqPage, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 	if page == 0 {
 		page = 1
 	}
 
-	limit, err = strconv.ParseUint(reqLimit, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqLimit) != 0 {
+		limit, err = strconv.ParseUint(reqLimit, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
 	offset = uint64((page - 1) * int64(limit))
 
-	withCount, err = strconv.ParseBool(reqWithCount)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqWithCount) != 0 {
+		withCount, err = strconv.ParseBool(reqWithCount)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
 	if withCount {

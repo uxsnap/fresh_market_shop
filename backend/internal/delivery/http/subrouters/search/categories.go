@@ -29,19 +29,23 @@ func (h *SearchSubrouter) searchCategories(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	page, err = strconv.ParseUint(reqPage, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqPage) != 0 {
+		page, err = strconv.ParseUint(reqPage, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 	if page == 0 {
 		page = 1
 	}
 
-	limit, err = strconv.ParseUint(reqLimit, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqLimit) != 0 {
+		limit, err = strconv.ParseUint(reqLimit, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
 	offset = (page - 1) * limit

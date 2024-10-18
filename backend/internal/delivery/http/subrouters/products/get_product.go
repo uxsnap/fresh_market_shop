@@ -14,16 +14,24 @@ import (
 func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
+	var (
+		withCount bool
+		err error
+	)
+
 	uid, err := uuid.FromString(chi.URLParam(r, "uid"))
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
 		return
 	}
 
-	withCount, err := strconv.ParseBool(r.URL.Query().Get("with_count"))
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	reqWithCount := r.URL.Query().Get("with_count")
+	if len(reqWithCount) != 0 {
+		withCount, err = strconv.ParseBool(r.URL.Query().Get("with_count"))
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
 	product, isFound, err := h.ProductsService.GetProductByUid(ctx, uid)
