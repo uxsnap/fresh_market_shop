@@ -11,12 +11,13 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
+// TODO: сделать флаг with_photos и получение фоток из бд
 func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	var (
 		withCount bool
-		err error
+		err       error
 	)
 
 	uid, err := uuid.FromString(chi.URLParam(r, "uid"))
@@ -55,7 +56,7 @@ func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpUtils.WriteResponseJson(w, httpEntity.ProductWithCount{
+	httpUtils.WriteResponseJson(w, httpEntity.ProductWithExtra{
 		Product: httpEntity.ProductFromEntity(product),
 		Count:   count,
 	})

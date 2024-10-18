@@ -26,6 +26,7 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 		createdBefore time.Time
 		createdAfter  time.Time
 		withCounts    bool
+		withPhotos    bool
 	)
 
 	categoryUid := uuid.FromStringOrNil(r.URL.Query().Get("category_uid"))
@@ -81,6 +82,15 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 		}
 	}
 
+	reqWithPhotos := r.URL.Query().Get("with_photos")
+	if len(reqWithPhotos) != 0 {
+		withPhotos, err = strconv.ParseBool(reqWithPhotos)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+	}
+
 	reqCreatedBefore := r.URL.Query().Get("created_before")
 	if len(reqCreatedBefore) != 0 {
 		createdBefore, err = time.Parse("2006-01-02T15:04:05", reqCreatedBefore)
@@ -100,20 +110,21 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 
 	offset := uint64((page - 1) * int64(limit))
 
-	if withCounts {
-		products, err := h.ProductsService.GetProductsWithCounts(
-			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
+	if withCounts || withPhotos {
+		products, err := h.ProductsService.GetProductsWithExtra(
+			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset, withCounts, withPhotos,
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		resp := make([]httpEntity.ProductWithCount, 0, len(products))
+		resp := make([]httpEntity.ProductWithExtra, 0, len(products))
 		for _, product := range products {
-			resp = append(resp, httpEntity.ProductWithCount{
+			resp = append(resp, httpEntity.ProductWithExtra{
 				Product: httpEntity.ProductFromEntity(product.Product),
 				Count:   product.StockQuantity,
+				Photos:  httpEntity.ProductPhotosFromEntity(product.Photos),
 			})
 		}
 

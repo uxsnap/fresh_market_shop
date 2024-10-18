@@ -10,7 +10,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseProducts) GetProductsWithCounts(
+func (uc *UseCaseProducts) GetProductsWithExtra(
 	ctx context.Context,
 	categoryUid uuid.UUID,
 	ccalMin int64,
@@ -19,8 +19,10 @@ func (uc *UseCaseProducts) GetProductsWithCounts(
 	createdAfter time.Time,
 	limit uint64,
 	offset uint64,
-) ([]entity.ProductWithStockQuantity, error) {
-	log.Printf("ucProducts.GetProductsWithCounts")
+	withCounts bool,
+	withPhotos bool,
+) ([]entity.ProductWithExtra, error) {
+	log.Printf("ucProducts.GetProductsWithExtra")
 
 	if !uuid.Equal(categoryUid, uuid.UUID{}) {
 		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, categoryUid)
@@ -34,7 +36,10 @@ func (uc *UseCaseProducts) GetProductsWithCounts(
 		}
 	}
 
-	products, err := uc.productsRepository.GetProductsWithCounts(ctx, categoryUid, ccalMin, ccalMax, limit, offset, createdBefore, createdAfter)
+	products, err := uc.productsRepository.GetProductsWithExtra(
+		ctx, categoryUid, ccalMin, ccalMax, limit, offset,
+		createdBefore, createdAfter, withCounts, withPhotos,
+	)
 	if err != nil {
 		log.Printf("failed to get products: %v", err)
 		return nil, errors.WithStack(err)

@@ -18,6 +18,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		limitOnProducts    uint64
 		offsetOnProducts   uint64
 		productsWithCount  bool
+		productWithPhotos  bool
 		limitOnCategories  uint64
 		offsetOnCategories uint64
 		page               uint64
@@ -27,6 +28,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	reqLimitOnProducts := r.URL.Query().Get("limit_on_products")
 	reqLimitOnCategories := r.URL.Query().Get("limit_on_categories")
 	reqProductsWithCount := r.URL.Query().Get("products_with_count")
+	reqProductsWithPhotos := r.URL.Query().Get("products_with_photos")
 	reqPage := r.URL.Query().Get("page")
 
 	if len(reqName) == 0 {
@@ -69,6 +71,14 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		}
 	}
 
+	if len(reqProductsWithPhotos) != 0 {
+		productWithPhotos, err = strconv.ParseBool(reqProductsWithPhotos)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
+	}
+
 	offsetOnProducts = (page - 1) * limitOnProducts
 	offsetOnCategories = (page - 1) * limitOnCategories
 
@@ -85,18 +95,19 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		resp.Categories = append(resp.Categories, httpEntity.CategoryFromEntity(category))
 	}
 
-	if productsWithCount {
-		products, err := h.ProductsService.GetProductsByNameLikeWithCounts(ctx, reqName, limitOnProducts, offsetOnProducts)
+	if productsWithCount || productWithPhotos {
+		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, reqName, limitOnProducts, offsetOnProducts, productsWithCount, productWithPhotos)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		resp.ProductsWithCounts = make([]httpEntity.ProductWithCount, 0, len(products))
+		resp.ProductsWithCounts = make([]httpEntity.ProductWithExtra, 0, len(products))
 		for _, product := range products {
-			resp.ProductsWithCounts = append(resp.ProductsWithCounts, httpEntity.ProductWithCount{
+			resp.ProductsWithCounts = append(resp.ProductsWithCounts, httpEntity.ProductWithExtra{
 				Product: httpEntity.ProductFromEntity(product.Product),
 				Count:   product.StockQuantity,
+				Photos:  httpEntity.ProductPhotosFromEntity(product.Photos),
 			})
 		}
 
@@ -121,5 +132,5 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 type multipleSearchResponse struct {
 	Products           []httpEntity.Product          `json:"products,omitempty"`
 	Categories         []httpEntity.Category         `json:"categories"`
-	ProductsWithCounts []httpEntity.ProductWithCount `json:"productsWithCounts,omitempty"`
+	ProductsWithCounts []httpEntity.ProductWithExtra `json:"productsWithCounts,omitempty"`
 }

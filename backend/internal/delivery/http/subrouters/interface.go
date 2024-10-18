@@ -13,11 +13,11 @@ type ProductsService interface {
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	GetProducts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsWithCounts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsWithExtra(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsByNameLikeWithCounts(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsByNameLikeWithExtra(ctx context.Context, name string, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsLikeNamesWithLimitOnEachWithCounts(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error

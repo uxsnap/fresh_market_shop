@@ -44,9 +44,26 @@ func ProductToEntity(product Product) entity.Product {
 	}
 }
 
-type ProductWithCount struct {
-	Product Product `json:"product"`
-	Count   int64   `json:"count"`
+type ProductWithExtra struct {
+	Product Product        `json:"product"`
+	Count   int64          `json:"count,omitempty"`
+	Photos  []ProductPhoto `json:"photos,omitempty"`
+}
+
+type ProductPhoto struct {
+	Uid  uuid.UUID `json:"uid"`
+	Path string    `json:"path"`
+}
+
+func ProductPhotosFromEntity(photos []entity.ProductPhoto) []ProductPhoto {
+	res := make([]ProductPhoto, len(photos))
+	for i := 0; i < len(photos); i++ {
+		res[i] = ProductPhoto{
+			Uid:  photos[i].Uid,
+			Path: photos[i].FilePath,
+		}
+	}
+	return res
 }
 
 type CountResponse struct {

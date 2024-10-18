@@ -30,17 +30,17 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 	}
 
 	if req.WithCount {
-		products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEachWithCounts(
-			ctx, req.Names, req.LimitOnEach, req.OffsetOnEach,
+		products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEachWithExtra(
+			ctx, req.Names, req.LimitOnEach, req.OffsetOnEach, req.WithCount, false,
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		resp := make([]httpEntity.ProductWithCount, 0, len(products))
+		resp := make([]httpEntity.ProductWithExtra, 0, len(products))
 		for _, product := range products {
-			resp = append(resp, httpEntity.ProductWithCount{
+			resp = append(resp, httpEntity.ProductWithExtra{
 				Product: httpEntity.ProductFromEntity(product.Product),
 				Count:   product.StockQuantity,
 			})

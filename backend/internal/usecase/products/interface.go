@@ -22,16 +22,16 @@ type ProductsRepository interface {
 	) ([]entity.Product, error)
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsByNameLikeWithCounts(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsByNameLikeWithExtra(ctx context.Context, name string, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsLikeNamesWithLimitOnEachWithCounts(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.ProductWithStockQuantity, error)
+	GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	DeleteProduct(ctx context.Context, productUid uuid.UUID) error
 
 	CreateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error)
-	GetProductsWithCounts(
+	GetProductsWithExtra(
 		ctx context.Context,
 		categoryUid uuid.UUID,
 		ccalMin int64,
@@ -40,7 +40,9 @@ type ProductsRepository interface {
 		offset uint64,
 		createdBefore time.Time,
 		createdAfter time.Time,
-	) ([]entity.ProductWithStockQuantity, error)
+		withCounts bool,
+		withPhotos bool,
+	) ([]entity.ProductWithExtra, error)
 }
 
 type CategoriesRepository interface {

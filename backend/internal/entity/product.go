@@ -17,7 +17,14 @@ type Product struct {
 	UpdatedAt   time.Time
 }
 
-type ProductWithStockQuantity struct {
+type ProductWithExtra struct {
 	Product
 	StockQuantity int64
+	Photos        []ProductPhoto
+}
+
+type ProductPhoto struct {
+	Uid        uuid.UUID
+	ProductUid uuid.UUID
+	FilePath   string
 }
