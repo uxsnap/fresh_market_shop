@@ -33,21 +33,3 @@ func WriteResponseJson(w http.ResponseWriter, resp interface{}) {
 		return
 	}
 }
-
-func EncodeRequest(r *http.Request, dest interface{}) error {
-	if err := json.NewDecoder(r.Body).Decode(dest); err != nil {
-		log.Printf("failed to decode request: %v", err)
-		return err
-	}
-	return nil
-}
-
-func NewCookie(key string, value string) *http.Cookie {
-	return &http.Cookie{
-		Name:     key,
-		Value:    value,
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteLaxMode,
-	}
-}

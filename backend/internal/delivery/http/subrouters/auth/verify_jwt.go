@@ -10,7 +10,7 @@ import (
 // TODO: убрать этот метод отсюда, пока чисто для тестов
 func (h *AuthSubrouter) VerifyJwt(w http.ResponseWriter, r *http.Request) {
 	var req VerifyJwtRequest
-	if err := httpUtils.EncodeRequest(r, &req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

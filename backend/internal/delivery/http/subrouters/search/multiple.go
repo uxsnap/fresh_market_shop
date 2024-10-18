@@ -34,32 +34,39 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	limitOnProducts, err = strconv.ParseUint(reqLimitOnProducts, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqLimitOnProducts) != 0 {
+		limitOnProducts, err = strconv.ParseUint(reqLimitOnProducts, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
-	limitOnCategories, err = strconv.ParseUint(reqLimitOnCategories, 10, 64)
-
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqLimitOnCategories) != 0 {
+		limitOnCategories, err = strconv.ParseUint(reqLimitOnCategories, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
-	page, err = strconv.ParseUint(reqPage, 10, 64)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqPage) != 0 {
+		page, err = strconv.ParseUint(reqPage, 10, 64)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 	if page == 0 {
 		page = 1
 	}
 
-	productsWithCount, err = strconv.ParseBool(reqProductsWithCount)
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
-		return
+	if len(reqProductsWithCount) != 0 {
+		productsWithCount, err = strconv.ParseBool(reqProductsWithCount)
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			return
+		}
 	}
 
 	offsetOnProducts = (page - 1) * limitOnProducts

@@ -11,7 +11,7 @@ import (
 
 func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
-	if err := httpUtils.EncodeRequest(r, &req); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
