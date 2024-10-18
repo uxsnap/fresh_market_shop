@@ -27,7 +27,7 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	withCounts bool,
 	withPhotos bool,
 ) ([]entity.ProductWithExtra, error) {
-	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d)", limit, offset)
+	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d withCount: %s withPhotos: %s)", limit, offset, withCounts, withPhotos)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
@@ -152,6 +152,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	withPhotos bool,
 ) ([]entity.ProductWithExtra, error) {
 	log.Printf("productsRepository.GetProductsByNameLikeWithExtra (name: %s)", name)
+	log.Println(withCounts, withPhotos)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
@@ -192,6 +193,8 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 		return nil, errors.WithStack(err)
 	}
 
+	log.Printf("stmt: %s", stmt)
+
 	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {
 		log.Printf("failed to GetProductsByNameLikeWithExtra name %s: %v", name, err)
@@ -209,6 +212,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	}
 
 	for rows.Next() {
+		log.Printf("row")
 
 		if err := rows.Scan(valsForScan...); err != nil {
 			return nil, errors.WithStack(err)
@@ -232,6 +236,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 
 		res = append(res, product)
 	}
+	log.Printf("%v", res)
 
 	return res, nil
 }
