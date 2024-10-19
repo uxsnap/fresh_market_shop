@@ -10,6 +10,7 @@ export const SideMenu = () => {
   const { data, isFetching } = useQuery({
     queryKey: [getCategories.queryKey],
     queryFn: getCategories,
+    refetchOnWindowFocus: false,
   });
 
   const renderLoader = () => <SkeletLoader l={8} />;

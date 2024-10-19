@@ -69,7 +69,7 @@ func (r *ProductsRepository) GetProductsWithExtra(
 				"p.ccal": ccalMax,
 			})
 	}
-	if createdBefore.Unix() != 0 {
+	if createdBefore.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.LtOrEq{
 				"created_at": pgtype.Timestamp{
@@ -78,7 +78,7 @@ func (r *ProductsRepository) GetProductsWithExtra(
 				},
 			})
 	}
-	if createdAfter.Unix() != 0 {
+	if createdAfter.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.GtOrEq{
 				"created_at": pgtype.Timestamp{

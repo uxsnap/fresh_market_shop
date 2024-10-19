@@ -16,6 +16,7 @@ type Product struct {
 	Price       int64     `json:"price"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
+	Weight      int32     `json:"weight"`
 }
 
 func ProductFromEntity(product entity.Product) Product {
@@ -28,6 +29,7 @@ func ProductFromEntity(product entity.Product) Product {
 		Price:       product.Price,
 		CreatedAt:   product.CreatedAt,
 		UpdatedAt:   product.UpdatedAt,
+		Weight:      product.Weight,
 	}
 }
 
@@ -41,6 +43,7 @@ func ProductToEntity(product Product) entity.Product {
 		Price:       product.Price,
 		CreatedAt:   product.CreatedAt,
 		UpdatedAt:   product.UpdatedAt,
+		Weight:      product.Weight,
 	}
 }
 

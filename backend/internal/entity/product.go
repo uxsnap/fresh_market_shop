@@ -15,6 +15,7 @@ type Product struct {
 	Price       int64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Weight      int32
 }
 
 type ProductWithExtra struct {

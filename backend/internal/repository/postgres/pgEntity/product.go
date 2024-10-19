@@ -12,7 +12,7 @@ import (
 const ProductsTableName = "products"
 
 var productsTableFields = []string{
-	"uid", "category_uid", "name", "description", "ccal", "price", "created_at", "updated_at",
+	"uid", "category_uid", "weight", "name", "description", "ccal", "price", "created_at", "updated_at",
 }
 
 type ProductRow struct {
@@ -24,6 +24,7 @@ type ProductRow struct {
 	Price       int64
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
+	Weight      int32
 }
 
 func NewProductRow() *ProductRow {
@@ -43,6 +44,7 @@ func (p *ProductRow) FromEntity(product entity.Product) *ProductRow {
 	p.Description = product.Description
 	p.Ccal = product.Ccal
 	p.Price = product.Price
+	p.Weight = product.Weight
 
 	if product.CreatedAt.Unix() == 0 {
 		p.CreatedAt = pgtype.Timestamp{
@@ -78,13 +80,14 @@ func (p *ProductRow) ToEntity() entity.Product {
 		Price:       p.Price,
 		CreatedAt:   p.CreatedAt.Time,
 		UpdatedAt:   p.UpdatedAt.Time,
+		Weight:      p.Weight,
 	}
 }
 
 func (p *ProductRow) Values() []interface{} {
 	return []interface{}{
 		p.Uid, p.CategoryUid, p.Name, p.Description,
-		p.Ccal, p.Price, p.CreatedAt, p.UpdatedAt,
+		p.Ccal, p.Price, p.CreatedAt, p.UpdatedAt, p.Weight,
 	}
 }
 
@@ -98,7 +101,7 @@ func (p *ProductRow) Table() string {
 
 func (p *ProductRow) ValuesForScan() []interface{} {
 	return []interface{}{
-		&p.Uid, &p.CategoryUid, &p.Name, &p.Description,
+		&p.Uid, &p.CategoryUid, &p.Weight, &p.Name, &p.Description,
 		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt,
 	}
 }

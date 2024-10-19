@@ -11,6 +11,11 @@ export type Category = {
   updatedAt: string;
 };
 
+export type ProductsWithCategories = {
+  products: Product[];
+  categories: Category[];
+};
+
 export type Product = {
   uid: string;
   categoryUid: string;
@@ -20,9 +25,22 @@ export type Product = {
   price: number;
   createdAt: string;
   updatedAt: string;
+  weight: number;
 };
 
-export type ProductsWithCategories = {
-  products: Product[];
-  categories: Category[];
+export type Photo = {
+  uid: string;
+  path: string;
+};
+
+export type Recommendations = {
+  product: Product;
+  photos?: Photo[];
+};
+
+export type ProductItem = {
+  price: number;
+  name: string;
+  imgs: string[];
+  info: string;
 };
