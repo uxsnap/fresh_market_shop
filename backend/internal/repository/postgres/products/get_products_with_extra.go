@@ -27,7 +27,7 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	withCounts bool,
 	withPhotos bool,
 ) ([]entity.ProductWithExtra, error) {
-	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d withCount: %s withPhotos: %s)", limit, offset, withCounts, withPhotos)
+	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d )", limit, offset)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
@@ -212,7 +212,6 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	}
 
 	for rows.Next() {
-		log.Printf("row")
 
 		if err := rows.Scan(valsForScan...); err != nil {
 			return nil, errors.WithStack(err)
@@ -236,7 +235,6 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 
 		res = append(res, product)
 	}
-	log.Printf("%v", res)
 
 	return res, nil
 }
