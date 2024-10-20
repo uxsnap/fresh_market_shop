@@ -47,7 +47,7 @@ export const ItemCard = ({
   const fallbackSrc = getFallbackImg(name);
 
   return (
-    <Card p={8} miw={maw} radius="md" withBorder>
+    <Card p={8} maw={maw} radius="md" withBorder>
       <Card.Section>
         {!imgs.length ? (
           <Image

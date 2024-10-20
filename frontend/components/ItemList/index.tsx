@@ -1,6 +1,13 @@
-import { Flex, LoadingOverlay, ScrollArea, Title } from "@mantine/core";
+import {
+  Container,
+  Flex,
+  LoadingOverlay,
+  ScrollArea,
+  Title,
+} from "@mantine/core";
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
+import { PropsWithChildren } from "react";
 
 type Props = {
   title?: string;
@@ -8,6 +15,7 @@ type Props = {
   noTitle?: boolean;
   items?: ProductItem[];
   isFetching?: boolean;
+  scroll?: boolean;
 };
 
 export const ItemList = ({
@@ -16,10 +24,31 @@ export const ItemList = ({
   noTitle = false,
   items = Array.from({ length: 10 }),
   isFetching = false,
+  scroll = true,
 }: Props) => {
+  const Wrapper = ({ children }: PropsWithChildren) => {
+    if (scroll) {
+      return (
+        <ScrollArea type="never" w="100%">
+          {children}
+        </ScrollArea>
+      );
+    }
+
+    return (
+      <Container m={0} p={8}>
+        {children}
+      </Container>
+    );
+  };
+
   return (
     <Flex gap={20} mih={350} pos="relative" direction="column">
-      {!noTitle && <Title order={1}>{title}</Title>}
+      {!noTitle && (
+        <Title c="accent.0" order={1}>
+          {title}
+        </Title>
+      )}
 
       <LoadingOverlay
         visible={isFetching}
@@ -29,13 +58,13 @@ export const ItemList = ({
       />
 
       {!isFetching && (
-        <ScrollArea type="never" w="100%">
-          <Flex gap={12} align="flex-start">
+        <Wrapper>
+          <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
             {items.map((item, ind) => (
               <ItemCard {...item} type={type} key={ind} />
             ))}
           </Flex>
-        </ScrollArea>
+        </Wrapper>
       )}
     </Flex>
   );

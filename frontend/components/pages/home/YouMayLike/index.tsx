@@ -1,6 +1,7 @@
 import { getRecommendations } from "@/api/recommendations/getRecommendations";
 import { ItemList } from "@/components/ItemList";
 import { ProductItem } from "@/types";
+import { convertProductToProductItem } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 
 export const YouMayLike = () => {
@@ -8,12 +9,7 @@ export const YouMayLike = () => {
     queryKey: [getRecommendations.queryKey],
     queryFn: () => getRecommendations({ with_photos: true }),
     select(data): ProductItem[] {
-      return data.data.map((item) => ({
-        imgs: (item.photos ?? []).map((p) => `${process.env.NEXT_PUBLIC_API}/${p.path}`),
-        price: item.product.price,
-        name: item.product.name,
-        info: `${item.product.weight}грамм/${item.product.ccal}ккал`,
-      }));
+      return data.data.map(convertProductToProductItem);
     },
   });
 

@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-
+import cn from "classnames";
 import { Salad } from "../icons/Salad";
 import { Bread } from "../icons/Bread";
 import { Fish } from "../icons/Fish";
@@ -11,7 +11,7 @@ import { Milk } from "../icons/Milk";
 import { Grains } from "../icons/Grains";
 import { Bean } from "../icons/Bean";
 
-import styles from './CategoryItem.module.css'
+import styles from "./CategoryItem.module.css";
 
 const mapNameToIcon: Record<string, React.FC> = {
   "Готовая еда": Salad,
@@ -28,9 +28,11 @@ const mapNameToIcon: Record<string, React.FC> = {
 
 type Props = {
   children: string;
+  onClick: () => void;
+  active?: boolean;
 };
 
-export const CategoryItem = ({ children }: Props) => {
+export const CategoryItem = ({ children, onClick, active }: Props) => {
   const Icon = mapNameToIcon[children];
 
   return (
@@ -38,9 +40,10 @@ export const CategoryItem = ({ children }: Props) => {
       align="center"
       py={4}
       px={12}
-      className={styles.item}
+      className={cn(styles.item, active && styles.active)}
       key={children}
       gap={10}
+      onClick={onClick}
     >
       {Icon ? <Icon /> : ""}
 

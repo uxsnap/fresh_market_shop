@@ -3,7 +3,8 @@
   border-radius: 8px;
   max-height: 32px;
   
-  &:hover {
+  &:hover,
+  &.active {
     background: var(--mantine-color-primary-2);
   }
 }

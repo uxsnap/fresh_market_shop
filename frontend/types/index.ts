@@ -33,7 +33,7 @@ export type Photo = {
   path: string;
 };
 
-export type Recommendations = {
+export type ProductWithPhotos = {
   product: Product;
   photos?: Photo[];
 };
