@@ -1,13 +1,38 @@
+"use client";
+
 import { BackToCatalog } from "@/components/BackToCatalog";
+import { HugeIconText } from "@/components/HugeIconText";
+import { MainBox } from "@/components/MainBox";
 import { CartLeft } from "@/components/pages/cart/CartLeft";
-import { Container } from "@mantine/core";
+import { useCartStore } from "@/store";
+import { useEffect, useState } from "react";
 
 export default function CartPage() {
+  const items = useCartStore((s) => s.items);
+
+  const [empty, setEmpty] = useState(false);
+
+  useEffect(() => {
+    setEmpty(!Object.keys(items).length);
+  }, [items]);
+
+  const renderMain = () => <></>;
+
+  const renderEmpty = () => {
+    return (
+      <HugeIconText center type="sad">
+        В корзине нет товаров
+      </HugeIconText>
+    );
+  };
+
   return (
-    <Container pt={22} m={0} maw={1454} mx="auto">
+    <MainBox pt={22} pos="relative">
       <BackToCatalog />
 
-      <CartLeft />
-    </Container>
+      <CartLeft empty={empty} />
+
+      {!empty ? renderMain() : renderEmpty()}
+    </MainBox>
   );
 }

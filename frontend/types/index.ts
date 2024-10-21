@@ -39,12 +39,13 @@ export type ProductWithPhotos = {
 };
 
 export type ProductItem = {
+  id: string;
   price: number;
   name: string;
   imgs: string[];
   info: string;
+  weight: number;
 };
-
 
 export type CartItem = {
   product: ProductItem;

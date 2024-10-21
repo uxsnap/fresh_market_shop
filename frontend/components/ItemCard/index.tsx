@@ -1,5 +1,6 @@
+"use client";
+
 import { Card, Image, Text, Button, Container, Stack } from "@mantine/core";
-import { useCounter } from "@mantine/hooks";
 import { Counter } from "../Counter";
 import { ProductItem } from "@/types";
 import { Carousel } from "@mantine/carousel";
@@ -7,6 +8,10 @@ import { getFallbackImg } from "@/utils";
 
 type Props = ProductItem & {
   type?: "default" | "small";
+  count: number;
+  onIncrement: () => void;
+  onDecrement: () => void;
+  onAddItem: () => void;
 };
 
 const mapTypeToValues = {
@@ -38,11 +43,13 @@ export const ItemCard = ({
   name,
   imgs = [],
   info,
+  onIncrement,
+  onDecrement,
+  onAddItem,
+  count,
 }: Props) => {
   const { maw, imgH, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
     mapTypeToValues[type];
-
-  const [count, handlers] = useCounter(0, { min: 0, max: 10 });
 
   const fallbackSrc = getFallbackImg(name);
 
@@ -51,6 +58,7 @@ export const ItemCard = ({
       <Card.Section>
         {!imgs.length ? (
           <Image
+            style={{ userSelect: "none" }}
             src={""}
             fallbackSrc={fallbackSrc}
             height={imgH}
@@ -61,6 +69,7 @@ export const ItemCard = ({
             {imgs.map((img) => (
               <Carousel.Slide key={img}>
                 <Image
+                  style={{ userSelect: "none" }}
                   loading="lazy"
                   src={img}
                   height={imgH}
@@ -89,14 +98,14 @@ export const ItemCard = ({
 
       <Container fluid p={0} m={0} mt={8}>
         {count === 0 ? (
-          <Button w="100%" onClick={handlers.increment} variant="accent">
+          <Button w="100%" onClick={onAddItem} variant="accent">
             Добавить
           </Button>
         ) : (
           <Counter
             count={count}
-            onDecrement={handlers.decrement}
-            onIncrement={handlers.increment}
+            onDecrement={onDecrement}
+            onIncrement={onIncrement}
           />
         )}
       </Container>

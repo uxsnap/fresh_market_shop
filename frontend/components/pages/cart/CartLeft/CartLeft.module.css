@@ -1,3 +1,7 @@
 .root {
   max-width: 882px;
+
+  &.empty {
+    max-width: 100%;
+  }
 }

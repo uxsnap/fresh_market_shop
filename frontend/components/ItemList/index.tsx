@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Container,
   Flex,
@@ -8,6 +10,7 @@ import {
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
 import { PropsWithChildren } from "react";
+import { useCartStore } from "@/store";
 
 type Props = {
   title?: string;
@@ -26,6 +29,8 @@ export const ItemList = ({
   isFetching = false,
   scroll = true,
 }: Props) => {
+  const { incCartItem, decCartItem, addCartItem, getCount } = useCartStore();
+
   const Wrapper = ({ children }: PropsWithChildren) => {
     if (scroll) {
       return (
@@ -61,7 +66,15 @@ export const ItemList = ({
         <Wrapper>
           <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
             {items.map((item, ind) => (
-              <ItemCard {...item} type={type} key={ind} />
+              <ItemCard
+                {...item}
+                type={type}
+                key={ind}
+                onAddItem={() => addCartItem(item)}
+                onDecrement={() => decCartItem(item.id)}
+                onIncrement={() => incCartItem(item.id)}
+                count={getCount(item.id)}
+              />
             ))}
           </Flex>
         </Wrapper>

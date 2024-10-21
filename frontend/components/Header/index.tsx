@@ -1,13 +1,5 @@
-import {
-  Button,
-  Container,
-  Flex,
-  Group,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { Button, Flex, Group, Stack } from "@mantine/core";
 import { Menu } from "../icons/Menu";
-import { Glass } from "../icons/Glass";
 import { Location } from "../Location";
 import { DeliveryTime } from "../DeliveryTime";
 import { User } from "../icons/User";
