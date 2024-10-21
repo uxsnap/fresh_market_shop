@@ -17,6 +17,7 @@ export const SideMenu = () => {
     queryKey: [getCategories.queryKey],
     queryFn: getCategories,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   const active =

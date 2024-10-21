@@ -44,3 +44,9 @@ export type ProductItem = {
   imgs: string[];
   info: string;
 };
+
+
+export type CartItem = {
+  product: ProductItem;
+  count: number;
+};
