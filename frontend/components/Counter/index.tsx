@@ -22,7 +22,10 @@ export const Counter = ({ count, onDecrement, onIncrement }: Props) => (
         p={6}
         bg="bg.2"
         className={styles.button}
-        onClick={onDecrement}
+        onClick={(e) => {
+          e.stopPropagation();
+          onDecrement();
+        }}
       >
         <Minus size={16} />
       </Paper>
@@ -39,7 +42,10 @@ export const Counter = ({ count, onDecrement, onIncrement }: Props) => (
         p={6}
         bg="bg.2"
         className={styles.button}
-        onClick={onIncrement}
+        onClick={(e) => {
+          e.stopPropagation();
+          onIncrement();
+        }}
       >
         <Plus
           fill={`var(--mantine-color-${count === 10 ? "accent-2" : "accent-0"})`}

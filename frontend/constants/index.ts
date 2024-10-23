@@ -1,0 +1,1 @@
+export const CART_MAIN_HEIGHT = 432;

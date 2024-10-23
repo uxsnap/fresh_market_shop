@@ -3,8 +3,9 @@ import { ItemList } from "@/components/ItemList";
 import { ProductItem } from "@/types";
 import { convertProductToProductItem } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
+import { memo } from "react";
 
-export const YouMayLike = () => {
+export const YouMayLike = memo(() => {
   const { data, isFetching } = useQuery({
     queryKey: [getRecommendations.queryKey],
     queryFn: () => getRecommendations({ with_photos: true }),
@@ -13,5 +14,11 @@ export const YouMayLike = () => {
     },
   });
 
-  return <ItemList items={data} isFetching={isFetching} />;
-};
+  return (
+    <ItemList
+      title="Вам может понравиться"
+      items={data}
+      isFetching={isFetching}
+    />
+  );
+});

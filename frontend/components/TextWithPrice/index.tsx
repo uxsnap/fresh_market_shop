@@ -4,7 +4,7 @@ type TextType = "sm" | "md" | "lg";
 
 type Props = {
   text?: string;
-  price?: string;
+  price?: number;
   type?: TextType;
 };
 
@@ -24,7 +24,7 @@ const mapTypeToText: Record<TextType, { fz: number; fw?: number }> = {
 export const TextWithPrice = ({
   type = "md",
   text = "Какой-то текст",
-  price = "200Р",
+  price = 200,
 }: Props) => {
   const { fz, fw = 400 } = mapTypeToText[type];
 
@@ -35,7 +35,7 @@ export const TextWithPrice = ({
       </Text>
 
       <Text c="accent.0" fz={fz} fw="700">
-        {price}
+        {price}₽
       </Text>
     </Group>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { YouMayLike } from "@/components/pages/home/YouMayLike";
+import { YouMayLike } from "@/components/YouMayLike";
 import { Container } from "@mantine/core";
 
 export default function HomePage() {

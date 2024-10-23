@@ -5,13 +5,13 @@ import { Counter } from "../Counter";
 import { ProductItem } from "@/types";
 import { Carousel } from "@mantine/carousel";
 import { getFallbackImg } from "@/utils";
+import { memo, useMemo } from "react";
+import { useCartStore } from "@/store";
+import { useShallow } from "zustand/react/shallow";
 
-type Props = ProductItem & {
+type Props = {
+  item: ProductItem;
   type?: "default" | "small";
-  count: number;
-  onIncrement: () => void;
-  onDecrement: () => void;
-  onAddItem: () => void;
 };
 
 const mapTypeToValues = {
@@ -37,19 +37,35 @@ const mapTypeToValues = {
   },
 };
 
-export const ItemCard = ({
-  type = "default",
-  price,
-  name,
-  imgs = [],
-  info,
-  onIncrement,
-  onDecrement,
-  onAddItem,
-  count,
-}: Props) => {
+
+// TODO: Remove unwanted rerenders thorough memoization of the state
+const ItemCounter = ({ item }: { item: ProductItem }) => {
+  const { incCartItem, decCartItem, addCartItem, getCount } = useCartStore();
+
+  const count = getCount(item.id);
+
+  return (
+    <Container fluid p={0} m={0} mt={8}>
+      {count === 0 ? (
+        <Button w="100%" onClick={() => addCartItem(item)} variant="accent">
+          Добавить
+        </Button>
+      ) : (
+        <Counter
+          count={count}
+          onDecrement={() => decCartItem(item.id)}
+          onIncrement={() => incCartItem(item.id)}
+        />
+      )}
+    </Container>
+  );
+};
+
+export const ItemCard = memo(({ item, type = "default" }: Props) => {
   const { maw, imgH, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
     mapTypeToValues[type];
+
+  const { price, name, imgs = [], info, id } = item;
 
   const fallbackSrc = getFallbackImg(name);
 
@@ -96,19 +112,7 @@ export const ItemCard = ({
         {name}
       </Text>
 
-      <Container fluid p={0} m={0} mt={8}>
-        {count === 0 ? (
-          <Button w="100%" onClick={onAddItem} variant="accent">
-            Добавить
-          </Button>
-        ) : (
-          <Counter
-            count={count}
-            onDecrement={onDecrement}
-            onIncrement={onIncrement}
-          />
-        )}
-      </Container>
+      <ItemCounter item={item} />
     </Card>
   );
-};
+});
