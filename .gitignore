@@ -1,3 +1,5 @@
 backend/bin/
 .vscode
 backend/file_server/
+go.work
+go.work.sum

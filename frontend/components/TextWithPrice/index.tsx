@@ -1,4 +1,5 @@
 import { Group, Text } from "@mantine/core";
+import { memo } from "react";
 
 type TextType = "sm" | "md" | "lg";
 
@@ -21,22 +22,20 @@ const mapTypeToText: Record<TextType, { fz: number; fw?: number }> = {
   },
 };
 
-export const TextWithPrice = ({
-  type = "md",
-  text = "Какой-то текст",
-  price = 200,
-}: Props) => {
-  const { fz, fw = 400 } = mapTypeToText[type];
+export const TextWithPrice = memo(
+  ({ type = "md", text = "Какой-то текст", price = 200 }: Props) => {
+    const { fz, fw = 400 } = mapTypeToText[type];
 
-  return (
-    <Group justify="space-between">
-      <Text c="accent.0" fz={fz} fw={fw}>
-        {text}
-      </Text>
+    return (
+      <Group justify="space-between">
+        <Text c="accent.0" fz={fz} fw={fw}>
+          {text}
+        </Text>
 
-      <Text c="accent.0" fz={fz} fw="700">
-        {price}₽
-      </Text>
-    </Group>
-  );
-};
+        <Text c="accent.0" fz={fz} fw="700">
+          {price}₽
+        </Text>
+      </Group>
+    );
+  }
+);
