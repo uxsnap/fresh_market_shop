@@ -12,6 +12,7 @@ import (
 	authSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/auth"
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
 	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
+	ordersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/orders"
 	productsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/products"
 	recommendationsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/recommendations"
 	searchSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/search"
@@ -34,6 +35,7 @@ func New(
 	productsService subrouters.ProductsService,
 	usersService subrouters.UsersService,
 	recipesService subrouters.RecipesService,
+	ordersService subrouters.OrdersService,
 ) *Handler {
 	h := &Handler{
 		router: chi.NewRouter(),
@@ -43,6 +45,7 @@ func New(
 			ProductsService: productsService,
 			UsersService:    usersService,
 			RecipesService:  recipesService,
+			OrdersService:   ordersService,
 		},
 	}
 
@@ -71,6 +74,7 @@ func New(
 	h.router.Route("/search", searchSubrouter.New(h.deps))
 	h.router.Route("/assets", assetsSubrouter.New(h.deps))
 	h.router.Route("/recommendations", recommendationsSubrouter.New(h.deps))
+	h.router.Route("/orders", ordersSubrouter.New(h.deps))
 
 	return h
 }

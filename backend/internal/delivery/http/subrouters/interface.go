@@ -13,7 +13,7 @@ type ProductsService interface {
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	GetProducts(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64) ([]entity.Product, error)
-	GetProductsWithExtra(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
+	GetProductsWithExtra(ctx context.Context, categoryUid uuid.UUID, ccalMin int64, ccalMax int64, createdBefore time.Time, createdAfter time.Time, limit uint64, offset uint64, withCounts bool, withPhotos bool, uuids []uuid.UUID) ([]entity.ProductWithExtra, error)
 	GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error)
 	GetProductsByNameLikeWithExtra(ctx context.Context, name string, limit uint64, offset uint64, withCounts bool, withPhotos bool) ([]entity.ProductWithExtra, error)
 	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error)
@@ -73,4 +73,8 @@ type RecipesService interface {
 	) ([]entity.Recipe, error)
 	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
 	DeleteRecipe(ctx context.Context, uid uuid.UUID) error
+}
+
+type OrdersService interface {
+	CreateOrder(ctx context.Context, product entity.OrderProducts) (uuid.UUID, error)
 }

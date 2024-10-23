@@ -110,7 +110,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 
 	if withCounts || withPhotos {
 		products, err := h.ProductsService.GetProductsWithExtra(
-			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset, withCounts, withPhotos,
+			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset, withCounts, withPhotos, []uuid.UUID{},
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)

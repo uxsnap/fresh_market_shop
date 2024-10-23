@@ -36,12 +36,13 @@ type ProductsRepository interface {
 		categoryUid uuid.UUID,
 		ccalMin int64,
 		ccalMax int64,
-		limit uint64,
-		offset uint64,
 		createdBefore time.Time,
 		createdAfter time.Time,
+		limit uint64,
+		offset uint64,
 		withCounts bool,
 		withPhotos bool,
+		uuids []uuid.UUID,
 	) ([]entity.ProductWithExtra, error)
 }
 

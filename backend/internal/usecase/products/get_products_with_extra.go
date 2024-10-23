@@ -21,6 +21,7 @@ func (uc *UseCaseProducts) GetProductsWithExtra(
 	offset uint64,
 	withCounts bool,
 	withPhotos bool,
+	uuids []uuid.UUID,
 ) ([]entity.ProductWithExtra, error) {
 	log.Printf("ucProducts.GetProductsWithExtra")
 
@@ -37,8 +38,8 @@ func (uc *UseCaseProducts) GetProductsWithExtra(
 	}
 
 	products, err := uc.productsRepository.GetProductsWithExtra(
-		ctx, categoryUid, ccalMin, ccalMax, limit, offset,
-		createdBefore, createdAfter, withCounts, withPhotos,
+		ctx, categoryUid, ccalMin, ccalMax,
+		createdBefore, createdAfter, limit, offset, withCounts, withPhotos, uuids,
 	)
 	if err != nil {
 		log.Printf("failed to get products: %v", err)

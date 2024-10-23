@@ -11,9 +11,11 @@ import (
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
+	repositoryOrders "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/orders"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
 	repositoryRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/recipes"
 	repositoryUsers "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/users"
+	ucOrders "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/orders"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
 	ucRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/recipes"
 	ucUsers "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/users"
@@ -31,10 +33,12 @@ type serviceProvider struct {
 	categoriesRepository *repositoryCategories.CategoriesRepository
 	usersRepository      *repositoryUsers.UsersRepository
 	recipesRepository    *repositoryRecipes.RecipesRepository
+	ordersRepository     *repositoryOrders.OrdersRepository
 
 	ucProducts *ucProducts.UseCaseProducts
 	ucUsers    *ucUsers.UseCaseUsers
 	ucRecipes  *ucRecipes.UseCaseRecipes
+	ucOrders   *ucOrders.UseCaseOrders
 
 	txManager *transaction.Manager
 
@@ -123,6 +127,13 @@ func (sp *serviceProvider) RecipesRepository(ctx context.Context) *repositoryRec
 	return sp.recipesRepository
 }
 
+func (sp *serviceProvider) OrdersRepository(ctx context.Context) *repositoryOrders.OrdersRepository {
+	if sp.ordersRepository == nil {
+		sp.ordersRepository = repositoryOrders.New(sp.PgClient(ctx))
+	}
+	return sp.ordersRepository
+}
+
 func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
@@ -148,6 +159,13 @@ func (sp *serviceProvider) RecipesService(ctx context.Context) *ucRecipes.UseCas
 	return sp.ucRecipes
 }
 
+func (sp *serviceProvider) OrdersService(ctx context.Context) *ucOrders.UseCaseOrders {
+	if sp.ucOrders == nil {
+		sp.ucOrders = ucOrders.New(sp.OrdersRepository(ctx), sp.ProductsRepository(ctx), sp.TxManager(ctx))
+	}
+	return sp.ucOrders
+}
+
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {
 	if sp.handlerHTTP == nil {
 		sp.handlerHTTP = deliveryHttp.New(
@@ -156,6 +174,7 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 			sp.ProductsService(ctx),
 			sp.UsersService(ctx),
 			sp.RecipesService(ctx),
+			sp.OrdersService(ctx),
 		)
 	}
 	return sp.handlerHTTP

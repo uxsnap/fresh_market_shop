@@ -20,12 +20,13 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	categoryUid uuid.UUID,
 	ccalMin int64,
 	ccalMax int64,
-	limit uint64,
-	offset uint64,
 	createdBefore time.Time,
 	createdAfter time.Time,
+	limit uint64,
+	offset uint64,
 	withCounts bool,
 	withPhotos bool,
+	uuids []uuid.UUID,
 ) ([]entity.ProductWithExtra, error) {
 	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d )", limit, offset)
 
@@ -85,6 +86,13 @@ func (r *ProductsRepository) GetProductsWithExtra(
 					Time:   createdAfter,
 					Status: pgtype.Present,
 				},
+			})
+	}
+
+	if len(uuids) > 0 {
+		sql = sql.Where(
+			squirrel.Eq{
+				"p.uid": uuids,
 			})
 	}
 

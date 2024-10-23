@@ -45,7 +45,7 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 	}
 
 	products, err := h.ProductsService.GetProductsWithExtra(
-		ctx, categoryUid, 0, 0, time.Time{}, time.Time{}, limit, 0, false, withPhotos,
+		ctx, categoryUid, 0, 0, time.Time{}, time.Time{}, limit, 0, false, withPhotos, []uuid.UUID{},
 	)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
