@@ -3,7 +3,6 @@ package useCaseOrders
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -13,30 +12,20 @@ import (
 func (s *UseCaseOrders) CreateOrder(ctx context.Context, orderProducts entity.OrderProducts) (uuid.UUID, error) {
 	log.Printf("ucOrders.CreateOrder")
 
-	uuids := []uuid.UUID{}
+	uuids := make([]uuid.UUID, len(orderProducts.Products))
 
-	for _, u := range orderProducts.Products {
-		uuids = append(uuids, u.Uid)
+	for ind, v := range orderProducts.Products {
+		uuids[ind] = v.Uid
 	}
 
-	products, err := s.productsRepository.GetProductsWithExtra(
-		ctx, uuid.Nil, 0, 0, time.Time{}, time.Time{}, 0, 0, true, false, uuids,
-	)
-
-	if err != nil {
-		log.Printf("failed to fetch products for order: %v", err)
-		return uuid.UUID{}, err
-	}
-
-	if err := validateOrderCreation(orderProducts, products); err != nil {
-		log.Printf("failed to create order: %v", err)
-		return uuid.UUID{}, err
+	if err := s.productsRepository.CheckIfAllItemsExist(ctx, uuids); err != nil {
+		log.Printf("failed to validate order creation: %v", err)
+		return uuid.UUID{}, errors.WithStack(err)
 	}
 
 	order := entity.Order{
-		Sum:       orderProducts.Sum,
-		Uid:       uuid.NewV4(),
-		CreatedAt: time.Now().UTC(),
+		Sum: orderProducts.Sum,
+		Uid: uuid.NewV4(),
 	}
 
 	if err := s.ordersRepository.CreateOrder(ctx, order); err != nil {

@@ -1,6 +1,8 @@
 package pgEntity
 
 import (
+	"time"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
@@ -10,7 +12,7 @@ import (
 const OrdersTableName = "orders"
 
 var ordersTableFields = []string{
-	"uid", "name", "num", "created_at", "updated_at",
+	"uid", "num", "sum", "created_at", "updated_at",
 }
 
 type OrderRow struct {
@@ -30,11 +32,12 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 		Bytes:  order.Uid,
 		Status: pgtype.Present,
 	}
-	p.Num = order.Num
+
 	p.Sum = order.Sum
 
 	if order.CreatedAt.Unix() <= 0 {
 		p.CreatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
 			Status: pgtype.Null,
 		}
 	} else {
@@ -46,6 +49,7 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 
 	if order.UpdatedAt.Unix() <= 0 {
 		p.UpdatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
 			Status: pgtype.Null,
 		}
 	} else {
@@ -54,6 +58,7 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 			Status: pgtype.Present,
 		}
 	}
+
 	return p, nil
 }
 
@@ -69,7 +74,7 @@ func (p *OrderRow) ToEntity() entity.Order {
 
 func (p *OrderRow) Values() []interface{} {
 	return []interface{}{
-		p.Uid, p.Num, p.Sum, p.CreatedAt, p.UpdatedAt,
+		p.Uid, p.Num, p.Sum, p.CreatedAt.Time, p.UpdatedAt.Time,
 	}
 }
 
@@ -93,7 +98,7 @@ func (p *OrderRow) Scan(row pgx.Row) error {
 
 func (p *OrderRow) ColumnsForUpdate() []string {
 	return []string{
-		"name", "num", "updated_at",
+		"sum", "updated_at",
 	}
 }
 

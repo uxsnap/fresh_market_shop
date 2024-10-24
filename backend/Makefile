@@ -43,6 +43,6 @@ local-migration-down:
 start:
 	nodemon --watch './internal/**/*.go' --signal SIGTERM --exec 'go' run ./cmd/main.go
 
-.PHONY: migration-down
-migration-down: 
+.PHONY: migration-restart
+migration-restart: 
 	docker-compose down && docker image rm fresh_market_shop-migrator && docker-compose up -d
