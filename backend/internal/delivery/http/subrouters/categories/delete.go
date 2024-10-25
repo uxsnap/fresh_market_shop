@@ -13,12 +13,12 @@ func (h *CategoriesSubrouter) deleteCategory(w http.ResponseWriter, r *http.Requ
 
 	var category httpEntity.UUID
 	if err := httpUtils.DecodeJsonRequest(r, &category); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.ProductsService.DeleteCategory(ctx, category.Uid); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

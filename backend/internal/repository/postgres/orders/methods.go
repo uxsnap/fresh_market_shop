@@ -5,19 +5,19 @@ import (
 	"log"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/pkg/errors"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
-func (r *OrdersRepository) CreateOrder(ctx context.Context, order entity.Order) error {
+func (r *OrdersRepository) CreateOrder(ctx context.Context, order entity.Order) *errorWrapper.Error {
 	log.Printf("productsRepository.CreateProduct (uid: %s)", order.Uid)
 
 	p, err := pgEntity.NewOrderRow().FromEntity(order)
 
 	if err != nil {
 		log.Printf("failed to create order entity %s: %v", order.Uid, err)
-		return errors.WithStack(err)
+		return errorWrapper.NewError(errorWrapper.OrderCreateError, "не удалось создать заказ")
 	}
 
 	stmt, args, err := squirrel.
@@ -28,10 +28,14 @@ func (r *OrdersRepository) CreateOrder(ctx context.Context, order entity.Order) 
 
 	if err != nil {
 		log.Printf("failed to create order %s: %v", order.Uid, err)
-		return err
+		return errorWrapper.NewError(errorWrapper.OrderCreateError, "не удалось создать заказ")
 	}
 
 	_, err = r.DB().Exec(ctx, stmt, args...)
 
-	return err
+	if err != nil {
+		return errorWrapper.NewError(errorWrapper.OrderCreateError, "не удалось создать заказ")
+	}
+
+	return nil
 }

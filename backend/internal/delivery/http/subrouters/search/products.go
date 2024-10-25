@@ -2,7 +2,6 @@ package searchSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -29,14 +28,14 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 	reqLimit := r.URL.Query().Get("limit")
 
 	if len(reqName) == 0 {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errors.New("empty name"))
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if len(reqPage) != 0 {
 		page, err = strconv.ParseInt(reqPage, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -47,7 +46,7 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 	if len(reqLimit) != 0 {
 		limit, err = strconv.ParseUint(reqLimit, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -57,7 +56,7 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 	if len(reqWithCount) != 0 {
 		withCount, err = strconv.ParseBool(reqWithCount)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -65,7 +64,7 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 	if len(reqWithPhotos) != 0 {
 		withPhotos, err = strconv.ParseBool(reqWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -73,7 +72,7 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 	if withCount || withPhotos {
 		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, reqName, limit, offset, withCount, withPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
@@ -92,7 +91,7 @@ func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request)
 
 	products, err := h.ProductsService.GetProductsByNameLike(ctx, reqName, limit, offset)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

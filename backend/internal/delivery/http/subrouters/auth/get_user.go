@@ -8,6 +8,7 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 // TODO: rename to getUserSSO or getAuthUser
@@ -21,7 +22,9 @@ func (h *AuthSubrouter) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	accessCookie, err := r.Cookie(accessJwtCookieName)
 	if err != nil {
 		log.Printf("failed to get access token from request: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, err)
+		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось получить access_token",
+		))
 		return
 	}
 
@@ -30,7 +33,9 @@ func (h *AuthSubrouter) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	user, err := h.AuthService.GetAuthUser(ctx, accessCookie.Value, req.Uid, req.Email)
 	if err != nil {
 		log.Printf("failed to get user: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось получить пользователя",
+		))
 		return
 	}
 

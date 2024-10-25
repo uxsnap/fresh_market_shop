@@ -13,12 +13,12 @@ func (h *UsersSubrouter) updateUser(w http.ResponseWriter, r *http.Request) {
 
 	var user httpEntity.User
 	if err := httpUtils.DecodeJsonRequest(r, &user); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.UsersService.UpdateUser(ctx, httpEntity.UserToEntity(user)); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

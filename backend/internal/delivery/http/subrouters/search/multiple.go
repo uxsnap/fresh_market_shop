@@ -2,7 +2,6 @@ package searchSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -32,14 +31,14 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	reqPage := r.URL.Query().Get("page")
 
 	if len(reqName) == 0 {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errors.New("empty name"))
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if len(reqLimitOnProducts) != 0 {
 		limitOnProducts, err = strconv.ParseUint(reqLimitOnProducts, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -47,7 +46,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	if len(reqLimitOnCategories) != 0 {
 		limitOnCategories, err = strconv.ParseUint(reqLimitOnCategories, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -55,7 +54,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	if len(reqPage) != 0 {
 		page, err = strconv.ParseUint(reqPage, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -66,7 +65,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	if len(reqProductsWithCount) != 0 {
 		productsWithCount, err = strconv.ParseBool(reqProductsWithCount)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -74,7 +73,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	if len(reqProductsWithPhotos) != 0 {
 		productWithPhotos, err = strconv.ParseBool(reqProductsWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -86,7 +85,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 
 	categories, err := h.ProductsService.GetCategoriesByNameLike(ctx, reqName, limitOnCategories, offsetOnCategories)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
@@ -98,7 +97,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 	if productsWithCount || productWithPhotos {
 		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, reqName, limitOnProducts, offsetOnProducts, productsWithCount, productWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
@@ -117,7 +116,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 
 	products, err := h.ProductsService.GetProductsByNameLike(ctx, reqName, limitOnProducts, offsetOnProducts)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

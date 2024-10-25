@@ -30,7 +30,7 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 	if reqLimit != "" {
 		limit, err = strconv.ParseUint(reqLimit, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -39,7 +39,7 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 	if len(reqWithPhotos) != 0 {
 		withPhotos, err = strconv.ParseBool(reqWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -48,7 +48,7 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 		ctx, categoryUid, 0, 0, time.Time{}, time.Time{}, limit, 0, false, withPhotos, []uuid.UUID{},
 	)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

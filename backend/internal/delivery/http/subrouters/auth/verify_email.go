@@ -16,7 +16,7 @@ func (h *AuthSubrouter) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.AuthService.VerifyEmail(ctx, token); err != nil {
 		log.Printf("failed to verify email: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

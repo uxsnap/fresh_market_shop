@@ -20,7 +20,7 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 	uid, err := h.AuthService.Register(ctx, req.Email, req.Password)
 	if err != nil {
 		log.Printf("failed to register user: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

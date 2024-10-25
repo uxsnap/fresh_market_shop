@@ -2,7 +2,6 @@ package searchSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strconv"
 
@@ -25,14 +24,14 @@ func (h *SearchSubrouter) searchCategories(w http.ResponseWriter, r *http.Reques
 	reqLimit := r.URL.Query().Get("limit")
 
 	if len(reqName) == 0 {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errors.New("empty name"))
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if len(reqPage) != 0 {
 		page, err = strconv.ParseUint(reqPage, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -43,7 +42,7 @@ func (h *SearchSubrouter) searchCategories(w http.ResponseWriter, r *http.Reques
 	if len(reqLimit) != 0 {
 		limit, err = strconv.ParseUint(reqLimit, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -52,7 +51,7 @@ func (h *SearchSubrouter) searchCategories(w http.ResponseWriter, r *http.Reques
 
 	categories, err := h.ProductsService.GetCategoriesByNameLike(ctx, reqName, limit, offset)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

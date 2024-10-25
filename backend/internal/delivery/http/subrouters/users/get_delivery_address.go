@@ -2,7 +2,6 @@ package usersSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -16,7 +15,7 @@ func (h *UsersSubrouter) getDeliveryAddress(w http.ResponseWriter, r *http.Reque
 
 	uid, err := uuid.FromString(chi.URLParam(r, "address_uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
@@ -24,11 +23,11 @@ func (h *UsersSubrouter) getDeliveryAddress(w http.ResponseWriter, r *http.Reque
 
 	address, isFound, err := h.UsersService.GetDeliveryAddress(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	if !isFound {
-		httpUtils.WriteErrorResponse(w, http.StatusNotFound, errors.New("address not found"))
+		httpUtils.WriteErrorResponse(w, http.StatusNotFound, nil)
 		return
 	}
 

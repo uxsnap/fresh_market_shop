@@ -2,7 +2,6 @@ package usersSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -16,17 +15,17 @@ func (h *UsersSubrouter) getUser(w http.ResponseWriter, r *http.Request) {
 
 	uid, err := uuid.FromString(chi.URLParam(r, "user_uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	user, isFound, err := h.UsersService.GetUser(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	if !isFound {
-		httpUtils.WriteErrorResponse(w, http.StatusNotFound, errors.New("user not found"))
+		httpUtils.WriteErrorResponse(w, http.StatusNotFound, nil)
 		return
 	}
 

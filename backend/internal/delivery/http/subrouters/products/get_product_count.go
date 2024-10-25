@@ -15,13 +15,13 @@ func (h *ProductsSubrouter) GetProductCount(w http.ResponseWriter, r *http.Reque
 
 	uid, err := uuid.FromString(chi.URLParam(r, "uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	count, _, err := h.ProductsService.GetProductCount(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

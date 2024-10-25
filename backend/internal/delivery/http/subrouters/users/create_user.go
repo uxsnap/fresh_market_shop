@@ -13,13 +13,13 @@ func (h *UsersSubrouter) createUser(w http.ResponseWriter, r *http.Request) {
 
 	var user httpEntity.User
 	if err := httpUtils.DecodeJsonRequest(r, &user); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	uid, err := h.UsersService.CreateUser(ctx, httpEntity.UserToEntity(user))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

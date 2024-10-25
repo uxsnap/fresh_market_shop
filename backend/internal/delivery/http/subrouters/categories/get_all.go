@@ -12,7 +12,7 @@ func (h *CategoriesSubrouter) getAllCategories(w http.ResponseWriter, r *http.Re
 	ctx := context.Background()
 	categories, err := h.ProductsService.GetAllCategories(ctx)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

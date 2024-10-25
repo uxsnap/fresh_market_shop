@@ -20,7 +20,7 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 	accessCookie, err := r.Cookie(accessJwtCookieName)
 	if err != nil {
 		log.Printf("failed to get access token from request: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, err)
+		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
@@ -29,7 +29,7 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie.Value, req.Uid, req.Email, req.Password)
 	if err != nil {
 		log.Printf("failed to update user %s: %v", req.Uid, err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

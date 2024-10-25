@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi"
 	uuid "github.com/satori/go.uuid"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 func (h *ProductsSubrouter) DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -14,12 +15,16 @@ func (h *ProductsSubrouter) DeleteProduct(w http.ResponseWriter, r *http.Request
 
 	productUid, err := uuid.FromString(chi.URLParam(r, "uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
+		))
 		return
 	}
 
 	if err := h.ProductsService.DeleteProduct(ctx, productUid); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
+		))
 		return
 	}
 

@@ -15,13 +15,13 @@ func (h *CategoriesSubrouter) getCategoryByUid(w http.ResponseWriter, r *http.Re
 
 	categoryUid, err := uuid.FromString(chi.URLParam(r, "uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	category, err := h.ProductsService.GetCategoryByUid(ctx, categoryUid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

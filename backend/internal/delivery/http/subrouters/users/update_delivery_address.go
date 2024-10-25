@@ -13,12 +13,12 @@ func (h *UsersSubrouter) updateDeliveryAddress(w http.ResponseWriter, r *http.Re
 
 	var address httpEntity.DeliveryAddress
 	if err := httpUtils.DecodeJsonRequest(r, &address); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.UsersService.UpdateDeliveryAddress(ctx, httpEntity.DeliveryAddressToEntity(address)); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

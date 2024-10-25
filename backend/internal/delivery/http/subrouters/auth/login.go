@@ -17,7 +17,7 @@ func (h *AuthSubrouter) Login(w http.ResponseWriter, r *http.Request) {
 
 	accessJwt, refreshJwt, err := h.AuthService.Login(ctx, req.Email, req.Password)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

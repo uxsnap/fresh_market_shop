@@ -22,7 +22,7 @@ func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	uid, err := uuid.FromString(chi.URLParam(r, "uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
@@ -30,18 +30,18 @@ func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 	if len(reqWithCount) != 0 {
 		withCount, err = strconv.ParseBool(r.URL.Query().Get("with_count"))
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
 
 	product, isFound, err := h.ProductsService.GetProductByUid(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	if !isFound {
-		httpUtils.WriteErrorResponse(w, http.StatusNotFound, err)
+		httpUtils.WriteErrorResponse(w, http.StatusNotFound, nil)
 		return
 	}
 
@@ -52,7 +52,7 @@ func (h *ProductsSubrouter) GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	count, _, err := h.ProductsService.GetProductCount(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

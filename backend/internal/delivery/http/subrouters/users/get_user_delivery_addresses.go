@@ -15,13 +15,13 @@ func (h *UsersSubrouter) getUserDeliveryAddresses(w http.ResponseWriter, r *http
 
 	uid, err := uuid.FromString(chi.URLParam(r, "user_uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	addresses, err := h.UsersService.GetUserDeliveryAddresses(ctx, uid)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

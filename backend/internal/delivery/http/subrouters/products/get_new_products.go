@@ -32,7 +32,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqPage) != 0 {
 		page, err = strconv.ParseInt(reqPage, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -44,7 +44,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqLimit) != 0 {
 		limit, err = strconv.ParseUint(reqLimit, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -56,7 +56,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqCcalMin) != 0 {
 		ccalMin, err = strconv.ParseInt(reqCcalMin, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -65,7 +65,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqCcalMax) != 0 {
 		ccalMax, err = strconv.ParseInt(reqCcalMax, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -74,7 +74,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqWithCounts) != 0 {
 		withCounts, err = strconv.ParseBool(reqWithCounts)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -83,7 +83,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqWithPhotos) != 0 {
 		withPhotos, err = strconv.ParseBool(reqWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -92,7 +92,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 	if len(reqCreatedAfter) != 0 {
 		createdAfter, err = time.Parse("2006-01-02T15:04:05", reqCreatedAfter)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	} else {
@@ -107,7 +107,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 			ctx, categoryUid, ccalMin, ccalMax, time.Time{}, createdAfter, limit, offset, withCounts, withPhotos, []uuid.UUID{},
 		)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
@@ -128,7 +128,7 @@ func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Reques
 		ctx, categoryUid, ccalMin, ccalMax, time.Time{}, createdAfter, limit, offset,
 	)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	resp := make([]httpEntity.Product, 0, len(products))

@@ -6,6 +6,7 @@ import (
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
@@ -13,7 +14,9 @@ func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	var order httpEntity.OrderProducts
 	if err := httpUtils.DecodeJsonRequest(r, &order); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
+		))
 		return
 	}
 

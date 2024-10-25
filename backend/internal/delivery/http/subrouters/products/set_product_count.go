@@ -13,12 +13,12 @@ func (h *ProductsSubrouter) SetProductCount(w http.ResponseWriter, r *http.Reque
 
 	var req httpEntity.ProductCount
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.ProductsService.UpdateProductCount(ctx, req.ProductUid, req.Count); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

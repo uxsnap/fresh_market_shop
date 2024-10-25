@@ -17,7 +17,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 
 	categoryUid, err := uuid.FromString(chi.URLParam(r, "category_uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqPage) != 0 {
 		page, err = strconv.ParseInt(reqPage, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -48,7 +48,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqLimit) != 0 {
 		limit, err = strconv.ParseUint(reqLimit, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -57,7 +57,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqCcalMin) != 0 {
 		ccalMin, err = strconv.ParseInt(reqCcalMin, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -66,7 +66,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqCcalMax) != 0 {
 		ccalMax, err = strconv.ParseInt(reqCcalMax, 10, 64)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -75,7 +75,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqCreatedBefore) != 0 {
 		createdBefore, err = time.Parse("2006-01-02T15:04:05", reqCreatedBefore)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -83,7 +83,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqCreatedAfter) != 0 {
 		createdAfter, err = time.Parse("2006-01-02T15:04:05", reqCreatedAfter)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -92,7 +92,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqWithCounts) != 0 {
 		withCounts, err = strconv.ParseBool(reqWithCounts)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -101,7 +101,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 	if len(reqWithPhotos) != 0 {
 		withPhotos, err = strconv.ParseBool(reqWithPhotos)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 			return
 		}
 	}
@@ -113,7 +113,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 			ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset, withCounts, withPhotos, []uuid.UUID{},
 		)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
@@ -134,7 +134,7 @@ func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http
 		ctx, categoryUid, ccalMin, ccalMax, createdBefore, createdAfter, limit, offset,
 	)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 	resp := make([]httpEntity.Product, 0, len(products))

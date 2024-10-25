@@ -6,6 +6,7 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 type ProductsService interface {
@@ -76,5 +77,5 @@ type RecipesService interface {
 }
 
 type OrdersService interface {
-	CreateOrder(ctx context.Context, product entity.OrderProducts) (uuid.UUID, error)
+	CreateOrder(ctx context.Context, product entity.OrderProducts) (uuid.UUID, *errorWrapper.Error)
 }

@@ -13,12 +13,12 @@ func (h *CategoriesSubrouter) updateCategory(w http.ResponseWriter, r *http.Requ
 
 	var category httpEntity.Category
 	if err := httpUtils.DecodeJsonRequest(r, &category); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.ProductsService.UpdateCategory(ctx, httpEntity.CategoryToEntity(category)); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 	}
 
 	w.WriteHeader(http.StatusOK)

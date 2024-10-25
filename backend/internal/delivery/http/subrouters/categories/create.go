@@ -13,13 +13,13 @@ func (h *CategoriesSubrouter) createCategory(w http.ResponseWriter, r *http.Requ
 
 	var category httpEntity.Category
 	if err := httpUtils.DecodeJsonRequest(r, &category); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	uid, err := h.ProductsService.CreateCategory(ctx, httpEntity.CategoryToEntity(category))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 	}
 
 	httpUtils.WriteResponseJson(w, httpEntity.UUID{

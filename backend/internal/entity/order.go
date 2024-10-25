@@ -21,5 +21,4 @@ type OrderProduct struct {
 
 type OrderProducts struct {
 	Products []OrderProduct
-	Sum      int64
 }

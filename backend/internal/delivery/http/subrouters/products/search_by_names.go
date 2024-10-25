@@ -2,7 +2,6 @@ package productsSubrouter
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -16,12 +15,12 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 
 	var req searchProductsByNamesRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if len(req.Names) == 0 {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errors.New("empty names"))
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
@@ -34,7 +33,7 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 			ctx, req.Names, req.LimitOnEach, req.OffsetOnEach, req.WithCount, false,
 		)
 		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
@@ -52,7 +51,7 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 
 	products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEach(ctx, req.Names, req.LimitOnEach, req.OffsetOnEach)
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

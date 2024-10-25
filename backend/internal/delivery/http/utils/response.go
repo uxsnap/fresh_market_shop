@@ -4,15 +4,21 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 type ErrorResponse struct {
-	Error string `json:"error"`
+	Error errorWrapper.Error `json:"error"`
 }
 
-func WriteErrorResponse(w http.ResponseWriter, status int, err error) {
+func WriteErrorResponse(w http.ResponseWriter, status int, err *errorWrapper.Error) {
+	if err == nil {
+		err = errorWrapper.NewError(errorWrapper.InternalError, "ошибка")
+	}
+
 	w.WriteHeader(status)
-	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: err.Error()})
+	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: *err})
 	if encodeErr != nil {
 		log.Printf("failed to encode error response")
 		w.Write([]byte(encodeErr.Error()))
@@ -29,7 +35,10 @@ func WriteResponseJson(w http.ResponseWriter, resp interface{}) {
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		log.Printf("failed to encode response: %v", err)
-		WriteErrorResponse(w, http.StatusInternalServerError, err)
+
+		wrappedError := errorWrapper.NewError(errorWrapper.JsonParsingError, "не удалось распарсить тело ответа")
+
+		WriteErrorResponse(w, http.StatusInternalServerError, wrappedError)
 		return
 	}
 }

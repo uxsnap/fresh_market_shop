@@ -18,15 +18,14 @@ type OrderProducts struct {
 func OrderProductsToEntity(order OrderProducts) entity.OrderProducts {
 	products := make([]entity.OrderProduct, len(order.Products))
 
-	for _, p := range order.Products {
-		products = append(products, entity.OrderProduct{
+	for ind, p := range order.Products {
+		products[ind] = entity.OrderProduct{
 			Uid:   p.Uid,
 			Count: p.Count,
-		})
+		}
 	}
 
 	return entity.OrderProducts{
 		Products: products,
-		Sum:      order.Sum,
 	}
 }

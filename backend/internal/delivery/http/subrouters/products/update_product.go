@@ -13,12 +13,12 @@ func (h *ProductsSubrouter) UpdateProduct(w http.ResponseWriter, r *http.Request
 
 	var product httpEntity.Product
 	if err := httpUtils.DecodeJsonRequest(r, &product); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	if err := h.ProductsService.UpdateProduct(ctx, httpEntity.ProductToEntity(product)); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 

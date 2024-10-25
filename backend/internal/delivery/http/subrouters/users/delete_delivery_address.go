@@ -14,14 +14,14 @@ func (h *UsersSubrouter) deleteDeliveryAddress(w http.ResponseWriter, r *http.Re
 
 	uid, err := uuid.FromString(chi.URLParam(r, "address_uid"))
 	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, err)
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
 	//TODO: проверять что вызывает тот юзер чей юзер uid записан в адресе
 
 	if err := h.UsersService.DeleteDeliveryAddress(ctx, uid); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
