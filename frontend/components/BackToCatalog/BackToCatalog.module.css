@@ -1,0 +1,11 @@
+.root {
+  text-decoration: none;
+
+  .title {
+    font-size: 22px;
+
+    @media (max-width: $mantine-breakpoint-md) {
+      font-size: 18px;
+    }
+  }
+}

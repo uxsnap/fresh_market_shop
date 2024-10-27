@@ -1,0 +1,8 @@
+.root {
+  max-height: 38px;
+  
+  @media (max-width: $mantine-breakpoint-md) {
+    max-height: 32px;
+    font-size: 12px;
+  }
+}

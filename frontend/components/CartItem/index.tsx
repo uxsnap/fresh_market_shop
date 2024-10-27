@@ -46,7 +46,7 @@ export const CartItem = memo(({ item }: Props) => {
             loading="lazy"
             src={imgs[0]}
             height={80}
-            width={80}
+            w={80}
             alt={name}
             fit="contain"
             fallbackSrc={fallbackSrc}
@@ -54,7 +54,7 @@ export const CartItem = memo(({ item }: Props) => {
           />
 
           <Stack gap={8}>
-            <Title order={3} c="accent.0">
+            <Title textWrap="balance" order={3} c="accent.0">
               {name}
             </Title>
 

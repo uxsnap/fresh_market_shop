@@ -13,7 +13,6 @@ import { memo, PropsWithChildren } from "react";
 
 type Props = {
   title?: string;
-  type?: "default" | "small";
   noTitle?: boolean;
   items?: ProductItem[];
   isFetching?: boolean;
@@ -41,14 +40,13 @@ const Wrapper = ({
 
 export const ItemList = memo(
   ({
-    type = "default",
     title = "Вы уже заказывали",
     noTitle = false,
     items = Array.from({ length: 10 }),
     isFetching = false,
     scroll = true,
   }: Props) => (
-    <Flex gap={20} mih={350} pos="relative" direction="column">
+    <Flex gap={20} pos="relative" direction="column">
       {!noTitle && (
         <Title c="accent.0" order={1}>
           {title}
@@ -66,7 +64,7 @@ export const ItemList = memo(
         <Wrapper scroll={scroll}>
           <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
             {items.map((item, ind) => (
-              <ItemCard item={item} type={type} key={ind} />
+              <ItemCard item={item} key={ind} />
             ))}
           </Flex>
         </Wrapper>

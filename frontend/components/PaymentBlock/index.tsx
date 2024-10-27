@@ -20,7 +20,7 @@ export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props
   }, [price]);
 
   return (
-    <Stack miw="100%" gap={0}>
+    <Stack visibleFrom="md" miw="100%" gap={0}>
       <Title order={2} c="accent.0">
         Итого
       </Title>

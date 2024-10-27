@@ -2,6 +2,11 @@
   width: 100%;
   max-width: 882px;
 
+  @media (max-width: $mantine-breakpoint-md) {
+    max-width: 100%;
+    min-width: 100%;
+  }
+
   &.empty {
     max-width: 100%;
   }

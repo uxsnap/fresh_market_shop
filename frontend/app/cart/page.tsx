@@ -10,6 +10,9 @@ import { useCartStore } from "@/store";
 import { Box, Group } from "@mantine/core";
 import { useEffect, useState } from "react";
 
+import styles from "./cart.module.css";
+import { PayButton } from "@/components/pages/cart/PayButton";
+
 // TODO: Figure out right height proportions (CART_MAIN_HEIGHT)
 export default function CartPage() {
   const items = useCartStore((s) => s.items);
@@ -31,32 +34,38 @@ export default function CartPage() {
   };
 
   return (
-    <Box pt={22} px={8} mx="auto" maw={1520}>
-      <BackToCatalog />
+    <>
+      <Box className={styles.root}>
+        <BackToCatalog empty={empty} />
 
-      <Box mih={CART_MAIN_HEIGHT} pos="relative">
-        <Group
-          wrap="nowrap"
-          gap={60}
-          align="flex-start"
-          justify="space-between"
-        >
-          <CartMain empty={empty} />
+        <Box mih={CART_MAIN_HEIGHT} pos="relative">
+          <Group
+            className={styles.group}
+            wrap="nowrap"
+            align="flex-start"
+            justify="space-between"
+            w="100%"
+          >
+            <CartMain empty={empty} />
+            {!empty && (
+              <Box className={styles.paymentBlock} w="100%">
+                <PaymentBlock
+                  buttonText="Оформить заказ"
+                  onClick={() => console.log("ordered")}
+                />
+              </Box>
+            )}
+          </Group>
 
-          <Box w="100%" maw={362}>
-            <PaymentBlock
-              text="Оформить заказ"
-              onClick={() => console.log("ordered")}
-            />
-          </Box>
-        </Group>
+          {renderEmpty()}
+        </Box>
 
-        {renderEmpty()}
+        <Box mt={20}>
+          <YouMayLike />
+        </Box>
       </Box>
 
-      <Box mt={20}>
-        <YouMayLike />
-      </Box>
-    </Box>
+      <PayButton />
+    </>
   );
 }

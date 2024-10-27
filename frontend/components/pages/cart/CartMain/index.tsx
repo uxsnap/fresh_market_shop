@@ -1,12 +1,12 @@
 "use client";
 
 import cn from "classnames";
-import { Button, Container, Group, Title } from "@mantine/core";
+import { Box, Container, Group, Title } from "@mantine/core";
 
 import styles from "./CartMain.module.css";
-import { Trash } from "@/components/icons/Trash";
 import { CartList } from "@/components/CartList";
 import { useCartStore } from "@/store";
+import { RemoveAll } from "../RemoveAll";
 
 type Props = {
   empty?: boolean;
@@ -14,7 +14,6 @@ type Props = {
 
 export const CartMain = ({ empty = true }: Props) => {
   const storeItems = useCartStore((state) => state.items);
-  const removeAllItems = useCartStore((state) => state.removeAllItems);
 
   const items = Object.values(storeItems).map((item) => item);
 
@@ -30,16 +29,7 @@ export const CartMain = ({ empty = true }: Props) => {
           Корзина
         </Title>
 
-        {!empty && (
-          <Button
-            mih={38}
-            variant="accent-reverse"
-            leftSection={<Trash fill="var(--mantine-color-accent-0)" />}
-            onClick={removeAllItems}
-          >
-            Очистить корзину
-          </Button>
-        )}
+        <Box visibleFrom="md">{!empty && <RemoveAll />}</Box>
       </Group>
 
       {!empty && <CartList items={items} />}

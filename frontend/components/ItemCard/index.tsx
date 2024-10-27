@@ -1,20 +1,26 @@
 "use client";
 
-import { Card, Image, Text, Button, Container, Stack } from "@mantine/core";
+import {
+  Card,
+  Image,
+  Text,
+  Button,
+  Container,
+  Stack,
+  useMatches,
+} from "@mantine/core";
 import { Counter } from "../Counter";
 import { ProductItem } from "@/types";
 import { Carousel } from "@mantine/carousel";
 import { getFallbackImg } from "@/utils";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import { useCartStore } from "@/store";
-import { useShallow } from "zustand/react/shallow";
 
 type Props = {
   item: ProductItem;
-  type?: "default" | "small";
 };
 
-const mapTypeToValues = {
+const mapTypeToValues: Record<string, any> = {
   default: {
     maw: 200,
     imgH: 176,
@@ -36,7 +42,6 @@ const mapTypeToValues = {
     nameLh: 14,
   },
 };
-
 
 // TODO: Remove unwanted rerenders thorough memoization of the state
 const ItemCounter = ({ item }: { item: ProductItem }) => {
@@ -61,11 +66,16 @@ const ItemCounter = ({ item }: { item: ProductItem }) => {
   );
 };
 
-export const ItemCard = memo(({ item, type = "default" }: Props) => {
+export const ItemCard = memo(({ item }: Props) => {
+  const type = useMatches({
+    base: "small",
+    md: "default",
+  });
+
   const { maw, imgH, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
     mapTypeToValues[type];
 
-  const { price, name, imgs = [], info, id } = item;
+  const { price, name, imgs = [], info } = item;
 
   const fallbackSrc = getFallbackImg(name);
 
@@ -79,6 +89,7 @@ export const ItemCard = memo(({ item, type = "default" }: Props) => {
             fallbackSrc={fallbackSrc}
             height={imgH}
             alt="Norway"
+            w="100%"
           />
         ) : (
           <Carousel withControls={false}>
@@ -92,6 +103,7 @@ export const ItemCard = memo(({ item, type = "default" }: Props) => {
                   alt="Norway"
                   fit="contain"
                   fallbackSrc={fallbackSrc}
+                  w="100%"
                 />
               </Carousel.Slide>
             ))}
@@ -100,15 +112,28 @@ export const ItemCard = memo(({ item, type = "default" }: Props) => {
       </Card.Section>
 
       <Stack mt={8} gap={4}>
-        <Text lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
+        <Text w="90px" lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
           {price} Руб.
         </Text>
-        <Text lh={`${infoLh}px`} fw={500} fz={infoFz} c="accent.2">
+        <Text
+          truncate="end"
+          lh={`${infoLh}px`}
+          fw={500}
+          fz={infoFz}
+          c="accent.2"
+        >
           {info}
         </Text>
       </Stack>
 
-      <Text lh={`${nameLh}px`} fw={500} fz={nameFz} mt={8} c="accent.0">
+      <Text
+        truncate="end"
+        lh={`${nameLh}px`}
+        fw={500}
+        fz={nameFz}
+        mt={8}
+        c="accent.0"
+      >
         {name}
       </Text>
 

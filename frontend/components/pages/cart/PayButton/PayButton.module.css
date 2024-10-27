@@ -1,0 +1,10 @@
+.root {
+  border-top: 1px solid var(--mantine-color-accent-2);
+  background: var(--mantine-color-bg-2);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 80px;
+  padding: 20px;
+}
