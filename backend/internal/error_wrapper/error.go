@@ -5,6 +5,7 @@ const (
 	JsonParsingError      = "json_parsing_error"
 	OrderCreateValidation = "order_create_validation"
 	OrderCreateError      = "order_create_error"
+	ProductCountError     = "product_count_error"
 )
 
 type Error struct {

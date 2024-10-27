@@ -29,3 +29,12 @@ type ProductPhoto struct {
 	ProductUid uuid.UUID
 	FilePath   string
 }
+
+type ProductCount struct {
+	ProductUid uuid.UUID
+	Count      int64
+}
+
+type ProductsCounts struct {
+	Products []ProductCount
+}

@@ -9,16 +9,13 @@ import (
 type Order struct {
 	Uid       uuid.UUID
 	Num       int64
-	Sum       int64
+	Status    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-type OrderProduct struct {
-	Uid   uuid.UUID
-	Count int64
-}
-
 type OrderProducts struct {
-	Products []OrderProduct
+	OrderUid   uuid.UUID
+	ProductUid uuid.UUID
+	Count      int64
 }

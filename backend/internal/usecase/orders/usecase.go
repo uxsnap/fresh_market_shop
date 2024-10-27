@@ -5,20 +5,23 @@ import (
 )
 
 type UseCaseOrders struct {
-	ordersRepository   OrdersRepository
-	productsRepository ProductsRepository
+	ordersRepository        OrdersRepository
+	orderProductsRepository OrderProductsRepository
+	productsCountRepository ProductsCountRepository
 
 	txManager *transaction.Manager
 }
 
 func New(
 	ordersRepository OrdersRepository,
-	productsRepository ProductsRepository,
+	orderProductsRepository OrderProductsRepository,
+	productsCountRepository ProductsCountRepository,
 	txManager *transaction.Manager,
 ) *UseCaseOrders {
 	return &UseCaseOrders{
-		ordersRepository:   ordersRepository,
-		productsRepository: productsRepository,
-		txManager:          txManager,
+		ordersRepository:        ordersRepository,
+		orderProductsRepository: orderProductsRepository,
+		productsCountRepository: productsCountRepository,
+		txManager:               txManager,
 	}
 }

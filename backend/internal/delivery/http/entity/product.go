@@ -74,6 +74,25 @@ type CountResponse struct {
 }
 
 type ProductCount struct {
-	ProductUid uuid.UUID `json:"productUid"`
+	ProductUid uuid.UUID `json:"product_uid"`
 	Count      int64     `json:"count"`
+}
+
+type ProductsCounts struct {
+	Products []ProductCount `json:"products"`
+}
+
+func ProductsCountsToEntity(order ProductsCounts) entity.ProductsCounts {
+	products := make([]entity.ProductCount, len(order.Products))
+
+	for ind, p := range order.Products {
+		products[ind] = entity.ProductCount{
+			ProductUid: p.ProductUid,
+			Count:      p.Count,
+		}
+	}
+
+	return entity.ProductsCounts{
+		Products: products,
+	}
 }

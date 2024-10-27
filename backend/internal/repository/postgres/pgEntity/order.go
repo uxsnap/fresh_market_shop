@@ -12,13 +12,13 @@ import (
 const OrdersTableName = "orders"
 
 var ordersTableFields = []string{
-	"uid", "num", "sum", "created_at", "updated_at",
+	"uid", "num", "status", "created_at", "updated_at",
 }
 
 type OrderRow struct {
 	Uid       pgtype.UUID
 	Num       int64
-	Sum       int64
+	Status    string
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }
@@ -33,7 +33,7 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 		Status: pgtype.Present,
 	}
 
-	p.Sum = order.Sum
+	p.Status = order.Status
 
 	if order.CreatedAt.Unix() <= 0 {
 		p.CreatedAt = pgtype.Timestamp{
@@ -66,7 +66,7 @@ func (p *OrderRow) ToEntity() entity.Order {
 	return entity.Order{
 		Uid:       p.Uid.Bytes,
 		Num:       p.Num,
-		Sum:       p.Sum,
+		Status:    p.Status,
 		CreatedAt: p.CreatedAt.Time,
 		UpdatedAt: p.UpdatedAt.Time,
 	}
@@ -74,7 +74,7 @@ func (p *OrderRow) ToEntity() entity.Order {
 
 func (p *OrderRow) Values() []interface{} {
 	return []interface{}{
-		p.Uid, p.Num, p.Sum, p.CreatedAt.Time, p.UpdatedAt.Time,
+		p.Uid, p.Num, p.Status, p.CreatedAt.Time, p.UpdatedAt.Time,
 	}
 }
 
@@ -88,7 +88,7 @@ func (p *OrderRow) Table() string {
 
 func (p *OrderRow) ValuesForScan() []interface{} {
 	return []interface{}{
-		&p.Uid, &p.Num, &p.Sum, &p.CreatedAt, &p.UpdatedAt,
+		&p.Uid, &p.Num, &p.Status, &p.CreatedAt, &p.UpdatedAt,
 	}
 }
 
@@ -104,7 +104,7 @@ func (p *OrderRow) ColumnsForUpdate() []string {
 
 func (p *OrderRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
-		p.Num, p.Sum, p.UpdatedAt,
+		p.Num, p.Status, p.UpdatedAt,
 	}
 }
 

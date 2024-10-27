@@ -12,7 +12,7 @@ import (
 func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	var order httpEntity.OrderProducts
+	var order httpEntity.ProductsCounts
 	if err := httpUtils.DecodeJsonRequest(r, &order); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
 			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
@@ -20,7 +20,8 @@ func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uid, err := h.OrdersService.CreateOrder(ctx, httpEntity.OrderProductsToEntity(order))
+	uid, err := h.OrdersService.CreateOrder(ctx, httpEntity.ProductsCountsToEntity(order))
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return

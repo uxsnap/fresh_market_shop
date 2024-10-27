@@ -77,5 +77,5 @@ type RecipesService interface {
 }
 
 type OrdersService interface {
-	CreateOrder(ctx context.Context, product entity.OrderProducts) (uuid.UUID, *errorWrapper.Error)
+	CreateOrder(ctx context.Context, productsCounts entity.ProductsCounts) (uuid.UUID, *errorWrapper.Error)
 }

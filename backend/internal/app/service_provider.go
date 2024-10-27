@@ -11,8 +11,10 @@ import (
 	deliveryHttp "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/manager/transaction"
 	repositoryCategories "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/categories"
+	repositoryOrderProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/order_products"
 	repositoryOrders "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/orders"
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
+	repositoryProductsCount "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products_count"
 	repositoryRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/recipes"
 	repositoryUsers "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/users"
 	ucOrders "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/orders"
@@ -29,11 +31,13 @@ type serviceProvider struct {
 	pgClient   DBclient.ClientDB
 	authClient *clientAuthService.AuthClient
 
-	productsRepository   *repositoryProducts.ProductsRepository
-	categoriesRepository *repositoryCategories.CategoriesRepository
-	usersRepository      *repositoryUsers.UsersRepository
-	recipesRepository    *repositoryRecipes.RecipesRepository
-	ordersRepository     *repositoryOrders.OrdersRepository
+	productsRepository      *repositoryProducts.ProductsRepository
+	categoriesRepository    *repositoryCategories.CategoriesRepository
+	usersRepository         *repositoryUsers.UsersRepository
+	recipesRepository       *repositoryRecipes.RecipesRepository
+	ordersRepository        *repositoryOrders.OrdersRepository
+	productsCountRepository *repositoryProductsCount.ProductsCountRepository
+	orderProductsRepository *repositoryOrderProducts.OrderProductsRepository
 
 	ucProducts *ucProducts.UseCaseProducts
 	ucUsers    *ucUsers.UseCaseUsers
@@ -134,6 +138,20 @@ func (sp *serviceProvider) OrdersRepository(ctx context.Context) *repositoryOrde
 	return sp.ordersRepository
 }
 
+func (sp *serviceProvider) ProductsCountRepository(ctx context.Context) *repositoryProductsCount.ProductsCountRepository {
+	if sp.productsCountRepository == nil {
+		sp.productsCountRepository = repositoryProductsCount.New(sp.PgClient(ctx))
+	}
+	return sp.productsCountRepository
+}
+
+func (sp *serviceProvider) OrderProductsRepository(ctx context.Context) *repositoryOrderProducts.OrderProductsRepository {
+	if sp.orderProductsRepository == nil {
+		sp.orderProductsRepository = repositoryOrderProducts.New(sp.PgClient(ctx))
+	}
+	return sp.orderProductsRepository
+}
+
 func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
@@ -161,7 +179,12 @@ func (sp *serviceProvider) RecipesService(ctx context.Context) *ucRecipes.UseCas
 
 func (sp *serviceProvider) OrdersService(ctx context.Context) *ucOrders.UseCaseOrders {
 	if sp.ucOrders == nil {
-		sp.ucOrders = ucOrders.New(sp.OrdersRepository(ctx), sp.ProductsRepository(ctx), sp.TxManager(ctx))
+		sp.ucOrders = ucOrders.New(
+			sp.OrdersRepository(ctx),
+			sp.OrderProductsRepository(ctx),
+			sp.ProductsCountRepository(ctx),
+			sp.TxManager(ctx),
+		)
 	}
 	return sp.ucOrders
 }

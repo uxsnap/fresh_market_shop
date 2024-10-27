@@ -31,7 +31,7 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d )", limit, offset)
 
 	productRow := pgEntity.NewProductRow()
-	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
+	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
 	sqlSelectPart := withPrefix("p", productRow.Columns())
@@ -163,7 +163,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	log.Println(withCounts, withPhotos)
 
 	productRow := pgEntity.NewProductRow()
-	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
+	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
 	sqlSelectPart := withPrefix("p", productRow.Columns())
@@ -262,7 +262,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 	}
 
 	productRow := pgEntity.NewProductRow()
-	productsCountRow := pgEntity.NewProductsCountRow(uuid.UUID{}, 0)
+	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
 	sqlSelectPart := fmt.Sprintf("SELECT %s", strings.Join(withPrefix("p", productRow.Columns()), ","))

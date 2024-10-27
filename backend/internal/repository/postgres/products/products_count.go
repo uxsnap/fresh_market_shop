@@ -13,7 +13,7 @@ import (
 func (r *ProductsRepository) CreateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error {
 	log.Printf("productsRepository.CreateProductCount (product uid: %s, count: %d)", productUid, count)
 
-	if err := r.Create(ctx, pgEntity.NewProductsCountRow(productUid, count)); err != nil {
+	if err := r.Create(ctx, pgEntity.NewProductCountRow(productUid, count)); err != nil {
 		log.Printf("failed to create product count: %v", err)
 		return errors.WithStack(err)
 	}
@@ -22,7 +22,7 @@ func (r *ProductsRepository) CreateProductCount(ctx context.Context, productUid 
 
 func (r *ProductsRepository) UpdateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error {
 	log.Printf("productsRepository.UpdateProductCount (product uid: %s, count: %d)", productUid, count)
-	productCountRow := pgEntity.NewProductsCountRow(productUid, count)
+	productCountRow := pgEntity.NewProductCountRow(productUid, count)
 
 	if err := r.Update(ctx, productCountRow, productCountRow.ConditionProductUidEqual()); err != nil {
 		log.Printf("failed to update product count: %v", err)
@@ -34,7 +34,7 @@ func (r *ProductsRepository) UpdateProductCount(ctx context.Context, productUid 
 func (r *ProductsRepository) GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error) {
 	log.Printf("productsRepository.GetProductCount (product uid: %s)", productUid)
 
-	productCountRow := pgEntity.NewProductsCountRow(productUid, 0)
+	productCountRow := pgEntity.NewProductCountRow(productUid, 0)
 
 	if err := r.GetOne(ctx, productCountRow, productCountRow.ConditionProductUidEqual()); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

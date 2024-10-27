@@ -13,11 +13,14 @@ type ErrorResponse struct {
 }
 
 func WriteErrorResponse(w http.ResponseWriter, status int, err *errorWrapper.Error) {
+	SetContentTypeApplicationJson(w)
+
 	if err == nil {
 		err = errorWrapper.NewError(errorWrapper.InternalError, "ошибка")
 	}
 
 	w.WriteHeader(status)
+
 	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: *err})
 	if encodeErr != nil {
 		log.Printf("failed to encode error response")
