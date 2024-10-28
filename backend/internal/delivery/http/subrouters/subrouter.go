@@ -6,4 +6,5 @@ type SubrouterDeps struct {
 	UsersService    UsersService
 	RecipesService  RecipesService
 	OrdersService   OrdersService
+	Middleware      *Middleware
 }

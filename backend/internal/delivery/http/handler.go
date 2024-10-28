@@ -37,6 +37,8 @@ func New(
 	recipesService subrouters.RecipesService,
 	ordersService subrouters.OrdersService,
 ) *Handler {
+	subroutersMiddleware := subrouters.NewMiddleware(authService)
+
 	h := &Handler{
 		router: chi.NewRouter(),
 		config: cfg,
@@ -46,6 +48,7 @@ func New(
 			UsersService:    usersService,
 			RecipesService:  recipesService,
 			OrdersService:   ordersService,
+			Middleware:      subroutersMiddleware,
 		},
 	}
 
