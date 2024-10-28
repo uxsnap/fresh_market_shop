@@ -5,6 +5,7 @@ import {
   DEFAULT_THEME,
   defaultVariantColorsResolver,
   Input,
+  PasswordInput,
   RangeSlider,
   rem,
   Slider,
@@ -123,10 +124,31 @@ export const theme = createTheme({
         }
       },
     }),
+
     Input: Input.extend({
       classNames: {
         wrapper: classes.inputWrapper,
         input: classes.input,
+      },
+    }),
+
+    PasswordInput: Input.extend({
+      classNames: {
+        input: classes.passInput,
+      },
+      vars: (_, props) => {
+        switch (props.size) {
+          case "md":
+            return {
+              wrapper: {
+                "--input-height": rem(38),
+                "--input-padding-x": rem(8),
+                "--input-fz": rem(12),
+              },
+            };
+          default:
+            return { wrapper: {} };
+        }
       },
     }),
 

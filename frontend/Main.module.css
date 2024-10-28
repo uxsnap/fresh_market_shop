@@ -1,7 +1,7 @@
 .label {
   color: var(--mantine-color-accent-0);
   font-weight: 400;
-  font-size: 10px;
+  font-size: 12px;
   margin-bottom: 4px;
 }
 
@@ -22,12 +22,17 @@
     border: 1px solid var(--mantine-color-primary-0);
   }
 
-  &::placeholder {
+  input::placeholder {
     color: var(--mantine-color-accent-2);
+    font-size: 12px;
   }
 
   &[data-error="true"] {
     border-color: var(--mantine-color-danger-0);
+
+    &::placeholder {
+      color: var(--mantine-color-danger-2);
+    }
   }
 }
 
