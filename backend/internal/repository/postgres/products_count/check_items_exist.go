@@ -2,6 +2,7 @@ package repositoryProductsCount
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/Masterminds/squirrel"
@@ -29,6 +30,8 @@ func (r *ProductsCountRepository) CheckIfAllItemsExist(ctx context.Context, prod
 		log.Printf("failed to get product counts %v", err)
 		return errorWrapper.NewError(errorWrapper.ProductCountError, "ошибка получения полей количества продуктов")
 	}
+
+	fmt.Println(productCountRows, productsCounts.Products)
 
 	if len(productCountRows.GetRows()) != len(productsCounts.Products) {
 		log.Printf("items does not match")
