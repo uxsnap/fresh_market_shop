@@ -51,3 +51,8 @@ export type CartItem = {
   product: ProductItem;
   count: number;
 };
+
+export type MakeOrderItem = {
+  product_uid: string;
+  count: number;
+};

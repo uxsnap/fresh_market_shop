@@ -1,4 +1,4 @@
-import { Button, Flex, Group, Stack } from "@mantine/core";
+import { Button, Group, Stack } from "@mantine/core";
 import { Menu } from "../icons/Menu";
 import { Location } from "../Location";
 import { DeliveryTime } from "../DeliveryTime";
@@ -13,9 +13,24 @@ type Props = {
 
 export const Header = ({ onNavbar }: Props) => (
   <Stack justify="center" className={styles.root}>
-    <Flex mx="auto" align="center" justify="space-between" w="100%" maw={1520}>
+    <Group
+      gap={16}
+      mx="auto"
+      align="center"
+      justify="space-between"
+      w="100%"
+      wrap="nowrap"
+      maw={1520}
+    >
       <Group w="100%" wrap="nowrap">
-        <Button onClick={onNavbar} h={38} miw={38} maw={38} px={8} variant="secondary">
+        <Button
+          onClick={onNavbar}
+          h={38}
+          miw={38}
+          maw={38}
+          px={8}
+          variant="secondary"
+        >
           <Menu size={24} />
         </Button>
 
@@ -39,7 +54,7 @@ export const Header = ({ onNavbar }: Props) => (
           <User />
         </Button>
       </Group>
-    </Flex>
+    </Group>
 
     <Search maw="100%" className={styles.bottomSearch} />
   </Stack>

@@ -2,6 +2,7 @@ package ordersSubrouter
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -19,6 +20,8 @@ func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		))
 		return
 	}
+
+	fmt.Println(order)
 
 	uid, err := h.OrdersService.CreateOrder(ctx, httpEntity.ProductsCountsToEntity(order))
 

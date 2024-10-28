@@ -15,11 +15,12 @@ export const RemoveAll = () => {
 
   return (
     <Button
-      className={styles.root}
+      classNames={{ root: styles.root, section: styles.section }}
       variant="accent-reverse"
       leftSection={<Trash size={20} fill="var(--mantine-color-accent-0)" />}
       onClick={handleRemoveAll}
     >
+    
       Очистить корзину
     </Button>
   );

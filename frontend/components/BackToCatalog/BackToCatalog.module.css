@@ -7,5 +7,10 @@
     @media (max-width: $mantine-breakpoint-md) {
       font-size: 18px;
     }
+
+
+    @media (max-width: $mantine-breakpoint-xs) {
+      font-size: 14px;
+    }
   }
 }

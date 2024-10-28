@@ -10,9 +10,9 @@ type Props = {
 };
 
 export const BackToCatalog = ({ empty = true }: Props) => (
-  <Group justify="space-between">
+  <Group wrap="nowrap" justify="space-between">
     <Link className={styles.root} href={"/"}>
-      <Group gap={8}>
+      <Group align="center" gap={8}>
         <ArrowLeft fill="var(--mantine-color-accent-0)" />
         <Title className={styles.title} c="accent.0">
           Вернуться обратно к каталогу

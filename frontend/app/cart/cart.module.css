@@ -5,6 +5,7 @@
   max-width: 1520px;
 
   @media (max-width: $mantine-breakpoint-md) {
+    padding: 0;
     padding-bottom: 80px;
   }
 }

@@ -1,0 +1,24 @@
+.counter {
+  max-width: 167px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    max-width: 100%;
+
+    .icon {
+      display: none;
+    }
+  }
+}
+
+.mobileIcon {
+  @media (min-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}
+
+
+.mainGroup {
+  @media (max-width: $mantine-breakpoint-sm) {
+    width: 100%;
+  }
+}
