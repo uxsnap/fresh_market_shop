@@ -56,3 +56,5 @@ export type MakeOrderItem = {
   product_uid: string;
   count: number;
 };
+
+export type AuthType = "login" | "reg" | "forgotPass" | "passRet";

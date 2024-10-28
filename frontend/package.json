@@ -22,6 +22,7 @@
     "@mantine/carousel": "^7.13.3",
     "@mantine/core": "^7.13.3",
     "@mantine/dates": "^7.13.3",
+    "@mantine/form": "^7.13.4",
     "@mantine/hooks": "^7.13.3",
     "@next/bundle-analyzer": "^14.2.7",
     "@pbe/react-yandex-maps": "^1.2.5",
