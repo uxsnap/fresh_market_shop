@@ -2,6 +2,7 @@ package repositoryRecipes
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
@@ -86,9 +87,20 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	log.Printf("recipesRepository.GetRecipes: cookingTime %d createdAfter %s", cookingTime, createdAfter.String())
 
 	row := pgEntity.NewRecipeRow()
-	sql := sq.Select(row.Columns()...).
-		From(row.Table()).
-		PlaceholderFormat(sq.Dollar)
+	columns := []string{}
+
+	for _, col := range row.Columns() {
+		columns = append(columns, fmt.Sprintf("r.%v", col))
+	}
+
+	columns = append(columns, "0 as \"notate:recipe_products\"", "recipe_products.*")
+	columns = append(columns, "0 as \"notate:recipe_steps\"", "recipe_steps.*")
+
+	sql := sq.Select(columns...).
+		From(row.Table() + " r").
+		PlaceholderFormat(sq.Dollar).
+		Join("recipe_products rp on rp.recipe_uid = r.uid").
+		Join("recipe_steps rs on rs.recipe_uid = r.uid")
 
 	if cookingTime != 0 {
 		sql = sql.Where(sq.LtOrEq{
@@ -104,15 +116,18 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	if limit != 0 {
 		sql = sql.Limit(limit)
 	}
+
 	if offset != 0 {
 		sql = sql.Offset(offset)
 	}
 
 	stmt, args, err := sql.ToSql()
 	if err != nil {
-		log.Printf("failed to get recipes: %v", err)
+		log.Printf("failed to get recipes query: %v", err)
 		return nil, errors.WithStack(err)
 	}
+
+	fmt.Println(stmt)
 
 	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {
@@ -121,6 +136,7 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	}
 
 	recipeRows := pgEntity.NewRecipesRows()
+
 	if err := recipeRows.ScanAll(rows); err != nil {
 		log.Printf("failed to get recipes: %v", err)
 		return nil, errors.WithStack(err)

@@ -13,12 +13,12 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	rs := RecipesSubrouter{deps}
 
 	return func(r chi.Router) {
-		r.Post("", rs.CreateRecipe)
-		r.Put("", rs.UpdateRecipe)
+		r.Post("/", rs.CreateRecipe)
+		r.Put("/", rs.UpdateRecipe)
 		r.Delete("/{recipe_uid}", rs.DeleteRecipe)
 
 		r.Get("/{recipe_uid}", rs.GetRecipeByUid)
-		r.Get("", rs.GetRecipes)
+		r.Get("/", rs.GetRecipes)
 	}
 
 }

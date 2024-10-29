@@ -14,6 +14,7 @@ import (
 	healthSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/health"
 	ordersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/orders"
 	productsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/products"
+	recipesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/recipes"
 	recommendationsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/recommendations"
 	searchSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/search"
 	usersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/users"
@@ -78,6 +79,7 @@ func New(
 	h.router.Route("/assets", assetsSubrouter.New(h.deps))
 	h.router.Route("/recommendations", recommendationsSubrouter.New(h.deps))
 	h.router.Route("/orders", ordersSubrouter.New(h.deps))
+	h.router.Route("/recipes", recipesSubrouter.New(h.deps))
 
 	return h
 }

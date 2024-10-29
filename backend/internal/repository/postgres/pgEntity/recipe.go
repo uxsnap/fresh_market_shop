@@ -1,8 +1,6 @@
 package pgEntity
 
 import (
-	"encoding/json"
-	"log"
 	"strings"
 
 	sq "github.com/Masterminds/squirrel"
@@ -13,20 +11,23 @@ import (
 
 const recipesTableName = "recipes"
 
+type RecipeStepRow struct {
+	RecipeUid   pgtype.UUID
+	Step        int64
+	Description string
+	ImgPath     string
+}
+
 type RecipeRow struct {
 	Uid         pgtype.UUID
 	Name        string
 	Description string
 	CookingTime int64
-	Products    pgtype.JSON
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
-}
-
-type recipeProduct struct {
-	Name     string  `json:"name"`
-	Quantity float64 `json:"quantity"`
-	Measure  string  `json:"measure"`
+	Products    []ProductRow
+	Steps       []RecipeStepRow
+	ImgPath     string
 }
 
 func NewRecipeRow() *RecipeRow {
@@ -38,21 +39,23 @@ func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 	rr.Name = recipe.Name
 	rr.Description = recipe.Description
 	rr.CookingTime = recipe.CookingTime
+	rr.ImgPath = recipe.ImgPath
 
-	if len(recipe.Products) == 0 {
-		rr.Products = pgtype.JSON{
-			Status: pgtype.Null,
-		}
-	} else {
-		productsBts, err := json.Marshal(recipe.Products)
-		if err != nil {
-			log.Printf("failed to marshal recipe products")
-			return nil, err
-		}
+	rr.Products = make([]ProductRow, len(recipe.Products))
+	rr.Steps = make([]RecipeStepRow, len(recipe.Steps))
 
-		rr.Products = pgtype.JSON{
-			Bytes:  productsBts,
-			Status: pgtype.Present,
+	for productInd, product := range recipe.Products {
+		rr.Products[productInd] = *NewProductRow().FromEntity(product)
+	}
+
+	for stepInd, step := range recipe.Steps {
+		rr.Steps[stepInd] = RecipeStepRow{
+			RecipeUid: pgtype.UUID{
+				Status: pgtype.Present,
+				Bytes:  step.RecipeUid,
+			},
+			Step:        step.Step,
+			Description: step.Description,
 		}
 	}
 
@@ -60,6 +63,7 @@ func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 		Time:   recipe.CreatedAt,
 		Status: pgStatusFromTime(recipe.CreatedAt),
 	}
+
 	rr.UpdatedAt = pgtype.Timestamp{
 		Time:   recipe.UpdatedAt,
 		Status: pgStatusFromTime(recipe.UpdatedAt),
@@ -75,33 +79,31 @@ func (rr *RecipeRow) ToEntity() (entity.Recipe, error) {
 		CookingTime: rr.CookingTime,
 		CreatedAt:   rr.CreatedAt.Time,
 		UpdatedAt:   rr.UpdatedAt.Time,
+		ImgPath:     rr.ImgPath,
+		Products:    make([]entity.Product, len(rr.Products)),
+		Steps:       make([]entity.RecipeSteps, len(rr.Steps)),
 	}
 
-	if rr.Products.Status == pgtype.Present {
-		var products []recipeProduct
-		if err := json.Unmarshal(rr.Products.Bytes, &products); err != nil {
-			log.Printf("failed to unmarshal recipe products")
-			return entity.Recipe{}, err
-		}
+	for productInd, product := range rr.Products {
+		r.Products[productInd] = product.ToEntity()
+	}
 
-		r.Products = make([]entity.RecipeProduct, len(products))
-		for i := 0; i < len(products); i++ {
-			r.Products[i] = entity.RecipeProduct{
-				Name:     products[i].Name,
-				Quantity: products[i].Quantity,
-				Measure:  products[i].Measure,
-			}
+	for stepInd, step := range rr.Steps {
+		r.Steps[stepInd] = entity.RecipeSteps{
+			RecipeUid:   step.RecipeUid.Bytes,
+			Step:        step.Step,
+			Description: step.Description,
 		}
 	}
 
 	return r, nil
 }
 
-var recipesTableColumns = []string{"uid", "name", "description", "cooking_time", "products", "created_at", "updated_at"}
+var recipesTableColumns = []string{"uid", "name", "description", "created_at", "updated_at", "img_path"}
 
 func (rr *RecipeRow) Values() []interface{} {
 	return []interface{}{
-		rr.Uid, rr.Name, rr.Description, rr.CookingTime, rr.Products, rr.CreatedAt, rr.UpdatedAt,
+		rr.Uid, rr.Name, rr.Description, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.ImgPath, rr.Products, rr.Steps,
 	}
 }
 
@@ -114,16 +116,16 @@ func (rr *RecipeRow) Table() string {
 }
 
 func (rr *RecipeRow) Scan(row pgx.Row) error {
-	return row.Scan(&rr.Uid, &rr.Name, &rr.Description, &rr.CookingTime, &rr.Products, &rr.CreatedAt, &rr.UpdatedAt)
+	return row.Scan(&rr.Uid, &rr.Name, &rr.Description, &rr.CookingTime, &rr.CreatedAt, &rr.UpdatedAt, &rr.ImgPath, &rr.Products, &rr.Steps)
 }
 
 func (rr *RecipeRow) ColumnsForUpdate() []string {
-	return []string{"name", "description", "cooking_time", "products", "updated_at"}
+	return []string{"name", "description", "cooking_time", "updated_at", "img_path"}
 }
 
 func (rr *RecipeRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
-		rr.Name, rr.Description, rr.CookingTime, rr.Products, rr.UpdatedAt,
+		rr.Name, rr.Description, rr.CookingTime, rr.UpdatedAt, rr.ImgPath, rr.Products, rr.Steps,
 	}
 }
 
@@ -149,6 +151,7 @@ func NewRecipesRows() *RecipesRows {
 
 func (rr *RecipesRows) ScanAll(rows pgx.Rows) error {
 	rr.rows = []*RecipeRow{}
+
 	for rows.Next() {
 		newRow := &RecipeRow{}
 

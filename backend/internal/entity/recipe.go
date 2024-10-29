@@ -11,13 +11,16 @@ type Recipe struct {
 	Name        string
 	Description string
 	CookingTime int64
-	Products    []RecipeProduct
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	ImgPath     string
+	Steps       []RecipeSteps `scan:"notate"`
+	Products    []Product     `scan:"notate"`
 }
 
-type RecipeProduct struct {
-	Name     string
-	Quantity float64
-	Measure  string
+type RecipeSteps struct {
+	RecipeUid   uuid.UUID
+	Step        int64
+	Description string
+	ImgPath     string
 }
