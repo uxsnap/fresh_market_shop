@@ -6,6 +6,7 @@ import (
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
 const defaultLimitOnEach = 10
@@ -28,9 +29,15 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 		req.LimitOnEach = defaultLimitOnEach
 	}
 
+	qFilters := entity.QueryFilters{
+		LimitOnEach:  req.LimitOnEach,
+		OffsetOnEach: req.OffsetOnEach,
+		WithCounts:   req.WithCount,
+	}
+
 	if req.WithCount {
 		products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEachWithExtra(
-			ctx, req.Names, req.LimitOnEach, req.OffsetOnEach, req.WithCount, false,
+			ctx, req.Names, qFilters,
 		)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
@@ -49,7 +56,7 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEach(ctx, req.Names, req.LimitOnEach, req.OffsetOnEach)
+	products, err := h.ProductsService.GetProductsLikeNamesWithLimitOnEach(ctx, req.Names, qFilters)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return

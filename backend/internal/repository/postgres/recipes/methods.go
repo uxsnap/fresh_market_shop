@@ -3,7 +3,6 @@ package repositoryRecipes
 import (
 	"context"
 	"log"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
@@ -50,11 +49,13 @@ func (r *RecipesRepository) GetRecipeByUid(ctx context.Context, uid uuid.UUID) (
 	return res, true, nil
 }
 
-func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Recipe, error) {
+func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Recipe, error) {
 	log.Printf("recipesRepository.GetRecipesByNameLike: name %s", name)
 
 	row, _ := pgEntity.NewRecipeRow().FromEntity(entity.Recipe{Name: name})
 	rows := pgEntity.NewRecipesRows()
+
+	limit, offset := qFilters.Limit, qFilters.Offset
 
 	if limit != 0 {
 		if err := r.GetWithLimit(ctx, row, rows, row.ConditionNameLike(), limit, offset); err != nil {
@@ -76,13 +77,12 @@ func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name strin
 	return res, nil
 }
 
-func (r *RecipesRepository) GetRecipes(
-	ctx context.Context,
-	cookingTime int64,
-	createdAfter time.Time,
-	limit uint64,
-	offset uint64,
-) ([]entity.Recipe, error) {
+func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Recipe, error) {
+	cookingTime := qFilters.CookingTime
+	createdAfter := qFilters.CreatedAfter
+	limit := qFilters.Limit
+	offset := qFilters.Offset
+
 	log.Printf("recipesRepository.GetRecipes: cookingTime %d createdAfter %s", cookingTime, createdAfter.String())
 
 	row := pgEntity.NewRecipeRow()

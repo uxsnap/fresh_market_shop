@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -16,66 +15,57 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
-func (r *ProductsRepository) GetProducts(
-	ctx context.Context,
-	categoryUid uuid.UUID,
-	ccalMin int64,
-	ccalMax int64,
-	limit uint64,
-	offset uint64,
-	createdBefore time.Time,
-	createdAfter time.Time,
-) ([]entity.Product, error) {
-	log.Printf("productsRepository.GetProducts (limit: %d, offset: %d)", limit, offset)
+func (r *ProductsRepository) GetProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Product, error) {
+	log.Printf("productsRepository.GetProducts (limit: %d, offset: %d)", qFilters.Limit, qFilters.Offset)
 
 	productRow := pgEntity.NewProductRow()
 	productRows := pgEntity.NewProductRows()
 
 	sql := squirrel.Select(productRow.Columns()...).From(productRow.Table()).PlaceholderFormat(squirrel.Dollar)
 
-	if !uuid.Equal(categoryUid, uuid.UUID{}) {
+	if !uuid.Equal(qFilters.CategoryUid, uuid.UUID{}) {
 		sql = sql.Where(squirrel.Eq{
 			"category_uid": pgtype.UUID{
-				Bytes:  categoryUid,
+				Bytes:  qFilters.CategoryUid,
 				Status: pgtype.Present,
 			}})
 	}
 
-	if ccalMin > 0 {
+	if qFilters.CcalMin > 0 {
 		sql = sql.Where(squirrel.GtOrEq{
-			"ccal": ccalMin,
+			"ccal": qFilters.CcalMin,
 		})
 	}
-	if ccalMax > 0 {
+	if qFilters.CcalMax > 0 {
 		sql = sql.Where(
 			squirrel.LtOrEq{
-				"ccal": ccalMax,
+				"ccal": qFilters.CcalMax,
 			})
 	}
-	if createdBefore.Unix() > 0 {
+	if qFilters.CreatedBefore.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.LtOrEq{
 				"created_at": pgtype.Timestamp{
-					Time:   createdBefore,
+					Time:   qFilters.CreatedBefore,
 					Status: pgtype.Present,
 				},
 			})
 	}
-	if createdAfter.Unix() > 0 {
+	if qFilters.CreatedAfter.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.GtOrEq{
 				"created_at": pgtype.Timestamp{
-					Time:   createdAfter,
+					Time:   qFilters.CreatedAfter,
 					Status: pgtype.Present,
 				},
 			})
 	}
 
-	if limit > 0 {
-		sql = sql.Limit(limit)
+	if qFilters.Limit > 0 {
+		sql = sql.Limit(qFilters.Limit)
 	}
 
-	stmt, args, err := sql.Offset(offset).ToSql()
+	stmt, args, err := sql.Offset(qFilters.Offset).ToSql()
 	if err != nil {
 		log.Printf("failed to build sql query: %v", err)
 		return nil, errors.WithStack(err)
@@ -110,14 +100,14 @@ func (r *ProductsRepository) GetProductByUid(ctx context.Context, uid uuid.UUID)
 	return productRow.ToEntity(), true, nil
 }
 
-func (r *ProductsRepository) GetProductsByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Product, error) {
+func (r *ProductsRepository) GetProductsByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Product, error) {
 	log.Printf("productsRepository.GetProductsByNameLike (name: %s)", name)
 
 	productRow := pgEntity.NewProductRow().FromEntity(entity.Product{Name: name})
 	rows := pgEntity.NewProductRows()
 
-	if limit != 0 {
-		if err := r.GetWithLimit(ctx, productRow, rows, productRow.ConditionNameLike(), limit, offset); err != nil {
+	if qFilters.Limit != 0 {
+		if err := r.GetWithLimit(ctx, productRow, rows, productRow.ConditionNameLike(), qFilters.Limit, qFilters.Offset); err != nil {
 			log.Printf("failed to get products by name like %s: %v", name, err)
 			return nil, errors.WithStack(err)
 		}
@@ -131,7 +121,7 @@ func (r *ProductsRepository) GetProductsByNameLike(ctx context.Context, name str
 	return rows.ToEntity(), nil
 }
 
-func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, limit uint64, offset uint64) ([]entity.Product, error) {
+func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.Product, error) {
 	log.Printf("productsRepository.GetProductsLikeNamesWithLimitOnEach (names: %v)", names)
 
 	if len(names) == 0 {
@@ -144,7 +134,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Con
 	stmt.WriteString(
 		fmt.Sprintf(
 			"SELECT %s FROM products WHERE name LIKE %s LIMIT %d OFFSET %d\n",
-			strings.Join(row.Columns(), ","), "%$1%", limit, offset,
+			strings.Join(row.Columns(), ","), "%$1%", qFilters.Limit, qFilters.Offset,
 		),
 	)
 	for i := 1; i < len(names); i++ {
@@ -152,7 +142,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Con
 		stmt.WriteString(
 			fmt.Sprintf(
 				"SELECT %s FROM products WHERE name LIKE %s LIMIT %d OFFSET %d\n",
-				strings.Join(row.Columns(), ","), fmt.Sprintf("%%$%d%%", i+1), limit, offset,
+				strings.Join(row.Columns(), ","), fmt.Sprintf("%%$%d%%", i+1), qFilters.Limit, qFilters.Offset,
 			),
 		)
 	}

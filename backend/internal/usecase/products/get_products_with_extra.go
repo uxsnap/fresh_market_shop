@@ -3,27 +3,16 @@ package useCaseProducts
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseProducts) GetProductsWithExtra(
-	ctx context.Context,
-	categoryUid uuid.UUID,
-	ccalMin int64,
-	ccalMax int64,
-	createdBefore time.Time,
-	createdAfter time.Time,
-	limit uint64,
-	offset uint64,
-	withCounts bool,
-	withPhotos bool,
-	uuids []uuid.UUID,
-) ([]entity.ProductWithExtra, error) {
+func (uc *UseCaseProducts) GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
 	log.Printf("ucProducts.GetProductsWithExtra")
+
+	categoryUid := qFilters.CategoryUid
 
 	if !uuid.Equal(categoryUid, uuid.UUID{}) {
 		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, categoryUid)
@@ -37,10 +26,7 @@ func (uc *UseCaseProducts) GetProductsWithExtra(
 		}
 	}
 
-	products, err := uc.productsRepository.GetProductsWithExtra(
-		ctx, categoryUid, ccalMin, ccalMax,
-		createdBefore, createdAfter, limit, offset, withCounts, withPhotos, uuids,
-	)
+	products, err := uc.productsRepository.GetProductsWithExtra(ctx, qFilters)
 	if err != nil {
 		log.Printf("failed to get products: %v", err)
 		return nil, errors.WithStack(err)

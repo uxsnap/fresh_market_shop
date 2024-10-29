@@ -3,87 +3,26 @@ package searchSubrouter
 import (
 	"context"
 	"net/http"
-	"strconv"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
 func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	var (
-		err                error
-		limitOnProducts    uint64
-		offsetOnProducts   uint64
-		productsWithCount  bool
-		productWithPhotos  bool
-		limitOnCategories  uint64
-		offsetOnCategories uint64
-		page               uint64
-	)
-
-	reqName := r.URL.Query().Get("name")
-	reqLimitOnProducts := r.URL.Query().Get("limit_on_products")
-	reqLimitOnCategories := r.URL.Query().Get("limit_on_categories")
-	reqProductsWithCount := r.URL.Query().Get("products_with_count")
-	reqProductsWithPhotos := r.URL.Query().Get("products_with_photos")
-	reqPage := r.URL.Query().Get("page")
-
-	if len(reqName) == 0 {
+	qFilters, err := entity.NewQueryFiltersParser().WithRequired(
+		entity.QueryFieldName,
+	).ParseQuery(r.URL.Query())
+	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
 	}
 
-	if len(reqLimitOnProducts) != 0 {
-		limitOnProducts, err = strconv.ParseUint(reqLimitOnProducts, 10, 64)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
-			return
-		}
-	}
-
-	if len(reqLimitOnCategories) != 0 {
-		limitOnCategories, err = strconv.ParseUint(reqLimitOnCategories, 10, 64)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
-			return
-		}
-	}
-
-	if len(reqPage) != 0 {
-		page, err = strconv.ParseUint(reqPage, 10, 64)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
-			return
-		}
-	}
-	if page == 0 {
-		page = 1
-	}
-
-	if len(reqProductsWithCount) != 0 {
-		productsWithCount, err = strconv.ParseBool(reqProductsWithCount)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
-			return
-		}
-	}
-
-	if len(reqProductsWithPhotos) != 0 {
-		productWithPhotos, err = strconv.ParseBool(reqProductsWithPhotos)
-		if err != nil {
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
-			return
-		}
-	}
-
-	offsetOnProducts = (page - 1) * limitOnProducts
-	offsetOnCategories = (page - 1) * limitOnCategories
-
 	resp := multipleSearchResponse{}
 
-	categories, err := h.ProductsService.GetCategoriesByNameLike(ctx, reqName, limitOnCategories, offsetOnCategories)
+	categories, err := h.ProductsService.GetCategoriesByNameLike(ctx, qFilters.Name, qFilters)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
@@ -94,8 +33,8 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		resp.Categories = append(resp.Categories, httpEntity.CategoryFromEntity(category))
 	}
 
-	if productsWithCount || productWithPhotos {
-		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, reqName, limitOnProducts, offsetOnProducts, productsWithCount, productWithPhotos)
+	if qFilters.ProductsWithCount || qFilters.ProductsWithPhotos {
+		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, qFilters.Name, qFilters)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
@@ -114,7 +53,7 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	products, err := h.ProductsService.GetProductsByNameLike(ctx, reqName, limitOnProducts, offsetOnProducts)
+	products, err := h.ProductsService.GetProductsByNameLike(ctx, qFilters.Name, qFilters)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return

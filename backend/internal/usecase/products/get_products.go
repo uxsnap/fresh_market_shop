@@ -3,7 +3,6 @@ package useCaseProducts
 import (
 	"context"
 	"log"
-	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -17,31 +16,22 @@ func (uc *UseCaseProducts) GetProductByUid(ctx context.Context, productUid uuid.
 	return product, isFound, errors.WithStack(err)
 }
 
-func (uc *UseCaseProducts) GetProducts(
-	ctx context.Context,
-	categoryUid uuid.UUID,
-	ccalMin int64,
-	ccalMax int64,
-	createdBefore time.Time,
-	createdAfter time.Time,
-	limit uint64,
-	offset uint64,
-) ([]entity.Product, error) {
+func (uc *UseCaseProducts) GetProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Product, error) {
 	log.Printf("ucProducts.GetProducts")
 
-	if !uuid.Equal(categoryUid, uuid.UUID{}) {
-		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, categoryUid)
+	if !uuid.Equal(qFilters.CategoryUid, uuid.UUID{}) {
+		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, qFilters.CategoryUid)
 		if err != nil {
-			log.Printf("failed to get category %s: %v", categoryUid, err)
+			log.Printf("failed to get category %s: %v", qFilters.CategoryUid, err)
 		}
 
 		if !categoryFound {
-			log.Printf("category %s not found", categoryUid)
+			log.Printf("category %s not found", qFilters.CategoryUid)
 			return nil, errors.New("category not found")
 		}
 	}
 
-	products, err := uc.productsRepository.GetProducts(ctx, categoryUid, ccalMin, ccalMax, limit, offset, createdBefore, createdAfter)
+	products, err := uc.productsRepository.GetProducts(ctx, qFilters)
 	if err != nil {
 		log.Printf("failed to get products: %v", err)
 		return nil, errors.WithStack(err)

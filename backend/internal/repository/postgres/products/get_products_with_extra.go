@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -15,20 +14,8 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
-func (r *ProductsRepository) GetProductsWithExtra(
-	ctx context.Context,
-	categoryUid uuid.UUID,
-	ccalMin int64,
-	ccalMax int64,
-	createdBefore time.Time,
-	createdAfter time.Time,
-	limit uint64,
-	offset uint64,
-	withCounts bool,
-	withPhotos bool,
-	uuids []uuid.UUID,
-) ([]entity.ProductWithExtra, error) {
-	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d )", limit, offset)
+func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
+	log.Printf("productsRepository.GetProductsWithExtra (limit: %d, offset: %d )", qFilters.Limit, qFilters.Offset)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
@@ -37,12 +24,12 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	sqlSelectPart := withPrefix("p", productRow.Columns())
 	sqlFromPart := fmt.Sprintf("%s as p", productRow.Table())
 
-	if withCounts {
+	if qFilters.WithCounts {
 		sqlSelectPart = append(sqlSelectPart, withPrefix("c", productsCountRow.Columns()[1:])...)
 		sqlFromPart = sqlFromPart + fmt.Sprintf(" inner join %s as c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 
-	if withPhotos {
+	if qFilters.WithPhotos {
 		sqlSelectPart = append(
 			sqlSelectPart,
 			" (select jsonb_agg(jsonb_build_object('id', pp.id, 'product_uid', pp.product_uid, 'img_path', pp.img_path)) from product_photos pp where pp.product_uid = p.uid)",
@@ -51,56 +38,57 @@ func (r *ProductsRepository) GetProductsWithExtra(
 
 	sql := squirrel.Select(sqlSelectPart...).From(sqlFromPart).PlaceholderFormat(squirrel.Dollar)
 
-	if !uuid.Equal(categoryUid, uuid.UUID{}) {
+	if !uuid.Equal(qFilters.CategoryUid, uuid.UUID{}) {
 		sql = sql.Where(squirrel.Eq{
 			"p.category_uid": pgtype.UUID{
-				Bytes:  categoryUid,
+				Bytes:  qFilters.CategoryUid,
 				Status: pgtype.Present,
 			}})
 	}
 
-	if ccalMin > 0 {
+	if qFilters.CcalMin > 0 {
 		sql = sql.Where(squirrel.GtOrEq{
-			"p.ccal": ccalMin,
+			"p.ccal": qFilters.CcalMin,
 		})
 	}
-	if ccalMax > 0 {
+	if qFilters.CcalMax > 0 {
 		sql = sql.Where(
 			squirrel.LtOrEq{
-				"p.ccal": ccalMax,
+				"p.ccal": qFilters.CcalMax,
 			})
 	}
-	if createdBefore.Unix() > 0 {
+	if qFilters.CreatedBefore.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.LtOrEq{
 				"created_at": pgtype.Timestamp{
-					Time:   createdBefore,
+					Time:   qFilters.CreatedBefore,
 					Status: pgtype.Present,
 				},
 			})
 	}
-	if createdAfter.Unix() > 0 {
+	if qFilters.CreatedAfter.Unix() > 0 {
 		sql = sql.Where(
 			squirrel.GtOrEq{
 				"created_at": pgtype.Timestamp{
-					Time:   createdAfter,
+					Time:   qFilters.CreatedAfter,
 					Status: pgtype.Present,
 				},
 			})
 	}
 
-	if len(uuids) > 0 {
-		sql = sql.Where(
-			squirrel.Eq{
-				"p.uid": uuids,
-			})
+	// TODO: add uids to qFilters
+	// if len(uuids) > 0 {
+	// 	sql = sql.Where(
+	// 		squirrel.Eq{
+	// 			"p.uid": uuids,
+	// 		})
+	// }
+
+	if qFilters.Limit > 0 {
+		sql = sql.Limit(qFilters.Limit)
 	}
 
-	if limit > 0 {
-		sql = sql.Limit(limit)
-	}
-
-	stmt, args, err := sql.Offset(offset).ToSql()
+	stmt, args, err := sql.Offset(qFilters.Offset).ToSql()
 	if err != nil {
 		log.Printf("failed to build sql query: %v", err)
 		return nil, errors.WithStack(err)
@@ -116,10 +104,10 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	jsonPhotosBuf := []byte{}
 
 	valsForScan := productRow.ValuesForScan()
-	if withCounts {
+	if qFilters.WithCounts {
 		valsForScan = append(valsForScan, productsCountRow.ValuesForScan()[1:]...)
 	}
-	if withPhotos {
+	if qFilters.WithPhotos {
 		valsForScan = append(valsForScan, &jsonPhotosBuf)
 	}
 
@@ -133,11 +121,11 @@ func (r *ProductsRepository) GetProductsWithExtra(
 			Product: productRow.ToEntity(),
 		}
 
-		if withCounts {
+		if qFilters.WithCounts {
 			product.StockQuantity = productsCountRow.Count()
 		}
 
-		if withPhotos {
+		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
 				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
@@ -151,16 +139,9 @@ func (r *ProductsRepository) GetProductsWithExtra(
 	return res, nil
 }
 
-func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
-	ctx context.Context,
-	name string,
-	limit uint64,
-	offset uint64,
-	withCounts bool,
-	withPhotos bool,
-) ([]entity.ProductWithExtra, error) {
+func (r *ProductsRepository) GetProductsByNameLikeWithExtra(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
 	log.Printf("productsRepository.GetProductsByNameLikeWithExtra (name: %s)", name)
-	log.Println(withCounts, withPhotos)
+	log.Println(qFilters.WithCounts, qFilters.WithPhotos)
 
 	productRow := pgEntity.NewProductRow()
 	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
@@ -169,12 +150,12 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	sqlSelectPart := withPrefix("p", productRow.Columns())
 	sqlFromPart := fmt.Sprintf("%s as p", productRow.Table())
 
-	if withCounts {
+	if qFilters.WithCounts {
 		sqlSelectPart = append(sqlSelectPart, withPrefix("c", productsCountRow.Columns()[1:])...)
 		sqlFromPart = sqlFromPart + fmt.Sprintf(" inner join %s as c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 
-	if withPhotos {
+	if qFilters.WithPhotos {
 		sqlSelectPart = append(
 			sqlSelectPart,
 			" (select jsonb_agg(jsonb_build_object('id', pp.id, 'product_uid', pp.product_uid, 'img_path', pp.img_path)) from product_photos pp where pp.product_uid = p.uid) as photos",
@@ -186,12 +167,12 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 		PlaceholderFormat(squirrel.Dollar).
 		Where(squirrel.Like{"LOWER(p.name)": "%" + strings.ToLower(name) + "%"})
 
-	if limit != 0 {
-		sql = sql.Limit(limit)
+	if qFilters.Limit != 0 {
+		sql = sql.Limit(qFilters.Limit)
 	}
 
-	if offset != 0 {
-		sql = sql.Offset(offset)
+	if qFilters.Offset != 0 {
+		sql = sql.Offset(qFilters.Offset)
 	}
 
 	stmt, args, err := sql.ToSql()
@@ -212,10 +193,10 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	jsonPhotosBuf := []byte{}
 
 	valsForScan := productRow.ValuesForScan()
-	if withCounts {
+	if qFilters.WithCounts {
 		valsForScan = append(valsForScan, productsCountRow.ValuesForScan()[1:]...)
 	}
-	if withPhotos {
+	if qFilters.WithPhotos {
 		valsForScan = append(valsForScan, &jsonPhotosBuf)
 	}
 
@@ -229,11 +210,11 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 			Product: productRow.ToEntity(),
 		}
 
-		if withCounts {
+		if qFilters.WithCounts {
 			product.StockQuantity = productsCountRow.Count()
 		}
 
-		if withPhotos {
+		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
 				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
@@ -247,14 +228,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(
 	return res, nil
 }
 
-func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
-	ctx context.Context,
-	names []string,
-	limit uint64,
-	offset uint64,
-	withCounts bool,
-	withPhotos bool,
-) ([]entity.ProductWithExtra, error) {
+func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
 	log.Printf("productsRepository.GetProductsLikeNamesWithLimitOnEachWithExtra (names: %v)", names)
 
 	if len(names) == 0 {
@@ -268,12 +242,12 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 	sqlSelectPart := fmt.Sprintf("SELECT %s", strings.Join(withPrefix("p", productRow.Columns()), ","))
 	sqlFromPart := fmt.Sprintf("FROM %s p", productRow.Table())
 
-	if withCounts {
+	if qFilters.WithCounts {
 		sqlSelectPart += fmt.Sprintf(", %s", strings.Join(withPrefix("c", productsCountRow.Columns()[1:]), ","))
 		sqlFromPart += fmt.Sprintf(" inner join %s c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 
-	if withPhotos {
+	if qFilters.WithPhotos {
 		sqlSelectPart += " (select jsonb_agg(jsonb_build_object('id', pp.id, 'product_uid', pp.product_uid, 'img_path', pp.img_path)) from product_photos pp where pp.product_uid = p.uid) as photos"
 	}
 
@@ -281,7 +255,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 	stmt.WriteString(
 		fmt.Sprintf(
 			"%s %s WHERE LOWER(p.name) LIKE %s LIMIT %d OFFSET %d\n",
-			sqlSelectPart, sqlFromPart, "%$1%", limit, offset,
+			sqlSelectPart, sqlFromPart, "%$1%", qFilters.Limit, qFilters.Offset,
 		),
 	)
 	for i := 1; i < len(names); i++ {
@@ -289,7 +263,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 		stmt.WriteString(
 			fmt.Sprintf(
 				"%s %s WHERE LOWER(p.name) LIKE %s LIMIT %d OFFSET %d\n",
-				sqlSelectPart, sqlFromPart, fmt.Sprintf("%%$%d%%", i+1), limit, offset,
+				sqlSelectPart, sqlFromPart, fmt.Sprintf("%%$%d%%", i+1), qFilters.Limit, qFilters.Offset,
 			),
 		)
 	}
@@ -309,10 +283,10 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 	jsonPhotosBuf := []byte{}
 
 	valsForScan := productRow.ValuesForScan()
-	if withCounts {
+	if qFilters.WithCounts {
 		valsForScan = append(valsForScan, productsCountRow.ValuesForScan()[1:]...)
 	}
-	if withPhotos {
+	if qFilters.WithPhotos {
 		valsForScan = append(valsForScan, &jsonPhotosBuf)
 	}
 
@@ -326,11 +300,11 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(
 			Product: productRow.ToEntity(),
 		}
 
-		if withCounts {
+		if qFilters.WithCounts {
 			product.StockQuantity = productsCountRow.Count()
 		}
 
-		if withPhotos {
+		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
 				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {

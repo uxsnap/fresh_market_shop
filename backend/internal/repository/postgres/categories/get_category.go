@@ -53,14 +53,14 @@ func (r *CategoriesRepository) GetCategoryByUid(ctx context.Context, uid uuid.UU
 	return row.ToEntity(), true, nil
 }
 
-func (r *CategoriesRepository) GetCategoriesByNameLike(ctx context.Context, name string, limit uint64, offset uint64) ([]entity.Category, error) {
+func (r *CategoriesRepository) GetCategoriesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Category, error) {
 	log.Printf("categoriesRepository.GetCategoriesByNameLike: name: %s", name)
 
 	row := pgEntity.NewCategoryRow().FromEntity(entity.Category{Name: name})
 	rows := pgEntity.NewCategoriesRows()
 
-	if limit != 0 {
-		if err := r.GetWithLimit(ctx, row, rows, row.ConditionNameLike(), limit, offset); err != nil {
+	if qFilters.Limit != 0 {
+		if err := r.GetWithLimit(ctx, row, rows, row.ConditionNameLike(), qFilters.Limit, qFilters.Offset); err != nil {
 			log.Printf("failed to get GetCategoriesByNameLike: %v", err)
 			return nil, errors.WithStack(err)
 		}
