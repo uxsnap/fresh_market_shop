@@ -1,12 +1,15 @@
 "use client";
 
+import { RecipeList } from "@/components/RecipeList";
 import { YouMayLike } from "@/components/YouMayLike";
-import { Container } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
 export default function HomePage() {
   return (
-    <Container p={8} m={0} miw="100%">
+    <Stack gap={24} p={8} m={0} miw="100%">
+      <RecipeList isFetching={false} />
+
       <YouMayLike />
-    </Container>
+    </Stack>
   );
 }
