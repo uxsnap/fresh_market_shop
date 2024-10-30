@@ -80,26 +80,27 @@ CREATE TABLE recipes (
     uid uuid PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     ccal INT NOT NULL,
+		cooking_time INTERVAL NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
 		img_path TEXT NOT NULl
 );
 
-CREATE TABLE recipe_products (
+CREATE TABLE recipes_products (
 	recipe_uid uuid NOT NULL,
   product_uid uuid NOT NULL,
   PRIMARY KEY (recipe_uid, product_uid)
 );
 
-CREATE TABLE recipe_steps (
+CREATE TABLE recipes_steps (
 	recipe_uid uuid PRIMARY KEY,
 	step INT NOT NULL,
 	description TEXT NOT NULL,
 	img_path TEXT NOT NULl
 );
 
-CREATE INDEX ix_recipe_products_recipe_uid ON recipe_products (recipe_uid);
-CREATE INDEX ix_recipe_products_product_uid ON recipe_products (product_uid);
+CREATE INDEX ix_recipes_products_recipe_uid ON recipes_products (recipe_uid);
+CREATE INDEX ix_recipes_products_product_uid ON recipes_products (product_uid);
 
 INSERT INTO categories (uid, name, description, created_at,updated_at) VALUES 
 ('38e27c8f-570c-4d50-bf33-a0bd03afb13e', 'Хлеб', 'Хлебное описание', NOW()::TIMESTAMP, NOW()::TIMESTAMP),
@@ -341,13 +342,13 @@ INSERT INTO public.products_count (product_uid,stock_quantity) VALUES
 	('a323efa1-4788-459d-a1c4-c1710d289edc',10);
 
 
-INSERT INTO recipes (uid, name, ccal, created_at, updated_at, img_path) VALUES
-('cee5e047-84de-4d89-996f-d756a7d35c6c', 'Масло блять', 200, NOW()::TIMESTAMP, NOW()::TIMESTAMP, '');
+INSERT INTO recipes (uid, name, ccal, created_at, updated_at, img_path, cooking_time) VALUES
+('cee5e047-84de-4d89-996f-d756a7d35c6c', 'Масло блять', 200, NOW()::TIMESTAMP, NOW()::TIMESTAMP, '', '1 hour'::interval);
 
-INSERT INTO recipe_products (recipe_uid, product_uid) VALUES 
+INSERT INTO recipes_products (recipe_uid, product_uid) VALUES 
 ('cee5e047-84de-4d89-996f-d756a7d35c6c', '38e27c8f-570c-4d50-bf33-a0bd03afb511');
 
-INSERT INTO recipe_steps (recipe_uid, step, description, img_path) VALUES 
+INSERT INTO recipes_steps (recipe_uid, step, description, img_path) VALUES 
 ('cee5e047-84de-4d89-996f-d756a7d35c6c', 1, 'Добавь масло', '');
 
 -- +goose Down
@@ -355,7 +356,8 @@ INSERT INTO recipe_steps (recipe_uid, step, description, img_path) VALUES
 
 -- Удаление всех созданных таблиц
 DROP TABLE IF EXISTS recipes;
-DROP TABLE IF EXISTS recipe_products;
+DROP TABLE IF EXISTS recipes_products;
+DROP TABLE IF EXISTS recipes_steps;
 DROP TABLE IF EXISTS product_photos;
 DROP TABLE IF EXISTS products_count;
 DROP TABLE IF EXISTS products;
@@ -365,5 +367,5 @@ DROP TABLE IF EXISTS delivery_addresses;
 DROP TABLE IF EXISTS cities_handbook;
 DROP TABLE IF EXISTS users;
 
-DROP INDEX ix_recipe_products_recipe_uid;
-DROP INDEX ix_recipe_products_product_uid;
+DROP INDEX ix_recipes_products_recipe_uid;
+DROP INDEX ix_recipes_products_product_uid;

@@ -84,32 +84,41 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	limit := qFilters.Limit
 	offset := qFilters.Offset
 
-	log.Printf("recipesRepository.GetRecipes: cookingTime %d createdAfter %s", cookingTime, createdAfter.String())
+	log.Printf("recipesRepository.GetRecipes")
 
 	row := pgEntity.NewRecipeRow()
+	pRow := pgEntity.NewProductRow()
+	sRow := pgEntity.NewRecipeStepRow()
+
 	columns := []string{}
 
 	for _, col := range row.Columns() {
 		columns = append(columns, fmt.Sprintf("r.%v", col))
 	}
 
-	columns = append(columns, "0 as \"notate:recipe_products\"", "recipe_products.*")
-	columns = append(columns, "0 as \"notate:recipe_steps\"", "recipe_steps.*")
+	for _, col := range pRow.Columns() {
+		columns = append(columns, fmt.Sprintf("p.%v", col))
+	}
+
+	for _, col := range sRow.Columns() {
+		columns = append(columns, fmt.Sprintf("rs.%v", col))
+	}
 
 	sql := sq.Select(columns...).
 		From(row.Table() + " r").
 		PlaceholderFormat(sq.Dollar).
-		Join("recipe_products rp on rp.recipe_uid = r.uid").
-		Join("recipe_steps rs on rs.recipe_uid = r.uid")
+		Join(fmt.Sprintf("%v_%v as rp on rp.recipe_uid = r.uid", row.Table(), pRow.Table())).
+		Join(fmt.Sprintf("%v as p on rp.product_uid = p.uid", pRow.Table())).
+		Join(fmt.Sprintf("%v as rs on rs.recipe_uid = r.uid", sRow.Table()))
 
 	if cookingTime != 0 {
 		sql = sql.Where(sq.LtOrEq{
-			"cooking_time": cookingTime,
+			"r.cooking_time": cookingTime,
 		})
 	}
 	if createdAfter.Unix() != 0 {
 		sql = sql.Where(sq.GtOrEq{
-			"created_at": createdAfter,
+			"r.created_at": createdAfter,
 		})
 	}
 
@@ -122,12 +131,11 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	}
 
 	stmt, args, err := sql.ToSql()
+
 	if err != nil {
 		log.Printf("failed to get recipes query: %v", err)
 		return nil, errors.WithStack(err)
 	}
-
-	fmt.Println(stmt)
 
 	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {
@@ -135,11 +143,29 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 		return nil, errors.WithStack(err)
 	}
 
-	recipeRows := pgEntity.NewRecipesRows()
+	recipeRows := &pgEntity.RecipesRows{}
 
-	if err := recipeRows.ScanAll(rows); err != nil {
-		log.Printf("failed to get recipes: %v", err)
-		return nil, errors.WithStack(err)
+	for rows.Next() {
+		mainRow := pgEntity.NewRecipeRow()
+		productRow := pgEntity.NewProductRow()
+		stepRow := pgEntity.NewRecipeStepRow()
+
+		fields := append(
+			append(mainRow.ValuesToScan(), productRow.ValuesForScan()...),
+			stepRow.ValuesToScan()...,
+		)
+
+		err := rows.Scan(fields...)
+
+		if err != nil {
+			log.Printf("failed to get recipes: %v", err)
+			return nil, errors.WithStack(err)
+		}
+
+		mainRow.Products = append(mainRow.Products, *productRow)
+		mainRow.Steps = append(mainRow.Steps, *stepRow)
+
+		recipeRows.Rows = append(recipeRows.Rows, mainRow)
 	}
 
 	return recipeRows.ToEntity()

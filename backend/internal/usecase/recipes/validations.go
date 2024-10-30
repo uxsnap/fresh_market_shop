@@ -10,9 +10,6 @@ func validateRecipe(recipe entity.Recipe) error {
 	if len(recipe.Name) == 0 {
 		return errors.New("empty name")
 	}
-	if len(recipe.Description) == 0 {
-		return errors.New("empty description")
-	}
 
 	return nil
 }
