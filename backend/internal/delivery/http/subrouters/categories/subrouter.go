@@ -17,8 +17,12 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Get("/{uid}", cs.getCategoryByUid)
 		r.Get("/{category_uid}/products", cs.getCategoryProducts)
 
-		r.Post("/manage/create", cs.createCategory)
-		r.Post("/manage/update", cs.updateCategory)
-		r.Post("/manage/delete", cs.deleteCategory)
+		r.Group(func(r chi.Router) {
+			r.Use(cs.Middleware.Auth)
+
+			r.Post("/", cs.createCategory)
+			r.Put("/", cs.updateCategory)
+			r.Delete("/", cs.deleteCategory)
+		})
 	}
 }
