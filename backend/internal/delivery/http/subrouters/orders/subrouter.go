@@ -15,6 +15,11 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	return func(r chi.Router) {
 		r.Get("/history/{user_uid}", s.getHistory)
 
-		r.Post("/", s.CreateOrder)
+		r.Group(func(r chi.Router) {
+			r.Use(s.Middleware.Auth)
+
+			r.Post("/", s.CreateOrder)
+		})
+
 	}
 }
