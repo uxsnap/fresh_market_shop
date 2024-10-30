@@ -10,7 +10,6 @@ import (
 )
 
 const recipesTableName = "recipes"
-const recipeProductsTableName = "recipe_products"
 
 type RecipeRow struct {
 	Uid         pgtype.UUID
@@ -75,7 +74,7 @@ func (rr *RecipeRow) ToEntity() (entity.Recipe, error) {
 		UpdatedAt:   rr.UpdatedAt.Time,
 		ImgPath:     rr.ImgPath,
 		Products:    make([]entity.Product, len(rr.Products)),
-		Steps:       make([]entity.RecipeSteps, len(rr.Steps)),
+		Steps:       make([]entity.RecipeStep, len(rr.Steps)),
 	}
 
 	for productInd, product := range rr.Products {
@@ -83,7 +82,7 @@ func (rr *RecipeRow) ToEntity() (entity.Recipe, error) {
 	}
 
 	for stepInd, step := range rr.Steps {
-		r.Steps[stepInd] = entity.RecipeSteps{
+		r.Steps[stepInd] = entity.RecipeStep{
 			RecipeUid:   step.RecipeUid.Bytes,
 			Step:        step.Step,
 			Description: step.Description,

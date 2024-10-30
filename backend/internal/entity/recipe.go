@@ -13,11 +13,11 @@ type Recipe struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	ImgPath     string
-	Steps       []RecipeSteps
+	Steps       []RecipeStep
 	Products    []Product
 }
 
-type RecipeSteps struct {
+type RecipeStep struct {
 	RecipeUid   uuid.UUID
 	Step        int64
 	Description string
