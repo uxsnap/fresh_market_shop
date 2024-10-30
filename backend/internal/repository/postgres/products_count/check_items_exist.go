@@ -12,7 +12,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
-func (r *ProductsCountRepository) CheckIfAllItemsExist(ctx context.Context, productsCounts entity.ProductsCounts) *errorWrapper.Error {
+func (r *ProductsCountRepository) CheckIfAllItemsExist(ctx context.Context, productsCounts entity.ProductsCounts) error {
 	log.Printf("productsRepository.CheckIfAllItemsExist")
 	pc := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 

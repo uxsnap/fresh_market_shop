@@ -10,7 +10,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
-func (r *OrderProductsRepository) AddOrderProducts(ctx context.Context, orderProducts []entity.OrderProducts) *errorWrapper.Error {
+func (r *OrderProductsRepository) AddOrderProducts(ctx context.Context, orderProducts []entity.OrderProducts) error {
 	log.Printf("orderProductsRepository.AddOrderProducts")
 
 	opr := pgEntity.NewOrderProductsRow()

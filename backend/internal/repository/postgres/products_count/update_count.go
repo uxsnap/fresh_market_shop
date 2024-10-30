@@ -10,7 +10,7 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (r *ProductsCountRepository) UpdateCount(ctx context.Context, productsCounts entity.ProductsCounts) *errorWrapper.Error {
+func (r *ProductsCountRepository) UpdateCount(ctx context.Context, productsCounts entity.ProductsCounts) error {
 	log.Printf("productsCountRepository.UpdateCount")
 
 	updateStrs := []string{}

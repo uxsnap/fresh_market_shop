@@ -9,10 +9,10 @@ import (
 )
 
 type ErrorResponse struct {
-	Error errorWrapper.Error `json:"error"`
+	Error error `json:"error"`
 }
 
-func WriteErrorResponse(w http.ResponseWriter, status int, err *errorWrapper.Error) {
+func WriteErrorResponse(w http.ResponseWriter, status int, err error) {
 	SetContentTypeApplicationJson(w)
 
 	if err == nil {
@@ -21,7 +21,7 @@ func WriteErrorResponse(w http.ResponseWriter, status int, err *errorWrapper.Err
 
 	w.WriteHeader(status)
 
-	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: *err})
+	encodeErr := json.NewEncoder(w).Encode(ErrorResponse{Error: err})
 	if encodeErr != nil {
 		log.Printf("failed to encode error response")
 		w.Write([]byte(encodeErr.Error()))
