@@ -42,8 +42,8 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 
 		token, _ := jwt.Parse(tokenCookie.Value, nil)
 		if token == nil {
-			log.Printf("auth middleware: failed to parse jwt token: %v", err)
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(err.Error(), "auth middleware: failed to parse jwt token"))
+			log.Printf("auth middleware: failed to parse jwt token: empty token")
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("empty token", "auth middleware: failed to parse jwt token"))
 			return
 		}
 		claims, _ := token.Claims.(jwt.MapClaims)
