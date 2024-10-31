@@ -10,8 +10,6 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-const defaultLimit = 10
-
 func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 

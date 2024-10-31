@@ -131,28 +131,29 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEach(ctx context.Con
 	row := pgEntity.NewProductRow()
 
 	stmt := strings.Builder{}
+	if len(names) > 1 {
+		stmt.WriteString("(")
+	}
 	stmt.WriteString(
 		fmt.Sprintf(
-			"SELECT %s FROM products WHERE name LIKE %s LIMIT %d OFFSET %d\n",
-			strings.Join(row.Columns(), ","), "%$1%", qFilters.Limit, qFilters.Offset,
+			"SELECT %s FROM products WHERE name LIKE '%s' LIMIT %d OFFSET %d\n",
+			strings.Join(row.Columns(), ","), fmt.Sprintf("%%%s%%", names[0]), qFilters.LimitOnEach, qFilters.OffsetOnEach,
 		),
 	)
 	for i := 1; i < len(names); i++ {
-		stmt.WriteString("UNION\n")
+		stmt.WriteString(")\nUNION\n")
 		stmt.WriteString(
 			fmt.Sprintf(
-				"SELECT %s FROM products WHERE name LIKE %s LIMIT %d OFFSET %d\n",
-				strings.Join(row.Columns(), ","), fmt.Sprintf("%%$%d%%", i+1), qFilters.Limit, qFilters.Offset,
+				"(SELECT %s FROM products WHERE name LIKE '%s' LIMIT %d OFFSET %d\n",
+				strings.Join(row.Columns(), ","), fmt.Sprintf("%%%s%%", names[i]), qFilters.LimitOnEach, qFilters.OffsetOnEach,
 			),
 		)
 	}
-
-	args := make([]interface{}, len(names))
-	for i := 0; i < len(names); i++ {
-		args[i] = names[i]
+	if len(names) > 1 {
+		stmt.WriteString(")")
 	}
 
-	rows, err := r.DB().Query(ctx, stmt.String(), args...)
+	rows, err := r.DB().Query(ctx, stmt.String())
 	if err != nil {
 		log.Printf("failed to GetProductsLikeNamesWithLimitOnEach: %v", err)
 		return nil, errors.WithStack(err)

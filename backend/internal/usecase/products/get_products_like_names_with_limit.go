@@ -9,7 +9,7 @@ import (
 )
 
 func (uc *UseCaseProducts) GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.Product, error) {
-	log.Printf("ucProducts.GetProductsLikeNamesWithLimitOnEach: limit on each %d names %v", qFilters.Limit, names)
+	log.Printf("ucProducts.GetProductsLikeNamesWithLimitOnEach: limit on each %d names %v", qFilters.LimitOnEach, names)
 
 	if len(names) == 0 {
 		return []entity.Product{}, nil
@@ -25,7 +25,7 @@ func (uc *UseCaseProducts) GetProductsLikeNamesWithLimitOnEach(ctx context.Conte
 }
 
 func (uc *UseCaseProducts) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
-	log.Printf("ucProducts.GetProductsLikeNamesWithLimitOnEachWithExtra: limit on each %d names %v", qFilters.Limit, names)
+	log.Printf("ucProducts.GetProductsLikeNamesWithLimitOnEachWithExtra: limit on each %d names %v", qFilters.LimitOnEach, names)
 
 	if len(names) == 0 {
 		return []entity.ProductWithExtra{}, nil

@@ -249,6 +249,9 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx co
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
 	sqlSelectPart := fmt.Sprintf("SELECT %s", strings.Join(withPrefix("p", productRow.Columns()), ","))
+	if len(names) > 1 {
+		sqlSelectPart = "(" + sqlSelectPart
+	}
 	sqlFromPart := fmt.Sprintf("FROM %s p", productRow.Table())
 
 	if qFilters.WithCounts {
@@ -263,26 +266,26 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx co
 	stmt := strings.Builder{}
 	stmt.WriteString(
 		fmt.Sprintf(
-			"%s %s WHERE LOWER(p.name) LIKE %s LIMIT %d OFFSET %d\n",
-			sqlSelectPart, sqlFromPart, "%$1%", qFilters.Limit, qFilters.Offset,
+			"%s %s WHERE LOWER(p.name) LIKE '%s' LIMIT %d OFFSET %d\n",
+			sqlSelectPart, sqlFromPart, fmt.Sprintf("%%%s%%", names[0]), qFilters.LimitOnEach, qFilters.OffsetOnEach,
 		),
 	)
 	for i := 1; i < len(names); i++ {
-		stmt.WriteString("UNION\n")
+		stmt.WriteString(")\nUNION\n")
 		stmt.WriteString(
 			fmt.Sprintf(
-				"%s %s WHERE LOWER(p.name) LIKE %s LIMIT %d OFFSET %d\n",
-				sqlSelectPart, sqlFromPart, fmt.Sprintf("%%$%d%%", i+1), qFilters.Limit, qFilters.Offset,
+				"%s %s WHERE LOWER(p.name) LIKE '%s' LIMIT %d OFFSET %d\n",
+				sqlSelectPart, sqlFromPart, fmt.Sprintf("%%%s%%", names[i]), qFilters.LimitOnEach, qFilters.OffsetOnEach,
 			),
 		)
 	}
-
-	args := make([]interface{}, len(names))
-	for i := 0; i < len(names); i++ {
-		args[i] = strings.ToLower(names[i])
+	if len(names) > 1 {
+		stmt.WriteString(")")
 	}
 
-	rows, err := r.DB().Query(ctx, stmt.String(), args...)
+	fmt.Println(stmt.String())
+
+	rows, err := r.DB().Query(ctx, stmt.String())
 	if err != nil {
 		log.Printf("failed to GetProductsLikeNamesWithLimitOnEachWithExtra: %v", err)
 		return nil, errors.WithStack(err)
