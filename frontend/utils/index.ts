@@ -1,4 +1,4 @@
-import { ProductItem, ProductWithPhotos } from "@/types";
+import { ProductItem, ProductWithPhotos, RecipeStep } from "@/types";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -36,4 +36,8 @@ export const formatDuration = (duration: number) => {
 
 export const getRecipeBg = (uid: string) => {
   return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${uid}/main.jpg`;
+};
+
+export const getRecipeStepImg = (step: RecipeStep) => {
+  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.jpg`;
 };

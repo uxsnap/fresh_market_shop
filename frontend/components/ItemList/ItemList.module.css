@@ -1,0 +1,7 @@
+.root {
+  min-height: 300px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    min-height: 220px;
+  }
+}

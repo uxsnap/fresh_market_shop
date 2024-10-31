@@ -10,6 +10,7 @@ import {
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
 import { memo, PropsWithChildren } from "react";
+import styles from './ItemList.module.css';
 
 type Props = {
   title?: string;
@@ -46,7 +47,7 @@ export const ItemList = memo(
     isFetching = false,
     scroll = true,
   }: Props) => (
-    <Flex mih={300} gap={20} pos="relative" direction="column">
+    <Flex className={styles.root} gap={20} pos="relative" direction="column">
       {!noTitle && (
         <Title c="accent.0" order={1}>
           {title}

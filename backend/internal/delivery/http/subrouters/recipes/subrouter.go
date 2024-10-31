@@ -20,6 +20,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Get("/{recipe_uid}", rs.GetRecipeByUid)
 		r.Get("/", rs.GetRecipes)
 		r.Get("/{recipe_uid}/products", rs.GetRecipeProducts)
+		r.Get("/{recipe_uid}/steps", rs.GetRecipeSteps)
 	}
 
 }

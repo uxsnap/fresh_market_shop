@@ -156,3 +156,34 @@ func (r *RecipesRepository) DeleteRecipe(ctx context.Context, uid uuid.UUID) err
 	}
 	return nil
 }
+
+func (r *RecipesRepository) GetRecipeSteps(ctx context.Context, uid uuid.UUID) ([]entity.RecipeStep, error) {
+
+	log.Printf("recipesRepository.GetRecipeSteps: recipe_uid %s", uid)
+
+	row := pgEntity.NewRecipeStepRow()
+	sql := sq.Select(row.Columns()...).
+		From(row.Table()).
+		PlaceholderFormat(sq.Dollar).
+		Where(sq.Eq{"recipe_uid": uid})
+
+	stmt, args, err := sql.ToSql()
+	if err != nil {
+		log.Printf("failed to get recipe steps: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	rows, err := r.DB().Query(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to get recipe steps: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	recipeRows := pgEntity.NewRecipeStepRows()
+	if err := recipeRows.ScanAll(rows); err != nil {
+		log.Printf("failed to get recipe steps: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	return recipeRows.ToEntity()
+}

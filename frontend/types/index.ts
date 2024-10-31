@@ -63,7 +63,6 @@ export type RecipeStep = {
   recipeUid: string;
   step: number;
   description: string;
-  imgPath: string;
 };
 
 export type Recipe = {

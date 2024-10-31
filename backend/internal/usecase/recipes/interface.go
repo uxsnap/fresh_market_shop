@@ -14,6 +14,7 @@ type ProductsRepository interface {
 type RecipesRepository interface {
 	CreateRecipe(ctx context.Context, recipe entity.Recipe) error
 	GetRecipeByUid(ctx context.Context, uid uuid.UUID) (entity.Recipe, bool, error)
+	GetRecipeSteps(ctx context.Context, uid uuid.UUID) ([]entity.RecipeStep, error)
 	GetRecipesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Recipe, error)
 	GetRecipes(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Recipe, error)
 	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
