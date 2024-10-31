@@ -12,9 +12,7 @@ import (
 func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	qFilters, err := entity.NewQueryFiltersParser().
-		WithRequired(entity.QueryFieldCategoryUid).
-		ParseQuery(r.URL.Query())
+	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(r.URL.Query())
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return

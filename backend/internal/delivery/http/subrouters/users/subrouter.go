@@ -13,13 +13,13 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	us := UsersSubrouter{deps}
 
 	return func(r chi.Router) {
-		r.Post("/", us.createUser)
 
 		r.Group(func(r chi.Router) {
 			r.Use(us.Middleware.Auth)
 
 			r.Get("/{user_uid}", us.getUser)
 			r.Put("/", us.updateUser)
+
 			r.Post("/{user_uid}/delivery_address", us.addDeliveryAddress)
 			r.Put("/{user_uid}/delivery_address", us.updateDeliveryAddress)
 			r.Delete("/{user_uid}/delivery_address/{address_uid}", us.deleteDeliveryAddress)

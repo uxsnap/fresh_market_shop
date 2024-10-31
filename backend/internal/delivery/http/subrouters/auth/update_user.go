@@ -40,9 +40,10 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("failed to update user %s in gw: %v", req.Uid, err)
 	}
 
-	w.WriteHeader(http.StatusOK)
 	http.SetCookie(w, httpUtils.NewCookie(accessJwtCookieName, accessJwt))
 	http.SetCookie(w, httpUtils.NewCookie(refreshJwtCookieName, refreshJwt))
+
+	w.WriteHeader(http.StatusOK)
 }
 
 type UpdateUserRequest struct {

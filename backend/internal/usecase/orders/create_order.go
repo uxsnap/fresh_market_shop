@@ -6,10 +6,9 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
-	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (s *UseCaseOrders) CreateOrder(ctx context.Context, productsCounts entity.ProductsCounts) (uuid.UUID, *errorWrapper.Error) {
+func (s *UseCaseOrders) CreateOrder(ctx context.Context, productsCounts entity.ProductsCounts) (uuid.UUID, error) {
 	log.Printf("ucOrders.CreateOrder")
 
 	if err := s.productsCountRepository.CheckIfAllItemsExist(ctx, productsCounts); err != nil {

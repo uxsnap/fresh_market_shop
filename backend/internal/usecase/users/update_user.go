@@ -22,6 +22,7 @@ func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) error 
 		return errors.New("user not found")
 	}
 
+	// TODO: несогласованность данных. Сделать отдельный метод для обновления email. а здесь запретить это делать!
 	if len(user.Email) != 0 && user.Email != savedUser.Email {
 		savedUser.Email = user.Email
 	}

@@ -10,8 +10,8 @@ type AuthSubrouter struct {
 }
 
 const (
-	accessJwtCookieName  = "accessJwt"
-	refreshJwtCookieName = "refreshJwt"
+	accessJwtCookieName  = "access_jwt"
+	refreshJwtCookieName = "refresh_jwt"
 )
 
 func New(deps subrouters.SubrouterDeps) func(r chi.Router) {

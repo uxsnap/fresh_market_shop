@@ -119,7 +119,7 @@ func (dr *DeliveryAddressRow) ConditionUidEqual() sq.Eq {
 
 func (dr *DeliveryAddressRow) ConditionUserUidEqual() sq.Eq {
 	return sq.Eq{
-		"user_uid": dr.Uid,
+		"user_uid": dr.UserUid,
 	}
 }
 

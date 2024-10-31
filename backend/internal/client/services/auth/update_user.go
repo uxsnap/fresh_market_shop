@@ -18,7 +18,7 @@ func (c *AuthClient) UpdateAuthUser(
 ) (accessJwt string, refreshJwt string, err error) {
 	log.Printf("authClient.UpdateUser: uid %s", uid)
 
-	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, accessJwt)
+	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, accessToken)
 
 	var resp *auth_v1.JwtResponse
 	resp, err = c.client.UpdateUser(ctx, &auth_v1.UpdateUserRequest{

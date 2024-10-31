@@ -78,5 +78,6 @@ func (r *UsersRepository) GetDeliveryAddressesByUserUid(ctx context.Context, use
 		log.Printf("failed to get user %s delivery addresses: %v", userUid, err)
 		return nil, errors.WithStack(err)
 	}
+
 	return rows.ToEntity(), nil
 }
