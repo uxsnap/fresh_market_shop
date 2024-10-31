@@ -11,23 +11,12 @@ import (
 
 const recipesTableName = "recipes"
 
-type RecipeStepRow struct {
-	RecipeUid   pgtype.UUID
-	Step        int64
-	Description string
-	ImgPath     string
-}
-
 type RecipeRow struct {
 	Uid         pgtype.UUID
 	Name        string
-	Description string
-	CookingTime int64
+	CookingTime pgtype.Interval
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
-	Products    []ProductRow
-	Steps       []RecipeStepRow
-	ImgPath     string
 }
 
 func NewRecipeRow() *RecipeRow {
@@ -37,26 +26,9 @@ func NewRecipeRow() *RecipeRow {
 func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 	rr.Uid = pgUidFromUUID(recipe.Uid)
 	rr.Name = recipe.Name
-	rr.Description = recipe.Description
-	rr.CookingTime = recipe.CookingTime
-	rr.ImgPath = recipe.ImgPath
-
-	rr.Products = make([]ProductRow, len(recipe.Products))
-	rr.Steps = make([]RecipeStepRow, len(recipe.Steps))
-
-	for productInd, product := range recipe.Products {
-		rr.Products[productInd] = *NewProductRow().FromEntity(product)
-	}
-
-	for stepInd, step := range recipe.Steps {
-		rr.Steps[stepInd] = RecipeStepRow{
-			RecipeUid: pgtype.UUID{
-				Status: pgtype.Present,
-				Bytes:  step.RecipeUid,
-			},
-			Step:        step.Step,
-			Description: step.Description,
-		}
+	rr.CookingTime = pgtype.Interval{
+		Status:       pgtype.Present,
+		Microseconds: int64(recipe.CookingTime) / 1000,
 	}
 
 	rr.CreatedAt = pgtype.Timestamp{
@@ -75,36 +47,24 @@ func (rr *RecipeRow) ToEntity() (entity.Recipe, error) {
 	r := entity.Recipe{
 		Uid:         rr.Uid.Bytes,
 		Name:        rr.Name,
-		Description: rr.Description,
-		CookingTime: rr.CookingTime,
+		CookingTime: rr.CookingTime.Microseconds,
 		CreatedAt:   rr.CreatedAt.Time,
 		UpdatedAt:   rr.UpdatedAt.Time,
-		ImgPath:     rr.ImgPath,
-		Products:    make([]entity.Product, len(rr.Products)),
-		Steps:       make([]entity.RecipeSteps, len(rr.Steps)),
-	}
-
-	for productInd, product := range rr.Products {
-		r.Products[productInd] = product.ToEntity()
-	}
-
-	for stepInd, step := range rr.Steps {
-		r.Steps[stepInd] = entity.RecipeSteps{
-			RecipeUid:   step.RecipeUid.Bytes,
-			Step:        step.Step,
-			Description: step.Description,
-		}
 	}
 
 	return r, nil
 }
 
-var recipesTableColumns = []string{"uid", "name", "description", "created_at", "updated_at", "img_path"}
+var recipesTableColumns = []string{"uid", "name", "created_at", "updated_at", "cooking_time"}
 
 func (rr *RecipeRow) Values() []interface{} {
 	return []interface{}{
-		rr.Uid, rr.Name, rr.Description, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.ImgPath, rr.Products, rr.Steps,
+		rr.Uid, rr.Name, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.CookingTime,
 	}
+}
+
+func (rr *RecipeRow) ValuesToScan() []interface{} {
+	return []interface{}{&rr.Uid, &rr.Name, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime}
 }
 
 func (rr *RecipeRow) Columns() []string {
@@ -116,7 +76,7 @@ func (rr *RecipeRow) Table() string {
 }
 
 func (rr *RecipeRow) Scan(row pgx.Row) error {
-	return row.Scan(&rr.Uid, &rr.Name, &rr.Description, &rr.CookingTime, &rr.CreatedAt, &rr.UpdatedAt, &rr.ImgPath, &rr.Products, &rr.Steps)
+	return row.Scan(&rr.Uid, &rr.Name, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime)
 }
 
 func (rr *RecipeRow) ColumnsForUpdate() []string {
@@ -125,7 +85,7 @@ func (rr *RecipeRow) ColumnsForUpdate() []string {
 
 func (rr *RecipeRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
-		rr.Name, rr.Description, rr.CookingTime, rr.UpdatedAt, rr.ImgPath, rr.Products, rr.Steps,
+		rr.Name, rr.UpdatedAt, rr.CookingTime,
 	}
 }
 
@@ -142,7 +102,7 @@ func (rr *RecipeRow) ConditionNameLike() sq.Like {
 }
 
 type RecipesRows struct {
-	rows []*RecipeRow
+	Rows []*RecipeRow
 }
 
 func NewRecipesRows() *RecipesRows {
@@ -150,7 +110,7 @@ func NewRecipesRows() *RecipesRows {
 }
 
 func (rr *RecipesRows) ScanAll(rows pgx.Rows) error {
-	rr.rows = []*RecipeRow{}
+	rr.Rows = []*RecipeRow{}
 
 	for rows.Next() {
 		newRow := &RecipeRow{}
@@ -158,20 +118,20 @@ func (rr *RecipesRows) ScanAll(rows pgx.Rows) error {
 		if err := newRow.Scan(rows); err != nil {
 			return err
 		}
-		rr.rows = append(rr.rows, newRow)
+		rr.Rows = append(rr.Rows, newRow)
 	}
 
 	return nil
 }
 
 func (rr *RecipesRows) ToEntity() ([]entity.Recipe, error) {
-	if len(rr.rows) == 0 {
+	if len(rr.Rows) == 0 {
 		return nil, nil
 	}
 
-	res := make([]entity.Recipe, len(rr.rows))
-	for i := 0; i < len(rr.rows); i++ {
-		val, err := rr.rows[i].ToEntity()
+	res := make([]entity.Recipe, len(rr.Rows))
+	for i := 0; i < len(rr.Rows); i++ {
+		val, err := rr.Rows[i].ToEntity()
 		if err != nil {
 			return nil, err
 		}

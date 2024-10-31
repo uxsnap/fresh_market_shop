@@ -1,0 +1,36 @@
+.root {
+  border-radius: 8px;
+  border: 1px solid var(--mantine-color-accent-2);
+  min-width: 100%;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    max-width: 336px;
+  }
+}
+
+.img {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: 200px;
+  height: 180px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    max-width: 140px;
+    max-height: 140px;
+  }
+}
+
+
+.info {
+  height: 180px;
+  overflow: auto;
+  padding-top: 16px;
+  padding-right: 8px;
+  gap: 12px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    height: 140px;
+    padding-top: 8px;
+    gap: 8px;
+  }
+} 

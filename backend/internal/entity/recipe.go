@@ -9,18 +9,13 @@ import (
 type Recipe struct {
 	Uid         uuid.UUID
 	Name        string
-	Description string
 	CookingTime int64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	ImgPath     string
-	Steps       []RecipeSteps `scan:"notate"`
-	Products    []Product     `scan:"notate"`
 }
 
-type RecipeSteps struct {
+type RecipeStep struct {
 	RecipeUid   uuid.UUID
 	Step        int64
 	Description string
-	ImgPath     string
 }

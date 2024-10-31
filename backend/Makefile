@@ -45,4 +45,4 @@ start:
 
 .PHONY: migration-restart
 migration-restart: 
-	docker-compose down && docker image rm fresh_market_shop-migrator && docker-compose up -d
+	docker-compose down && docker image rm fresh_market_shop-migrator && docker volume rm fresh_market_shop_postgres_volume && docker-compose up -d

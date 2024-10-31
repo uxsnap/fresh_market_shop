@@ -10,6 +10,7 @@ import {
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
 import { memo, PropsWithChildren } from "react";
+import styles from './ItemList.module.css';
 
 type Props = {
   title?: string;
@@ -42,11 +43,11 @@ export const ItemList = memo(
   ({
     title = "Вы уже заказывали",
     noTitle = false,
-    items = Array.from({ length: 10 }),
+    items,
     isFetching = false,
     scroll = true,
   }: Props) => (
-    <Flex gap={20} pos="relative" direction="column">
+    <Flex className={styles.root} gap={20} pos="relative" direction="column">
       {!noTitle && (
         <Title c="accent.0" order={1}>
           {title}
@@ -55,7 +56,7 @@ export const ItemList = memo(
 
       <LoadingOverlay
         visible={isFetching}
-        zIndex={1000}
+        zIndex={1}
         overlayProps={{ radius: "sm", blur: 2 }}
         loaderProps={{ color: "primary.0", type: "bars" }}
       />
@@ -63,7 +64,7 @@ export const ItemList = memo(
       {!isFetching && (
         <Wrapper scroll={scroll}>
           <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
-            {items.map((item, ind) => (
+            {(items ?? []).map((item, ind) => (
               <ItemCard item={item} key={ind} />
             ))}
           </Flex>

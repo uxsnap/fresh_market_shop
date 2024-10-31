@@ -1,6 +1,7 @@
 package assetsSubrouter
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -9,18 +10,22 @@ import (
 	"github.com/go-chi/chi"
 )
 
-const PATH = "assets/imgs"
+func (as *AssetsSubrouter) getStaticFiles(path string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		workDir, _ := os.Getwd()
 
-func (as *AssetsSubrouter) getStaticFiles(w http.ResponseWriter, r *http.Request) {
-	workDir, _ := os.Getwd()
+		workPath := path
 
-	filesDir := http.Dir(filepath.Join(workDir, PATH))
+		filesDir := http.Dir(filepath.Join(workDir, workPath))
 
-	routeCtx := chi.RouteContext(r.Context())
+		routeCtx := chi.RouteContext(r.Context())
 
-	pathPrefix := strings.TrimSuffix(routeCtx.RoutePattern(), "/*")
+		pathPrefix := strings.TrimSuffix(routeCtx.RoutePattern(), "/*")
 
-	fs := http.StripPrefix(pathPrefix, http.FileServer(filesDir))
+		fmt.Println(pathPrefix)
 
-	fs.ServeHTTP(w, r)
+		fs := http.StripPrefix(pathPrefix, http.FileServer(filesDir))
+
+		fs.ServeHTTP(w, r)
+	}
 }

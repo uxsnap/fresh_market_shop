@@ -76,6 +76,15 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 			})
 	}
 
+	if !uuid.Equal(qFilters.RecipeUid, uuid.UUID{}) {
+		recipeRow := pgEntity.NewRecipeRow()
+
+		sql = sql.
+			Join(fmt.Sprintf("%v_%v as rs on rs.product_uid = p.uid", recipeRow.Table(), productRow.Table())).
+			Join(recipeRow.Table() + " r on r.uid = rs.recipe_uid").
+			Where(squirrel.Eq{"r.uid": qFilters.RecipeUid})
+	}
+
 	// TODO: add uids to qFilters
 	// if len(uuids) > 0 {
 	// 	sql = sql.Where(

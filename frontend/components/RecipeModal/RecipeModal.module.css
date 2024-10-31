@@ -1,3 +1,14 @@
 .header {
   border-bottom: 1px solid var(--mantine-color-bg-1);
+  justify-content: "space-between";
+  gap: 8px;
+}
+
+.content {
+  min-width: 640px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    width: 100%;
+    min-width: 100%;
+  }
 }

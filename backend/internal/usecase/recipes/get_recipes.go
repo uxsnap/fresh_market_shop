@@ -12,6 +12,7 @@ func (uc *UseCaseRecipes) GetRecipes(ctx context.Context, qFilters entity.QueryF
 	log.Printf("ucRecipes.GetRecipes")
 
 	recipes, err := uc.recipesRepository.GetRecipes(ctx, qFilters)
+
 	if err != nil {
 		log.Printf("failed to get recipes: %v", err)
 		return nil, errors.WithStack(err)

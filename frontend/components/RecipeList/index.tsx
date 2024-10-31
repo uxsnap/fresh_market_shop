@@ -1,39 +1,59 @@
 import { Group, LoadingOverlay, ScrollArea, Stack, Title } from "@mantine/core";
-import { Recipe, Props as RecipeProps } from "../Recipe";
-import { memo } from "react";
+import { Recipe } from "../Recipe";
+import { memo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getRecipes } from "@/api/recipes/getRecipes";
 
-type Props = {
-  items?: RecipeProps[];
-  isFetching?: boolean;
-};
+import { formatDuration, getRecipeBg } from "@/utils";
+import { RecipeModal } from "../RecipeModal";
+import { Recipe as IRecipe } from "@/types";
 
-export const RecipeList = memo(
-  ({
-    items = Array.from({ length: 10 }, () => ({
-      name: "Рецепт",
-      time: "1 20",
-    })),
-    isFetching = true,
-  }: Props) => (
-    <Stack gap={20}>
-      <Title c="accent.0" order={1}>
-        Рецепты
-      </Title>
+export const RecipeList = memo(() => {
+  const { data, isFetching } = useQuery({
+    queryFn: getRecipes,
+    queryKey: [getRecipes.queryKey],
+  });
 
-      <LoadingOverlay
-        visible={isFetching}
-        zIndex={1000}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "primary.0", type: "bars" }}
-      />
+  const [curRecipe, setCurRecipe] = useState<IRecipe>();
 
-      <ScrollArea type="never" w="100%">
-        <Group wrap="nowrap" gap={20}>
-          {items.map((item) => (
-            <Recipe key={item.name} {...item} />
-          ))}
-        </Group>
-      </ScrollArea>
-    </Stack>
-  )
-);
+  return (
+    <>
+      {curRecipe && (
+        <RecipeModal
+          close={() => setCurRecipe(undefined)}
+          uid={curRecipe.uid}
+          name={curRecipe.name}
+          ccal={curRecipe.ccal}
+          img={getRecipeBg(curRecipe.uid)}
+        />
+      )}
+
+      <Stack mih={280} gap={20} pos="relative">
+        <Title c="accent.0" order={1}>
+          Рецепты
+        </Title>
+
+        <LoadingOverlay
+          visible={isFetching}
+          zIndex={1}
+          overlayProps={{ radius: "sm", blur: 2 }}
+          loaderProps={{ color: "primary.0", type: "bars" }}
+        />
+
+        <ScrollArea type="never" w="100%">
+          <Group wrap="nowrap" gap={20}>
+            {data?.data.map((item) => (
+              <Recipe
+                key={item.uid}
+                name={item.name}
+                onClick={() => setCurRecipe(item)}
+                img={getRecipeBg(item.uid)}
+                time={formatDuration(item.cookingTime)}
+              />
+            ))}
+          </Group>
+        </ScrollArea>
+      </Stack>
+    </>
+  );
+});

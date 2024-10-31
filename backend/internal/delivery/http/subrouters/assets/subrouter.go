@@ -13,6 +13,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	as := AssetsSubrouter{deps}
 
 	return func(r chi.Router) {
-		r.Get("/imgs/*", as.getStaticFiles)
+		r.Get("/imgs/*", as.getStaticFiles("assets/imgs"))
+		r.Get("/recipes/*", as.getStaticFiles("assets/recipes"))
 	}
 }
