@@ -8,6 +8,7 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
+// unused
 func (h *UsersSubrouter) createUser(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
