@@ -21,7 +21,7 @@ func NewMiddleware(authService AuthService) *Middleware {
 	}
 }
 
-const accessJwtCookieName = "accessJwt"
+const accessJwtCookieName = "access_jwt"
 
 func (m *Middleware) Auth(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
