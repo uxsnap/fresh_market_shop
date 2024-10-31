@@ -21,9 +21,10 @@ func (h *AuthSubrouter) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
 	http.SetCookie(w, httpUtils.NewCookie(accessJwtCookieName, accessJwt))
 	http.SetCookie(w, httpUtils.NewCookie(refreshJwtCookieName, refreshJwt))
+
+	w.WriteHeader(http.StatusOK)
 }
 
 type LoginRequest struct {
