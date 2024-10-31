@@ -65,6 +65,7 @@ type RecipesService interface {
 	GetRecipeByUid(ctx context.Context, uid uuid.UUID) (entity.Recipe, bool, error)
 	GetRecipesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Recipe, error)
 	GetRecipes(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Recipe, error)
+	GetRecipesProducts(ctx context.Context, recipe_uid uuid.UUID) ([]entity.ProductWithExtra, error)
 	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
 	DeleteRecipe(ctx context.Context, uid uuid.UUID) error
 }

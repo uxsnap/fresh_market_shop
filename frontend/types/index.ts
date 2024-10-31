@@ -58,3 +58,19 @@ export type MakeOrderItem = {
 };
 
 export type AuthType = "login" | "reg" | "forgotPass" | "passRet";
+
+export type RecipeStep = {
+  recipeUid: string;
+  step: number;
+  description: string;
+  imgPath: string;
+};
+
+export type Recipe = {
+  uid: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  cookingTime: number;
+  ccal: number;
+};

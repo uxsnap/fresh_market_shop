@@ -172,7 +172,7 @@ func (sp *serviceProvider) UsersService(ctx context.Context) *ucUsers.UseCaseUse
 
 func (sp *serviceProvider) RecipesService(ctx context.Context) *ucRecipes.UseCaseRecipes {
 	if sp.ucRecipes == nil {
-		sp.ucRecipes = ucRecipes.New(sp.RecipesRepository(ctx))
+		sp.ucRecipes = ucRecipes.New(sp.RecipesRepository(ctx), sp.ProductsRepository(ctx))
 	}
 	return sp.ucRecipes
 }

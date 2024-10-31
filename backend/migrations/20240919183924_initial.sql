@@ -150,7 +150,8 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('38e27c8f-570c-4d50-bf33-a0bd03afb307', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Шпинат', 'Листовой овощ, богатый железом и витаминами.', 0.6, 90, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb308', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Редис', 'Овощ с низким содержанием калорий и высоким содержанием витамина C.', 0.8, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb309', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Зелёный лук', 'Ароматный овощ, богатый витаминами A и C.', 0.4, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('38e27c8f-570c-4d50-bf33-a0bd03afb310', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Сельдерей', 'Низкокалорийный овощ с высоким содержанием клетчатки.', 0.4, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('38e27c8f-570c-4d50-bf33-a0bd03afb310', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Сельдерей', 'Низкокалорийный овощ с высоким содержанием клетчатки.', 0.4, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
+('38e27c8f-570c-4d50-bf33-a0bd03afb311', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Салат', 'Низкокалорийный продукт, богатый витаминами A, C и K, антиоксидантами и клетчаткой.', 0.15, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 -- Мясной отдел
 INSERT INTO products (uid, category_uid, weight, name, description, ccal, price, created_at, updated_at) VALUES
@@ -163,7 +164,8 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('38e27c8f-570c-4d50-bf33-a0bd03afb407', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Утиная грудка', 'Богатое белком мясо с умеренным содержанием жира.', 350, 800, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb408', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Филе оленя', 'Диетическое мясо с насыщенным вкусом.', 260, 1200, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb409', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Говяжий язык', 'Мясо с высоким содержанием белка и железа.', 300, 400, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('38e27c8f-570c-4d50-bf33-a0bd03afb410', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Печень говяжья', 'Полезный субпродукт, богатый железом и витаминами группы B.', 200, 250, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('38e27c8f-570c-4d50-bf33-a0bd03afb410', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Печень говяжья', 'Полезный субпродукт, богатый железом и витаминами группы B.', 200, 250, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
+('38e27c8f-570c-4d50-bf33-a0bd03afb411', '23f1cf15-95ac-4abf-bda2-37c62fa24e5d', 100, 'Печень куриная', 'Полезный субпродукт, богатый железом и витаминами группы B.', 200, 250, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 -- Бакалея
 INSERT INTO products (uid, category_uid, weight, name, description, ccal, price, created_at, updated_at) VALUES
@@ -189,7 +191,8 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('38e27c8f-570c-4d50-bf33-a0bd03afb517', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Миндальное масло', 'Богатое витаминами Е и омега-6 жирными кислотами.', 36, 90, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb518', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Масло тыквенных семян', 'Полезное масло с ярким ароматом и высоким содержанием цинка.', 36, 85, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb519', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Масло из расторопши', 'Обладает антиоксидантными и противовоспалительными свойствами.', 36, 55, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('38e27c8f-570c-4d50-bf33-a0bd03afb520', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Масло виноградных косточек', 'Легкое масло с высоким содержанием витамина E.', 36, 45, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('38e27c8f-570c-4d50-bf33-a0bd03afb520', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Масло виноградных косточек', 'Легкое масло с высоким содержанием витамина E.', 36, 45, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
+('38e27c8f-570c-4d50-bf33-a0bd03afb521', '36adad5c-8c71-4beb-ade3-ae6b0a10d998', 20, 'Бальзамический уксус', 'Ароматная приправа, богатая антиоксидантами и минералами.', 14, 45, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 -- Молочные продукты
 INSERT INTO products (uid, category_uid, weight, name, description, ccal, price, created_at, updated_at) VALUES
@@ -198,7 +201,6 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec5', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Творог 5% жирности', 'Творог с низким содержанием жира, богатый белком и кальцием.', 2, 25, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec6', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Кефир 1% жирности', 'Пробиотический напиток, полезный для пищеварения.', 2, 22, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec7', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Молочный напиток из овса', 'Веганский молочный напиток с добавлением витаминов и минералов.', 4, 24, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec8', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Кottage cheese', 'Творог с нежной текстурой, богатый белком.', 3, 28, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec9', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Брынза', 'Соленый сыр, богатый белком и кальцием.', 5, 35, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9eca', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Рикотта', 'Мягкий сыр с низким содержанием жира и высоким содержанием белка.', 6, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ecb', '038f69de-cb6e-4d72-87f4-6dfdf0e4f290', 20, 'Сыр моцарелла', 'Сыр с низким содержанием жира и мягкой текстурой.', 5.6, 45, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
@@ -215,7 +217,8 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('96e091ed-981a-4c4d-afdc-e5bae7151df8', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Пекан', 'Орехи с насыщенным вкусом и высоким содержанием полезных жиров.', 5, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('06784003-3c44-4913-adb6-7e433f82d19e', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Семена подсолнечника', 'Семена с высоким содержанием витамина E и полезных жиров.', 3, 30, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('fd99b689-646d-47e0-ac98-287b60be6f45', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Семена тыквы', 'Семена с высоким содержанием минералов и омега-3 жирных кислот.', 3.6, 30, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('a323efa1-4788-459d-a1c4-c1710d289edc', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Кунжут', 'Семена с высоким содержанием кальция и полезных жиров.', 3.4, 30, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('a323efa1-4788-459d-a1c4-c1710d289edc', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Кунжут', 'Семена с высоким содержанием кальция и полезных жиров.', 3.4, 30, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
+('a323efa1-4788-459d-a1c4-c1710d289edd', '1a1e32b7-5c0f-4409-a82c-3e5c973868e6', 20, 'Мед', 'Натуральный подсластитель, богатый антиоксидантами и полезными ферментами.', 64, 30, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 INSERT INTO public.products_count (product_uid,stock_quantity) VALUES
 	('38e27c8f-570c-4d50-bf33-a0bd03afb99e',10),
@@ -293,7 +296,6 @@ INSERT INTO public.products_count (product_uid,stock_quantity) VALUES
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec5',10),
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec6',10),
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec7',10),
-	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec8',10),
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec9',10),
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9eca',10),
 	('f1c52c01-d7be-43aa-b9f6-f30e5d7f9ecb',10),

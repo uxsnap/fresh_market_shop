@@ -7,7 +7,7 @@ import { Stack } from "@mantine/core";
 export default function HomePage() {
   return (
     <Stack gap={24} p={8} m={0} miw="100%">
-      <RecipeList isFetching={false} />
+      <RecipeList />
 
       <YouMayLike />
     </Stack>

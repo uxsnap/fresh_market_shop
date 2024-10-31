@@ -31,6 +31,7 @@ type QueryFilters struct {
 	LimitOnEach        uint64
 	OffsetOnEach       uint64
 	CookingTime        int64
+	RecipeUid          uuid.UUID
 }
 
 const defaultLimit = 10
@@ -51,6 +52,7 @@ const (
 	QueryFieldCategoryUid        = "category_uid"
 	QueryFieldName               = "name"
 	QueryFieldCookingTime        = "cooking_time"
+	QueryFieldRecipeUid          = "recipe_uid"
 )
 
 type QueryFiltersParser struct {
@@ -76,6 +78,7 @@ func NewQueryFiltersParser() *QueryFiltersParser {
 			QueryFieldCategoryUid:        parseCategoryUid,
 			QueryFieldName:               parseName,
 			QueryFieldCookingTime:        parseCookingTime,
+			QueryFieldRecipeUid:          parseRecipeUid,
 		},
 	}
 }
@@ -217,6 +220,15 @@ func parseCreatedAfter(query url.Values, qFilters *QueryFilters) error {
 func parseCategoryUid(query url.Values, qFilters *QueryFilters) error {
 	var err error
 	qFilters.CategoryUid, err = uuid.FromString(query.Get(QueryFieldCategoryUid))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseRecipeUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.RecipeUid, err = uuid.FromString(query.Get(QueryFieldRecipeUid))
 	if err != nil {
 		return err
 	}

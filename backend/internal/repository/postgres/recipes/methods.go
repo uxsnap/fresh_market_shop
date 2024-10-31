@@ -2,7 +2,6 @@ package repositoryRecipes
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
@@ -84,56 +83,34 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	limit := qFilters.Limit
 	offset := qFilters.Offset
 
-	log.Printf("recipesRepository.GetRecipes")
+	log.Printf("recipesRepository.GetRecipes: cookingTime %d createdAfter %s", cookingTime, createdAfter.String())
 
 	row := pgEntity.NewRecipeRow()
-	pRow := pgEntity.NewProductRow()
-	sRow := pgEntity.NewRecipeStepRow()
-
-	columns := []string{}
-
-	for _, col := range row.Columns() {
-		columns = append(columns, fmt.Sprintf("r.%v", col))
-	}
-
-	for _, col := range pRow.Columns() {
-		columns = append(columns, fmt.Sprintf("p.%v", col))
-	}
-
-	for _, col := range sRow.Columns() {
-		columns = append(columns, fmt.Sprintf("rs.%v", col))
-	}
-
-	sql := sq.Select(columns...).
-		From(row.Table() + " r").
-		PlaceholderFormat(sq.Dollar).
-		Join(fmt.Sprintf("%v_%v as rp on rp.recipe_uid = r.uid", row.Table(), pRow.Table())).
-		Join(fmt.Sprintf("%v as p on rp.product_uid = p.uid", pRow.Table())).
-		Join(fmt.Sprintf("%v as rs on rs.recipe_uid = r.uid", sRow.Table()))
+	sql := sq.Select(row.Columns()...).
+		From(row.Table()).
+		PlaceholderFormat(sq.Dollar)
 
 	if cookingTime != 0 {
 		sql = sql.Where(sq.LtOrEq{
-			"r.cooking_time": cookingTime,
+			"cooking_time": cookingTime,
 		})
 	}
 	if createdAfter.Unix() != 0 {
 		sql = sql.Where(sq.GtOrEq{
-			"r.created_at": createdAfter,
+			"created_at": createdAfter,
 		})
 	}
 
 	if limit != 0 {
 		sql = sql.Limit(limit)
 	}
-
 	if offset != 0 {
 		sql = sql.Offset(offset)
 	}
 
 	stmt, args, err := sql.ToSql()
-
 	if err != nil {
-		log.Printf("failed to get recipes query: %v", err)
+		log.Printf("failed to get recipes: %v", err)
 		return nil, errors.WithStack(err)
 	}
 
@@ -143,29 +120,10 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 		return nil, errors.WithStack(err)
 	}
 
-	recipeRows := &pgEntity.RecipesRows{}
-
-	for rows.Next() {
-		mainRow := pgEntity.NewRecipeRow()
-		productRow := pgEntity.NewProductRow()
-		stepRow := pgEntity.NewRecipeStepRow()
-
-		fields := append(
-			append(mainRow.ValuesToScan(), productRow.ValuesForScan()...),
-			stepRow.ValuesToScan()...,
-		)
-
-		err := rows.Scan(fields...)
-
-		if err != nil {
-			log.Printf("failed to get recipes: %v", err)
-			return nil, errors.WithStack(err)
-		}
-
-		mainRow.Products = append(mainRow.Products, *productRow)
-		mainRow.Steps = append(mainRow.Steps, *stepRow)
-
-		recipeRows.Rows = append(recipeRows.Rows, mainRow)
+	recipeRows := pgEntity.NewRecipesRows()
+	if err := recipeRows.ScanAll(rows); err != nil {
+		log.Printf("failed to get recipes: %v", err)
+		return nil, errors.WithStack(err)
 	}
 
 	return recipeRows.ToEntity()

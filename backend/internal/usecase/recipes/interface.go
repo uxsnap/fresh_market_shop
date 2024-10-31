@@ -7,6 +7,10 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
+type ProductsRepository interface {
+	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+}
+
 type RecipesRepository interface {
 	CreateRecipe(ctx context.Context, recipe entity.Recipe) error
 	GetRecipeByUid(ctx context.Context, uid uuid.UUID) (entity.Recipe, bool, error)

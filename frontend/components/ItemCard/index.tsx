@@ -112,7 +112,7 @@ export const ItemCard = memo(({ item }: Props) => {
       </Card.Section>
 
       <Stack mt={8} gap={4}>
-        <Text w="90px" lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
+        <Text lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
           {price} Руб.
         </Text>
         <Text
