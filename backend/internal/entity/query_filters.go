@@ -10,6 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// TODO: вынести из entity этому тут не место
 type QueryFilters struct {
 	Limit              uint64
 	LimitOnCategories  uint64
@@ -176,11 +177,10 @@ func parseLimitOnProducts(query url.Values, qFilters *QueryFilters) error {
 }
 
 func parsePage(query url.Values, qFilters *QueryFilters) error {
+	qFilters.Page = 1
+
 	if err := parseUint64(query, QueryFieldPage, &qFilters.Page); err != nil {
 		return err
-	}
-	if qFilters.Page == 0 {
-		qFilters.Page = 1
 	}
 	return nil
 }
