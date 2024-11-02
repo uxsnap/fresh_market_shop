@@ -12,7 +12,7 @@ import (
 const ProductsTableName = "products"
 
 var productsTableFields = []string{
-	"uid", "category_uid", "weight", "name", "description", "ccal", "price", "created_at", "updated_at",
+	"uid", "category_uid", "name", "description", "ccal", "price", "created_at", "updated_at", "weight",
 }
 
 type ProductRow struct {
@@ -101,8 +101,8 @@ func (p *ProductRow) Table() string {
 
 func (p *ProductRow) ValuesForScan() []interface{} {
 	return []interface{}{
-		&p.Uid, &p.CategoryUid, &p.Weight, &p.Name, &p.Description,
-		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt,
+		&p.Uid, &p.CategoryUid, &p.Name, &p.Description,
+		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt, &p.Weight,
 	}
 }
 
@@ -112,14 +112,14 @@ func (p *ProductRow) Scan(row pgx.Row) error {
 
 func (p *ProductRow) ColumnsForUpdate() []string {
 	return []string{
-		"category_uid", "name", "description", "ccal", "price", "updated_at",
+		"category_uid", "name", "description", "ccal", "price", "weight", "updated_at",
 	}
 }
 
 func (p *ProductRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
 		p.CategoryUid, p.Name, p.Description, p.Ccal,
-		p.Price, p.UpdatedAt,
+		p.Price, p.Weight, p.UpdatedAt,
 	}
 }
 
