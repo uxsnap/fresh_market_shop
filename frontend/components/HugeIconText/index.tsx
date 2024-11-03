@@ -4,9 +4,10 @@ import { Ok } from "../icons/Ok";
 import { SadFace } from "../icons/SadFace";
 
 import styles from "./HugeIconText.module.css";
+import { MailSent } from "../icons/MailSent";
 
 type Props = {
-  type: "ok" | "sad";
+  type: "ok" | "sad" | "email";
   children?: string;
   subText?: string;
   center?: boolean;
@@ -15,6 +16,7 @@ type Props = {
 const mapTypeToIcon = {
   sad: <SadFace fill="var(--mantine-color-danger-0)" size={200} />,
   ok: <Ok fill="var(--mantine-color-primary-0)" size={200} />,
+  email: <MailSent fill="var(--mantine-color-secondary-1)" size={200}  />
 };
 
 export const HugeIconText = ({ type, children, subText, center }: Props) => {

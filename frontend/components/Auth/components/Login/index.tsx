@@ -2,6 +2,8 @@ import { AuthType } from "@/types";
 import { Button, Flex, Group, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Buttons } from "../Buttons";
+import { loginUser } from "@/api/auth/login";
+import { useMutation } from "@tanstack/react-query";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -21,8 +23,19 @@ export const Login = ({ onChange, close }: Props) => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: () => {
+      // router.push("/email_sent");
+    },
+  });
+
+  const handleSubmit = form.onSubmit((values) => {
+    mutation.mutate(values);
+  });
+
   return (
-    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+    <form onSubmit={handleSubmit}>
       <Flex gap={16} direction="column">
         <TextInput size="md" label="Email" placeholder="Введите email" />
         <PasswordInput size="md" label="Пароль" placeholder="Введите пароль" />
