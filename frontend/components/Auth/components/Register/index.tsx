@@ -29,6 +29,7 @@ export const Register = ({ onChange, close }: Props) => {
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: () => {
+      close();
       router.push("/email_sent");
     },
   });

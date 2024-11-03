@@ -42,11 +42,13 @@ export default function EmailVerify() {
         loaderProps={{ color: "primary.0", type: "bars" }}
       />
 
-      <HugeIconText center type={verified ? "ok" : "sad"}>
-        {verified
-          ? "Вы успешно активировали свой аккаунт!"
-          : "Не удалось активировать аккаунт!"}
-      </HugeIconText>
+      {verified !== undefined && (
+        <HugeIconText center type={verified ? "ok" : "sad"}>
+          {verified
+            ? "Вы успешно активировали свой аккаунт!"
+            : "Не удалось активировать аккаунт!"}
+        </HugeIconText>
+      )}
     </MainBox>
   );
 }
