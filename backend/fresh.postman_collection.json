@@ -1,0 +1,962 @@
+{
+	"info": {
+		"_postman_id": "4030f8ee-147f-4e41-87a1-9e2ca13d5cd7",
+		"name": "fresh",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17443477",
+		"_collection_link": "https://orange-comet-294040.postman.co/workspace/s~e64ff750-e2ed-4184-9cec-62efcab26471/collection/17443477-4030f8ee-147f-4e41-87a1-9e2ca13d5cd7?action=share&source=collection_link&creator=17443477"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "delivery_address",
+					"item": [
+						{
+							"name": "add_address",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_address",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"delivery_address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_address",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"uid\": \"bb34f0cc-0280-4917-ba8d-460471a9986d\",\n    \"userUid\": \"b0477677-ebf8-4fe9-863a-ea9cba0d190a\",\n    \"latitude\": 59.23,\n    \"longitude\": 21.23423,\n    \"cityName\": \"Кал\",\n    \"streetName\": \"Говна\",\n    \"houseNumber\": 46,\n    \"building\": 1,\n    \"floor\": 7,\n    \"apartment\": 198\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_address",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"delivery_address"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get address",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/users/delivery_address/bb34f0cc-0280-4917-ba8d-460471a9986d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"delivery_address",
+										"bb34f0cc-0280-4917-ba8d-460471a9986d"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "get user addresses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_addresses",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"delivery_addresses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete address",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_address/bb34f0cc-0280-4917-ba8d-460471a9986d",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"users",
+										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"delivery_address",
+										"bb34f0cc-0280-4917-ba8d-460471a9986d"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get user",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"b0477677-ebf8-4fe9-863a-ea9cba0d190a\",\n    \"username\": \"govnoEd\",\n    \"email\": \"new@new\",\n    \"createdAt\": \"2024-10-31T14:02:58.400746Z\",\n    \"updatedAt\": \"2024-10-31T14:03:41.422004Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"768dc54b-d7a7-4fc3-9177-90e9c5c045bc\",\n    \"email\": \"hhh\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"67b6e6dd-0ef7-47a0-aa68-4dac7b2038ba\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/auth/refresh",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"66b5cf1a-ef10-430c-9308-c43dbe49f761\",\n    \"email\": \"new@new\",\n    \"password\": \"new\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify jwt",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jwt\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhoaCIsImV4cGlyZWRfYXQiOiIzNjAwMDAwMDAwMDAwIiwicGVybWlzc2lvbnMiOiJub3RfdmVyaWZpZWQiLCJyb2xlIjoidXNlciIsInNlc3Npb25fdWlkIjoiODBmOTcwY2UtYzljYS00YjE4LWI1ZTctOWZjYmYyNmFiNzU4IiwidXNlcl91aWQiOiI2N2I2ZTZkZC0wZWY3LTQ3YTAtYWE2OC00ZGFjN2IyMDM4YmEifQ.7ebN5FYx-1bTsYFiVz4GEL1HGy584Nv4lW8aTNs2kIo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/verify/jwt",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"verify",
+								"jwt"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"66b5cf1a-ef10-430c-9308-c43dbe49f761\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "categories",
+			"item": [
+				{
+					"name": "create category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Сыр\",\n    \"description\": \"молочный продукт вкусный\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"16875721-9091-4b67-870a-45c42c544d27\",\n    \"name\": \"Сыр\",\n    \"description\": \"молочный продукт пушка бомба\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"16875721-9091-4b67-870a-45c42c544d27\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/categories/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/categories/16875721-9091-4b67-870a-45c42c544d27",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								"16875721-9091-4b67-870a-45c42c544d27"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get category products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/categories/38e27c8f-570c-4d50-bf33-a0bd03afb13e/products?limit=3&page=2&with_counts=false&with_photos=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"categories",
+								"38e27c8f-570c-4d50-bf33-a0bd03afb13e",
+								"products"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "with_counts",
+									"value": "false"
+								},
+								{
+									"key": "with_photos",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "health",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "create order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"productUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb502\",\n            \"count\": 2\n        },\n        {\n            \"productUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb504\",\n            \"count\": 3\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "get products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products?page=1&limit=5&with_counts=true&category_uid=4cf8fc1e-1745-4939-b434-5067684f65fb",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "with_counts",
+									"value": "true"
+								},
+								{
+									"key": "category_uid",
+									"value": "4cf8fc1e-1745-4939-b434-5067684f65fb"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/e2dff304-23ee-4162-a466-cb120ce9b6af?with_count=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"e2dff304-23ee-4162-a466-cb120ce9b6af"
+							],
+							"query": [
+								{
+									"key": "with_count",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get products by names",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"names\": [\"хлеб\", \"апельсин\", \"грудка\", \"оливковое масло\"],\n    \"limitOnEach\": 1,\n    \"offsetOnEach\": 0,\n    \"withCount\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/by_names",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"by_names"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get new products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/new?with_counts=true&with_photos=true&limit=5&page=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"new"
+							],
+							"query": [
+								{
+									"key": "with_counts",
+									"value": "true"
+								},
+								{
+									"key": "with_photos",
+									"value": "true"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "page",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product count",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/38e27c8f-570c-4d50-bf33-a0bd03afb101/count",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"38e27c8f-570c-4d50-bf33-a0bd03afb101",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "set product count",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productUid\": \"e2dff304-23ee-4162-a466-cb120ce9b6af\",\n    \"count\": 23\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/count",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"count"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "increment product count",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb101\",\n    \"count\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/count/inc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"count",
+								"inc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "decrement product count",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb101\",\n    \"count\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/count/dec",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"count",
+								"dec"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"categoryUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb13e\",\n    \"name\": \"Хлебный мякиш\",\n    \"description\": \"Аутентичный продукт прямиком из офиса СберБанка\",\n    \"ccal\": 138,\n    \"price\": 50,\n    \"weight\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uid\": \"e2dff304-23ee-4162-a466-cb120ce9b6af\",\n    \"categoryUid\": \"38e27c8f-570c-4d50-bf33-a0bd03afb13e\",\n    \"name\": \"Хлебный мякиш\",\n    \"description\": \"Аутентичный продукт прямиком из офиса СберБанка\",\n    \"ccal\": 190,\n    \"price\": 55,\n    \"weight\": 101\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/products/e2dff304-23ee-4162-a466-cb120ce9b6af",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"e2dff304-23ee-4162-a466-cb120ce9b6af"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "recipes",
+			"item": [
+				{
+					"name": "get recipe by uid",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get recipes",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "recommendations",
+			"item": []
+		},
+		{
+			"name": "search",
+			"item": []
+		}
+	]
+}

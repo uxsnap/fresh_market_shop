@@ -17,7 +17,7 @@ func (h *RecipesSubrouter) GetRecipes(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
+			errorWrapper.InternalError, err.Error(),
 		))
 		return
 	}
