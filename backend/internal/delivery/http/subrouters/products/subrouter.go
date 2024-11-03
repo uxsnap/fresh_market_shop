@@ -19,7 +19,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Get("/by_names", ps.getProductsByNames)
 		r.Get("/new", ps.getNewProducts)
 
-		r.Get("/count/{uid}", ps.GetProductCount)
+		r.Get("/{uid}/count", ps.GetProductCount)
 
 		r.Group(func(r chi.Router) {
 			r.Use(ps.Middleware.Auth)

@@ -28,7 +28,7 @@ func (h *ProductsSubrouter) getProductsByNames(w http.ResponseWriter, r *http.Re
 	if req.LimitOnEach == 0 {
 		req.LimitOnEach = defaultLimitOnEach
 	}
-
+	// TODO: добавить with_photos
 	qFilters := entity.QueryFilters{
 		LimitOnEach:  req.LimitOnEach,
 		OffsetOnEach: req.OffsetOnEach,

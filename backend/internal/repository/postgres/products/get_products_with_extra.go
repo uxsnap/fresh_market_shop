@@ -136,6 +136,7 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 
 		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
+				product.Photos = nil
 				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
 				product.Photos = productPhotoRows.ToEntity()

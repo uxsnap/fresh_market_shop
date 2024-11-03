@@ -23,7 +23,7 @@ func (h *ProductsSubrouter) CreateProduct(w http.ResponseWriter, r *http.Request
 	uid, err := h.ProductsService.CreateProduct(ctx, httpEntity.ProductToEntity(product))
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
+			errorWrapper.InternalError, err.Error(),
 		))
 		return
 	}

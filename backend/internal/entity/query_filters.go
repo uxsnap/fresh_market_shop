@@ -177,7 +177,11 @@ func parseLimitOnProducts(query url.Values, qFilters *QueryFilters) error {
 }
 
 func parsePage(query url.Values, qFilters *QueryFilters) error {
-	qFilters.Page = 1
+	defer func() {
+		if qFilters.Page == 0 {
+			qFilters.Page = 1
+		}
+	}()
 
 	if err := parseUint64(query, QueryFieldPage, &qFilters.Page); err != nil {
 		return err
