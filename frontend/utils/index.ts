@@ -1,4 +1,5 @@
 import { ProductItem, ProductWithPhotos, RecipeStep } from "@/types";
+import axios from "axios";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -40,4 +41,16 @@ export const getRecipeBg = (uid: string) => {
 
 export const getRecipeStepImg = (step: RecipeStep) => {
   return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.jpg`;
+};
+
+export const isAccessTokenAlmostExpired = (expiredTime: number) => {
+  const SECONDS_TO_EXPIRE = 15000;
+
+  return Date.now() + SECONDS_TO_EXPIRE >= expiredTime * 1000;
+};
+
+export const publicApiErrorResponse = (error: unknown) => {
+  return Response.json(axios.isAxiosError(error) ? error?.response : error, {
+    status: axios.isAxiosError(error) ? error?.response?.status || 500 : 500,
+  });
 };

@@ -2,6 +2,7 @@ import { COOKIE_AUTH_TOKENS_NAME } from "@/constants";
 import { NextServerResult } from "@/types";
 import cookie from "cookie";
 import { IncomingMessage } from "http";
+import { NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 
 export const parseAuthCookieTokens = (cookieStr: string) => {

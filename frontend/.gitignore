@@ -8,3 +8,4 @@ node_modules
 .next/
 yarn.lock
 package-lock.json
+.env
