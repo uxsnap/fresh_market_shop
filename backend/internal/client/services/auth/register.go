@@ -21,9 +21,11 @@ func (c *AuthClient) Register(ctx context.Context, email string, password string
 	}
 
 	userUid, err := uuid.FromString(resp.Uid)
+
 	if err != nil {
 		log.Printf("register returns uncorrect uid: (%s), error: %v", resp.Uid, err)
 		return uuid.UUID{}, err
 	}
+
 	return userUid, nil
 }

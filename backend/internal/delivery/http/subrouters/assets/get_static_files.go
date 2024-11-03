@@ -1,7 +1,6 @@
 package assetsSubrouter
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,8 +20,6 @@ func (as *AssetsSubrouter) getStaticFiles(path string) func(w http.ResponseWrite
 		routeCtx := chi.RouteContext(r.Context())
 
 		pathPrefix := strings.TrimSuffix(routeCtx.RoutePattern(), "/*")
-
-		fmt.Println(pathPrefix)
 
 		fs := http.StripPrefix(pathPrefix, http.FileServer(filesDir))
 

@@ -73,3 +73,9 @@ export type Recipe = {
   cookingTime: number;
   ccal: number;
 };
+
+export type NextServerResult = {
+  success: boolean;
+  tokens?: any;
+  error?: Error | null;
+};

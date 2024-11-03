@@ -8,25 +8,26 @@ import {
   Title,
   Text,
 } from "@mantine/core";
-import { useState } from "react";
 import { Register } from "./components/Register";
 import { Login } from "./components/Login";
+import { useAuthStore } from "@/store/auth";
 
-const mapTypeToTitle = {
-  login: "Вход в систему",
+const mapTypeToTitle: Record<AuthType, string> = {
+  login: "Войдите для продолжения",
   reg: "Регистрация",
   forgotPass: "Забыли пароль",
   passRet: "Восстановление пароля",
 };
 
-const mapTypeToComponent = {
-  login: (onChange: (type: AuthType) => void, close: () => void) => (
-    <Login onChange={onChange} close={close} />
+const mapTypeToComponent: Record<
+  AuthType,
+  (onChange: (type: AuthType | "") => void) => any
+> = {
+  login: (onChange) => <Login onChange={onChange} close={() => onChange("")} />,
+  reg: (onChange) => (
+    <Register onChange={onChange} close={() => onChange("")} />
   ),
-  reg: (onChange: (type: AuthType) => void, close: () => void) => (
-    <Register onChange={onChange} close={close} />
-  ),
-  forgotPass: (onChange: (type: AuthType) => void) => (
+  forgotPass: (onChange) => (
     <>
       <Flex gap={16} direction="column">
         <TextInput size="md" label="Email" placeholder="Введите email" />
@@ -66,7 +67,7 @@ const mapTypeToComponent = {
   ),
 };
 
-const mapTypToText = {
+const mapTypToText: Record<AuthType, any> = {
   login: "",
   reg: "",
   forgotPass: (
@@ -78,24 +79,24 @@ const mapTypToText = {
   passRet: "",
 };
 
-type Props = {
-  opened: boolean;
-  close: () => void;
-};
+export const Auth = () => {
+  const modalOpen = useAuthStore((s) => s.modalOpen);
+  const setModalOpen = useAuthStore((s) => s.setModalOpen);
 
-export const Auth = ({ opened, close }: Props) => {
-  const [currentType, setCurrentType] = useState<AuthType>("login");
-
-  const handleTypeChange = (type: AuthType) => {
-    setCurrentType(type);
+  const handleTypeChange = (type: AuthType | "") => {
+    setModalOpen(type);
   };
 
-  const title = mapTypeToTitle[currentType];
-  const Component = mapTypeToComponent[currentType](handleTypeChange, close);
-  const text = mapTypToText[currentType];
+  if (!modalOpen) {
+    return null;
+  }
+
+  const title = mapTypeToTitle[modalOpen];
+  const Component = mapTypeToComponent[modalOpen](handleTypeChange);
+  const text = mapTypToText[modalOpen];
 
   return (
-    <Modal.Root centered opened={opened} onClose={close}>
+    <Modal.Root centered opened onClose={() => setModalOpen("")}>
       <Modal.Overlay bg="accent.0" opacity={0.6} />
 
       <Modal.Content right={0}>

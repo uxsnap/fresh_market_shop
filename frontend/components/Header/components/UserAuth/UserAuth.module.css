@@ -1,0 +1,11 @@
+.userButton {
+  svg {
+    fill: var(--mantine-color-accent-0);
+  }
+
+  &:hover {
+    svg {
+      fill: var(--mantine-color-secondary-0);
+    }
+  }
+}

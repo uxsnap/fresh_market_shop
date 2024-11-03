@@ -6,12 +6,19 @@ import { SideMenu } from "../SideMenu";
 import { PropsWithChildren, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useMutation,
+} from "@tanstack/react-query";
+import { verifyUser } from "@/api/auth/verify";
+import { useAuthStore } from "@/store/auth";
 
 const queryClient = new QueryClient();
 
-export const MainAppShell = ({ children }: PropsWithChildren) => {
+const MainApp = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
+  const setLogged = useAuthStore((s) => s.setLogged);
 
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
     useDisclosure();
@@ -30,27 +37,40 @@ export const MainAppShell = ({ children }: PropsWithChildren) => {
     toggleMobile();
   };
 
+  const mutation = useMutation({
+    mutationFn: verifyUser,
+    onSuccess: ({ isValid }) => {
+      setLogged(isValid);
+    },
+  });
+
+  useEffect(mutation.mutate, []);
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppShell
-        header={{ height: { base: 125, md: 78 } }}
-        navbar={{
-          width: 300,
-          breakpoint: "md",
-          collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
-        }}
-        padding="md"
-      >
-        <AppShell.Header zIndex={3}>
-          <Header onNavbar={handleToggle} />
-        </AppShell.Header>
+    <AppShell
+      header={{ height: { base: 125, md: 78 } }}
+      navbar={{
+        width: 300,
+        breakpoint: "md",
+        collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+      }}
+      padding="md"
+    >
+      <AppShell.Header zIndex={3}>
+        <Header onNavbar={handleToggle} />
+      </AppShell.Header>
 
-        <AppShell.Navbar zIndex={1} px={12} py={20}>
-          <SideMenu />
-        </AppShell.Navbar>
+      <AppShell.Navbar zIndex={1} px={12} py={20}>
+        <SideMenu />
+      </AppShell.Navbar>
 
-        <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
-    </QueryClientProvider>
+      <AppShell.Main>{children}</AppShell.Main>
+    </AppShell>
   );
 };
+
+export const MainAppShell = ({ children }: PropsWithChildren) => (
+  <QueryClientProvider client={queryClient}>
+    <MainApp>{children}</MainApp>
+  </QueryClientProvider>
+);

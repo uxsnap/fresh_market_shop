@@ -2,6 +2,9 @@ import { AuthType } from "@/types";
 import { Button, Flex, Group, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Buttons } from "../Buttons";
+import { loginUser } from "@/api/auth/login";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/store/auth";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -9,6 +12,8 @@ type Props = {
 };
 
 export const Login = ({ onChange, close }: Props) => {
+  const setLogged = useAuthStore((s) => s.setLogged);
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -21,11 +26,33 @@ export const Login = ({ onChange, close }: Props) => {
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: () => {
+      close();
+      setLogged(true);
+    },
+  });
+
+  const handleSubmit = form.onSubmit((values) => {
+    mutation.mutate(values);
+  });
+
   return (
-    <form onSubmit={form.onSubmit((values) => console.log(values))}>
+    <form onSubmit={handleSubmit}>
       <Flex gap={16} direction="column">
-        <TextInput size="md" label="Email" placeholder="Введите email" />
-        <PasswordInput size="md" label="Пароль" placeholder="Введите пароль" />
+        <TextInput
+          size="md"
+          label="Email"
+          placeholder="Введите email"
+          {...form.getInputProps("email")}
+        />
+        <PasswordInput
+          size="md"
+          label="Пароль"
+          placeholder="Введите пароль"
+          {...form.getInputProps("password")}
+        />
       </Flex>
 
       <Group mt={4} justify="space-between">
@@ -47,11 +74,11 @@ export const Login = ({ onChange, close }: Props) => {
           size="xs"
           variant="outline"
         >
-          Регистрация
+          Либо зарегистрируйтесь
         </Button>
       </Group>
 
-      <Buttons close={close} currentType="reg" />
+      <Buttons close={close} currentType="login" />
     </form>
   );
 };
