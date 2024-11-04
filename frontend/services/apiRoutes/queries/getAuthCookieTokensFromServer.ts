@@ -5,7 +5,10 @@ import { cookies } from "next/headers";
 export const getAppCookie = async () => {
   const cookieStore = await cookies();
 
-  return cookieStore.get(COOKIE_AUTH_TOKENS_NAME) ?? "";
+  return {
+    access_jwt: cookieStore.get("access_jwt")?.value,
+    refresh_jwt: cookieStore.get("refresh_jwt")?.value,
+  };
 };
 
 export const getAuthCookieTokensFromServer =
@@ -13,9 +16,12 @@ export const getAuthCookieTokensFromServer =
     const result: NextServerResult = { success: false };
 
     try {
-      const appCookie = await getAppCookie();
+      const { access_jwt, refresh_jwt } = await getAppCookie();
 
-      result.tokens = appCookie ? JSON.parse(appCookie.value) : undefined;
+      if (access_jwt && refresh_jwt) {
+        result.tokens = { access_jwt, refresh_jwt };
+      }
+
       result.success = !!result.tokens;
     } catch (e: any) {
       result.success = false;

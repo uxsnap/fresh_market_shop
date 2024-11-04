@@ -39,10 +39,16 @@ local-migration-up:
 local-migration-down:
 	${LOCAL_BIN}/goose -dir ${LOCAL_MIGRATION_DIR} postgres ${LOCAL_MIGRATION_DSN} down -v
 
-.PHONY: start
-start:
+run:
 	nodemon --watch './internal/**/*.go' --signal SIGTERM --exec 'go' run ./cmd/main.go
 
-.PHONY: migration-restart
-migration-restart: 
-	docker-compose down && docker image rm fresh_market_shop-migrator && docker volume rm fresh_market_shop_postgres_volume && docker-compose up -d
+down:
+	docker-compose down
+	docker image rm fresh_market_shop-migrator
+	docker volume rm fresh_market_shop_postgres_volume
+
+restart-migrations:
+	docker-compose restart migrator
+
+build:
+	docker-compose up -d

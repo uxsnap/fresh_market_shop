@@ -76,6 +76,18 @@ export type Recipe = {
 
 export type NextServerResult = {
   success: boolean;
-  tokens?: any;
+  tokens?: {
+    access_jwt?: string;
+    refresh_jwt?: string;
+  };
   error?: Error | null;
+};
+
+export type JwtData = {
+  email: string;
+  expired_at: string;
+  permissions: string;
+  role: string;
+  session_uid: string;
+  user_uid: string;
 };
