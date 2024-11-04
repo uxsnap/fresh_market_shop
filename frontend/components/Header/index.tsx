@@ -1,7 +1,6 @@
 import { Button, Group, Stack } from "@mantine/core";
 import { Menu } from "../icons/Menu";
 import { Location } from "../Location";
-import { DeliveryTime } from "../DeliveryTime";
 import styles from "./Header.module.css";
 import { CartButton } from "./components/CartButton";
 import { Search } from "./components/Search";

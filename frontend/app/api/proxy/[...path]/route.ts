@@ -1,10 +1,7 @@
 import { setAuthCookieTokensFromServer } from "@/services/apiRoutes/authCookie";
 import { deleteAuthCookieTokensFromServer } from "@/services/apiRoutes/queries/deleteAuthCookieTokensFromServer";
 import { getAuthCookieTokensFromServer } from "@/services/apiRoutes/queries/getAuthCookieTokensFromServer";
-import {
-  isAccessTokenAlmostExpired,
-  publicApiErrorResponse,
-} from "@/utils";
+import { isAccessTokenAlmostExpired, publicApiErrorResponse } from "@/utils";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 const cookie = require("cookie");
@@ -47,28 +44,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
       }
 
     case "/verify":
-      const { tokens } = await getAuthCookieTokensFromServer();
-
-      if (!tokens) {
-        return Response.json({ isValid: false });
-      }
-
       try {
-        const response = await axios.request({
-          ...req,
-          method: "POST",
-          url: "/auth/verify/jwt",
-          baseURL: process.env.NEXT_PUBLIC_API,
-          data: {
-            jwt: tokens.access_jwt,
-          },
-          headers: {},
-        });
+        const { tokens } = await getAuthCookieTokensFromServer();
 
-        return Response.json({ isValid: response.data.isValid });
+        if (!tokens) {
+          return Response.json({ isValid: false });
+        }
+
+        return Response.json({ isValid: true });
       } catch (err) {
-        console.log(err);
-
         return Response.json({ isValid: false });
       }
     default:

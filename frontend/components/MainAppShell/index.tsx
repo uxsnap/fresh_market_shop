@@ -37,14 +37,14 @@ const MainApp = ({ children }: PropsWithChildren) => {
     toggleMobile();
   };
 
-  const mutation = useMutation({
+  const { mutate } = useMutation({
     mutationFn: verifyUser,
     onSuccess: ({ isValid }) => {
       setLogged(isValid);
     },
   });
 
-  useEffect(mutation.mutate, []);
+  useEffect(mutate, []);
 
   return (
     <AppShell

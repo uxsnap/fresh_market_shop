@@ -5,7 +5,9 @@ type VerifyResponse = {
 };
 
 export const verifyUser = (): Promise<VerifyResponse> => {
-  return axios.post(`${process.env.NEXT_PUBLIC_API_PROXY_BASE_URL}/verify`);
+  return axios
+    .post(`${process.env.NEXT_PUBLIC_API_PROXY_BASE_URL}/verify`)
+    .then((data) => data.data);
 };
 
 verifyUser.queryKey = "verifyUser";

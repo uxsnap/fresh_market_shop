@@ -12,6 +12,10 @@ export const UserAuth = ({ children }: PropsWithChildren) => {
   const logged = useAuthStore((s) => s.logged);
   const setModalOpen = useAuthStore((s) => s.setModalOpen);
 
+  if (logged === undefined) {
+    return;
+  }
+
   return (
     <Group wrap="nowrap" gap={logged ? 12 : 24} align="center">
       {children}
