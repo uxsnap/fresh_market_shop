@@ -1,4 +1,4 @@
-import axios from "axios";
+import client from "../client";
 
 type Body = {
   email: string;
@@ -6,7 +6,7 @@ type Body = {
 };
 
 export const loginUser = (body: Body) => {
-  return axios.post(`${process.env.NEXT_PUBLIC_API_PROXY_BASE_URL}/login`, body);
+  return client.post("/login", body);
 };
 
 loginUser.queryKey = "loginUser";

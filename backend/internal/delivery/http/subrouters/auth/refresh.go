@@ -10,6 +10,7 @@ import (
 
 func (h *AuthSubrouter) RefreshJwt(w http.ResponseWriter, r *http.Request) {
 	refreshCookie, err := r.Cookie(refreshJwtCookieName)
+
 	if err != nil {
 		log.Printf("failed to get refresh token from request: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
@@ -24,7 +25,8 @@ func (h *AuthSubrouter) RefreshJwt(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
 	http.SetCookie(w, httpUtils.NewCookie(accessJwtCookieName, accessJwt))
 	http.SetCookie(w, httpUtils.NewCookie(refreshJwtCookieName, refreshJwt))
+
+	w.WriteHeader(http.StatusOK)
 }

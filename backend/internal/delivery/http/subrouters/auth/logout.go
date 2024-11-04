@@ -16,16 +16,17 @@ func (h *AuthSubrouter) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessCookie, err := r.Cookie(accessJwtCookieName)
-	if err != nil {
-		log.Printf("failed to get access token from request: %v", err)
+	bearer := httpUtils.GetBearerToken(r)
+
+	if bearer == "" {
+		log.Printf("failed to get access token from request")
 		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
 	ctx := context.Background()
 
-	if err := h.AuthService.Logout(ctx, accessCookie.Value, req.Uid); err != nil {
+	if err := h.AuthService.Logout(ctx, bearer, req.Uid); err != nil {
 		log.Printf("failed to logout user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return

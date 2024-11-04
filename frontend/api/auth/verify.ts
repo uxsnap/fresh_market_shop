@@ -1,13 +1,11 @@
-import axios from "axios";
+import client from "../client";
 
 type VerifyResponse = {
   isValid: boolean;
 };
 
 export const verifyUser = (): Promise<VerifyResponse> => {
-  return axios
-    .post(`${process.env.NEXT_PUBLIC_API_PROXY_BASE_URL}/verify`)
-    .then((data) => data.data);
+  return client.post("/verify").then(data => data.data);
 };
 
 verifyUser.queryKey = "verifyUser";

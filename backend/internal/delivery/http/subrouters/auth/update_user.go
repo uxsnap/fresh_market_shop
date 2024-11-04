@@ -17,16 +17,16 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessCookie, err := r.Cookie(accessJwtCookieName)
-	if err != nil {
-		log.Printf("failed to get access token from request: %v", err)
+	accessCookie := httpUtils.GetBearerToken(r)
+	if accessCookie == "" {
+		log.Printf("failed to get access token from request")
 		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, nil)
 		return
 	}
 
 	ctx := context.Background()
 
-	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie.Value, req.Uid, req.Email, req.Password)
+	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie, req.Uid, req.Email, req.Password)
 	if err != nil {
 		log.Printf("failed to update user %s: %v", req.Uid, err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)

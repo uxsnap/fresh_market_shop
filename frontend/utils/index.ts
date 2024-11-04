@@ -1,4 +1,4 @@
-import { JwtData, ProductItem, ProductWithPhotos, RecipeStep } from "@/types";
+import { ProductItem, ProductWithPhotos, RecipeStep } from "@/types";
 import axios from "axios";
 
 import dayjs from "dayjs";
@@ -41,30 +41,6 @@ export const getRecipeBg = (uid: string) => {
 
 export const getRecipeStepImg = (step: RecipeStep) => {
   return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.jpg`;
-};
-
-export const parseJwt = (token?: string): JwtData | undefined => {
-  if (!token) {
-    return;
-  }
-
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace("-", "+").replace("_", "/");
-  return JSON.parse(Buffer.from(base64, "base64").toString());
-};
-
-export const isAccessTokenAlmostExpired = (token: string) => {
-  const parsed = parseJwt(token);
-
-  if (!parsed) {
-    return true;
-  }
-
-  const expiredTime = parseInt(parsed.expired_at, 10);
-
-  const SECONDS_TO_EXPIRE = 15000;
-
-  return Date.now() + SECONDS_TO_EXPIRE >= expiredTime * 1000;
 };
 
 export const publicApiErrorResponse = (error: unknown) => {

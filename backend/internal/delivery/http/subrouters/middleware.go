@@ -21,26 +21,25 @@ func NewMiddleware(authService AuthService) *Middleware {
 	}
 }
 
-const accessJwtCookieName = "access_jwt"
-
 func (m *Middleware) Auth(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 
-		tokenCookie, err := r.Cookie(accessJwtCookieName)
-		if err != nil {
-			log.Printf("auth middleware: failed to get jwt token: %v", err)
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(err.Error(), "auth middleware: failed to get jwt token"))
+		tokenCookie := httpUtils.GetBearerToken(r)
+
+		if tokenCookie == "" {
+			log.Printf("auth middleware: failed to get jwt token")
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "auth middleware: failed to get jwt token"))
 			return
 		}
 
-		if err := m.VerifyJwt(ctx, tokenCookie.Value); err != nil {
+		if err := m.VerifyJwt(ctx, tokenCookie); err != nil {
 			log.Printf("auth middleware: invalid jwt token: %v", err)
 			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(err.Error(), "auth middleware: invalid jwt token"))
 			return
 		}
 
-		token, _ := jwt.Parse(tokenCookie.Value, nil)
+		token, _ := jwt.Parse(tokenCookie, nil)
 		if token == nil {
 			log.Printf("auth middleware: failed to parse jwt token: empty token")
 			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("empty token", "auth middleware: failed to parse jwt token"))

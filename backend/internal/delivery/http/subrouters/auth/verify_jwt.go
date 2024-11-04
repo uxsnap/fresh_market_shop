@@ -7,7 +7,6 @@ import (
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 )
 
-// TODO: убрать этот метод отсюда, пока чисто для тестов
 func (h *AuthSubrouter) VerifyJwt(w http.ResponseWriter, r *http.Request) {
 	var req VerifyJwtRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {

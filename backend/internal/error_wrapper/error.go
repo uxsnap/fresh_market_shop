@@ -8,6 +8,7 @@ const (
 	OrderCreateValidation = "order_create_validation"
 	OrderCreateError      = "order_create_error"
 	ProductCountError     = "product_count_error"
+	JwtAuthMiddleware     = "jwt_auth_middleware"
 )
 
 type Error struct {
