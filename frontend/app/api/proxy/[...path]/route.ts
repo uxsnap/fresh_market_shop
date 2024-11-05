@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     case "/verify":
       return proxyVerify();
     case "/logout":
-      return proxyLogout(req);
+      return proxyLogout();
     default:
       return proxyDefault(req);
   }

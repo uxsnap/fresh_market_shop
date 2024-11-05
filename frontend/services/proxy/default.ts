@@ -3,6 +3,7 @@ import {
   deleteAuthCookies,
   getAuthCookieTokensFromServer,
   isAccessTokenAlmostExpired,
+  parseJwt,
   parseResponseCookies,
 } from "./cookies";
 import { publicApiErrorResponse } from "@/utils";
@@ -46,6 +47,16 @@ export const proxyDefault = async (req: NextRequest) => {
 
           cookieStore.set("access_jwt", parsed);
         } catch (e) {
+          const parsedJwt = parseJwt(access_jwt);
+
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API}/auth/logout`,
+            { uid: parsedJwt!.user_uid },
+            {
+              headers: { Authorization: `Bearer ${access_jwt}` },
+            }
+          );
+
           return deleteAuthCookies();
         }
       }

@@ -1,4 +1,8 @@
-import { DAY_IN_SECONDS, ONE_HOUR_IN_SECONDS, SECONDS_TO_EXPIRE } from "@/constants";
+import {
+  DAY_IN_SECONDS,
+  ONE_HOUR_IN_SECONDS,
+  SECONDS_TO_EXPIRE,
+} from "@/constants";
 import { JwtData, NextServerResult } from "@/types";
 import { AxiosResponse } from "axios";
 import { cookies } from "next/headers";
@@ -60,7 +64,6 @@ export const deleteAuthCookies = () => {
     {},
     {
       status: 200,
-
       headers: [
         ["Set-Cookie", serializeCookie("access_jwt", "", -1)],
         ["Set-Cookie", serializeCookie("refresh_jwt", "", -1)],

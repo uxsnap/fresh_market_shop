@@ -1,18 +1,25 @@
 import { publicApiErrorResponse } from "@/utils";
 import axios from "axios";
-import { NextRequest } from "next/server";
-import { deleteAuthCookies, getAuthCookieTokensFromServer } from "./cookies";
+import {
+  deleteAuthCookies,
+  getAuthCookieTokensFromServer,
+  parseJwt,
+} from "./cookies";
 
-export const proxyLogout = async (req: NextRequest) => {
+export const proxyLogout = async () => {
   try {
-    const body = await req.json();
-
     const { tokens } = await getAuthCookieTokensFromServer();
+    const parsed = parseJwt(tokens?.access_jwt);
 
-    await axios.post(`${process.env.NEXT_PUBLIC_API}/auth/logout`, body, {
-      headers: { Bearer: `${tokens?.access_jwt}` },
-    });
+    const body = { uid: parsed?.user_uid };
 
+    await axios.post(
+      `${process.env.NEXT_PUBLIC_API}/auth/logout`,
+      body,
+      {
+        headers: { Authorization: `Bearer ${tokens?.access_jwt}` },
+      }
+    );
     return deleteAuthCookies();
   } catch (error) {
     return publicApiErrorResponse(error);

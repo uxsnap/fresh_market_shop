@@ -1,12 +1,11 @@
 import { User } from "@/components/icons/User";
-import { Box, Button, Group } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { Button, Group } from "@mantine/core";
 
 import styles from "./UserAuth.module.css";
 import { Auth } from "@/components/Auth";
 import { useAuthStore } from "@/store/auth";
-import { Avatar } from "@/components/Avatar";
 import { PropsWithChildren } from "react";
+import { UserMenu } from "./UserMenu";
 
 export const UserAuth = ({ children }: PropsWithChildren) => {
   const logged = useAuthStore((s) => s.logged);
@@ -21,9 +20,7 @@ export const UserAuth = ({ children }: PropsWithChildren) => {
       {children}
 
       {logged ? (
-        <Box mah={38} maw={38} hidden={!logged}>
-          <Avatar size="small" />
-        </Box>
+        <UserMenu />
       ) : (
         <Button
           hidden={logged}
