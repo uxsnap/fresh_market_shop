@@ -97,6 +97,10 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 		sql = sql.Limit(qFilters.Limit)
 	}
 
+	if qFilters.WithRandom {
+		sql = sql.OrderBy("random()")
+	}
+
 	stmt, args, err := sql.Offset(qFilters.Offset).ToSql()
 	if err != nil {
 		log.Printf("failed to build sql query: %v", err)

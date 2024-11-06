@@ -31,4 +31,5 @@ type CategoriesRepository interface {
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
 	DeleteCategory(ctx context.Context, uid uuid.UUID) error
+	GetCategoriesByUserOrders(ctx context.Context, userUid uuid.UUID) ([]uuid.UUID, error)
 }
