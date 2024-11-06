@@ -12,11 +12,12 @@ import (
 const OrdersTableName = "orders"
 
 var ordersTableFields = []string{
-	"uid", "num", "status", "created_at", "updated_at",
+	"uid", "user_uid", "num", "status", "created_at", "updated_at",
 }
 
 type OrderRow struct {
 	Uid       pgtype.UUID
+	UserUid   pgtype.UUID
 	Num       int64
 	Status    string
 	CreatedAt pgtype.Timestamp
@@ -30,6 +31,11 @@ func NewOrderRow() *OrderRow {
 func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 	p.Uid = pgtype.UUID{
 		Bytes:  order.Uid,
+		Status: pgtype.Present,
+	}
+
+	p.UserUid = pgtype.UUID{
+		Bytes:  order.UserUid,
 		Status: pgtype.Present,
 	}
 
@@ -65,6 +71,7 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 func (p *OrderRow) ToEntity() entity.Order {
 	return entity.Order{
 		Uid:       p.Uid.Bytes,
+		UserUid:   p.UserUid.Bytes,
 		Num:       p.Num,
 		Status:    p.Status,
 		CreatedAt: p.CreatedAt.Time,
@@ -74,7 +81,7 @@ func (p *OrderRow) ToEntity() entity.Order {
 
 func (p *OrderRow) Values() []interface{} {
 	return []interface{}{
-		p.Uid, p.Num, p.Status, p.CreatedAt.Time, p.UpdatedAt.Time,
+		p.Uid, p.UserUid, p.Num, p.Status, p.CreatedAt.Time, p.UpdatedAt.Time,
 	}
 }
 
@@ -88,7 +95,7 @@ func (p *OrderRow) Table() string {
 
 func (p *OrderRow) ValuesForScan() []interface{} {
 	return []interface{}{
-		&p.Uid, &p.Num, &p.Status, &p.CreatedAt, &p.UpdatedAt,
+		&p.Uid, &p.UserUid, &p.Num, &p.Status, &p.CreatedAt, &p.UpdatedAt,
 	}
 }
 
