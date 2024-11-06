@@ -20,16 +20,7 @@ func (h *OrdersSubrouter) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userInfo, err := httpEntity.AuthUserInfoFromContext(r.Context())
-
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "не удалось найти юзера",
-		))
-		return
-	}
-
-	uid, err := h.OrdersService.CreateOrder(ctx, userInfo.UserUid, httpEntity.ProductsCountsToEntity(order))
+	uid, err := h.OrdersService.CreateOrder(ctx, httpEntity.ProductsCountsToEntity(order))
 
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)

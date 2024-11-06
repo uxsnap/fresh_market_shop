@@ -13,11 +13,6 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 	rs := RecommendationsSubrouter{deps}
 
 	return func(r chi.Router) {
-
-		r.Group(func(r chi.Router) {
-			r.Use(rs.Middleware.AuthOrPass)
-
-			r.Get("/", rs.getRecommendations)
-		})
+		r.Get("/", rs.getRecommendations)
 	}
 }

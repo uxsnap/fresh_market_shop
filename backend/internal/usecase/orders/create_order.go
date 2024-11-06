@@ -8,7 +8,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (s *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error) {
+func (s *UseCaseOrders) CreateOrder(ctx context.Context, productsCounts entity.ProductsCounts) (uuid.UUID, error) {
 	log.Printf("ucOrders.CreateOrder")
 
 	if err := s.productsCountRepository.CheckIfAllItemsExist(ctx, productsCounts); err != nil {
@@ -22,8 +22,7 @@ func (s *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, prod
 	}
 
 	order := entity.Order{
-		UserUid: userUid,
-		Uid:     uuid.NewV4(),
+		Uid: uuid.NewV4(),
 	}
 
 	if err := s.ordersRepository.CreateOrder(ctx, order); err != nil {

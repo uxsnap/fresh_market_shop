@@ -23,7 +23,6 @@ type QueryFilters struct {
 	ProductsWithPhotos bool
 	WithCounts         bool
 	WithPhotos         bool
-	WithRandom         bool
 	CcalMin            uint64
 	CcalMax            uint64
 	CreatedBefore      time.Time
@@ -34,8 +33,6 @@ type QueryFilters struct {
 	OffsetOnEach       uint64
 	CookingTime        int64
 	RecipeUid          uuid.UUID
-	UserUid            uuid.UUID
-	CategoryUids       []uuid.UUID
 }
 
 const defaultLimit = 10
@@ -57,9 +54,6 @@ const (
 	QueryFieldName               = "name"
 	QueryFieldCookingTime        = "cooking_time"
 	QueryFieldRecipeUid          = "recipe_uid"
-	QueryFieldWithRandom         = "with_random"
-	QueryFieldUserUid            = "user_uid"
-	QueryFieldCategoryUids       = "category_uids"
 )
 
 type QueryFiltersParser struct {
@@ -86,9 +80,6 @@ func NewQueryFiltersParser() *QueryFiltersParser {
 			QueryFieldName:               parseName,
 			QueryFieldCookingTime:        parseCookingTime,
 			QueryFieldRecipeUid:          parseRecipeUid,
-			QueryFieldWithRandom:         parseWithRandom,
-			QueryFieldUserUid:            parseUserUid,
-			QueryFieldCategoryUids:       parseCategoryUids,
 		},
 	}
 }
@@ -130,7 +121,6 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldCategoryUid,
 		QueryFieldName,
 		QueryFieldCookingTime,
-		QueryFieldWithRandom,
 	}
 
 	for _, field := range queryFiltersFields {
@@ -138,16 +128,15 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 			continue
 		}
 
-		_, ok := q.fieldsParsers[field]
+		parseField, ok := q.fieldsParsers[field]
 		if !ok {
 			log.Printf("parser for query field %s not found", field)
 			continue
 		}
 
-		// TODO: Add flag, the message is annoying
-		// if err := parseField(query, &queryFilters); err != nil {
-		// 	log.Printf("WARN: failed to parse field %s: %v", field, err)
-		// }
+		if err := parseField(query, &queryFilters); err != nil {
+			log.Printf("WARN: failed to parse field %s: %v", field, err)
+		}
 	}
 
 	queryFilters.Offset = (queryFilters.Page - 1) * queryFilters.Limit
@@ -257,39 +246,6 @@ func parseName(query url.Values, qFilters *QueryFilters) error {
 
 func parseCookingTime(query url.Values, qFilters *QueryFilters) error {
 	return parseInt64(query, QueryFieldCookingTime, &qFilters.CookingTime)
-}
-
-func parseWithRandom(query url.Values, qFilters *QueryFilters) error {
-	return parseBool(query, QueryFieldWithRandom, &qFilters.WithRandom)
-}
-
-func parseUserUid(query url.Values, qFilters *QueryFilters) error {
-	var err error
-	qFilters.UserUid, err = uuid.FromString(query.Get(QueryFieldUserUid))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
-	uuidsStrings, ok := query[QueryFieldCategoryUids]
-
-	if !ok {
-		return errors.Errorf("field %s not found in query", QueryFieldCategoryUids)
-	}
-
-	for _, uuidString := range uuidsStrings {
-		categoryUid, err := uuid.FromString(uuidString)
-
-		if err != nil {
-			return err
-		}
-
-		qFilters.CategoryUids = append(qFilters.CategoryUids, categoryUid)
-	}
-
-	return nil
 }
 
 //-----COMMON-----//

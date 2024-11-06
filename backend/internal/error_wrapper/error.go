@@ -9,8 +9,6 @@ const (
 	OrderCreateError      = "order_create_error"
 	ProductCountError     = "product_count_error"
 	JwtAuthMiddleware     = "jwt_auth_middleware"
-	RecommendationsError  = "recommendations_error"
-	CategoriesError       = "categories_error"
 )
 
 type Error struct {

@@ -8,7 +8,7 @@ import { memo } from "react";
 export const YouMayLike = memo(() => {
   const { data, isFetching } = useQuery({
     queryKey: [getRecommendations.queryKey],
-    queryFn: () => getRecommendations({ with_photos: true, limit: 50 }),
+    queryFn: () => getRecommendations({ with_photos: true }),
     select(data): ProductItem[] {
       return data.data.map(convertProductToProductItem);
     },
