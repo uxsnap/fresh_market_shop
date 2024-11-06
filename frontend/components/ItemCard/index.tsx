@@ -2,7 +2,6 @@
 
 import {
   Card,
-  Image,
   Text,
   Button,
   Container,
@@ -11,10 +10,13 @@ import {
 } from "@mantine/core";
 import { Counter } from "../Counter";
 import { ProductItem } from "@/types";
-import { Carousel } from "@mantine/carousel";
 import { getFallbackImg } from "@/utils";
 import { memo } from "react";
 import { useCartStore } from "@/store";
+import { ArrowsMaximize } from "../icons/ArrowsMaximize";
+
+import styles from "./ItemCard.module.css";
+import { ItemCardCarousel } from "./ItemCardCarousel";
 
 type Props = {
   item: ProductItem;
@@ -77,38 +79,15 @@ export const ItemCard = memo(({ item }: Props) => {
 
   const { price, name, imgs = [], info } = item;
 
-  const fallbackSrc = getFallbackImg(name);
-
   return (
-    <Card p={8} w={maw} radius="md" withBorder>
+    <Card p={8} w={maw} radius="md" withBorder pos="relative">
       <Card.Section>
-        {!imgs.length ? (
-          <Image
-            style={{ userSelect: "none" }}
-            src={""}
-            fallbackSrc={fallbackSrc}
-            height={imgH}
-            alt="Norway"
-            w="100%"
-          />
-        ) : (
-          <Carousel withControls={false}>
-            {imgs.map((img) => (
-              <Carousel.Slide key={img}>
-                <Image
-                  style={{ userSelect: "none" }}
-                  loading="lazy"
-                  src={img}
-                  height={imgH}
-                  alt="Norway"
-                  fit="contain"
-                  fallbackSrc={fallbackSrc}
-                  w="100%"
-                />
-              </Carousel.Slide>
-            ))}
-          </Carousel>
-        )}
+        <ArrowsMaximize
+          className={styles.icon}
+          fill="var(--mantine-color-accent-0)"
+        />
+
+        <ItemCardCarousel name={name} imgs={imgs} />
       </Card.Section>
 
       <Stack mt={8} gap={4}>
