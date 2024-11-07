@@ -54,7 +54,7 @@ export type CartItem = {
 };
 
 export type MakeOrderItem = {
-  product_uid: string;
+  productUid: string;
   count: number;
 };
 
@@ -91,4 +91,9 @@ export type JwtData = {
   role: string;
   session_uid: string;
   user_uid: string;
+};
+
+export type ErrorWrapper = {
+  type: string;
+  message: string;
 };

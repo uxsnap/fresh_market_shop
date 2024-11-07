@@ -14,11 +14,10 @@ import (
 func (h *RecommendationsSubrouter) handleUrlValues(ctx context.Context, urlValues url.Values) url.Values {
 	userInfo, err := httpEntity.AuthUserInfoFromContext(ctx)
 
-	urlValues.Add(entity.QueryFieldWithRandom, "true")
+	urlValues.Set(entity.QueryFieldWithRandom, "true")
 
 	if err == nil {
-		urlValues.Del(entity.QueryFieldWithRandom)
-		urlValues.Add(entity.QueryFieldUserUid, userInfo.UserUid.String())
+		urlValues.Set(entity.QueryFieldUserUid, userInfo.UserUid.String())
 	}
 
 	categoryUids, err := h.ProductsService.GetCategoriesByUserOrders(
@@ -29,8 +28,6 @@ func (h *RecommendationsSubrouter) handleUrlValues(ctx context.Context, urlValue
 		for _, uid := range categoryUids {
 			urlValues.Add(entity.QueryFieldCategoryUids, uid.String())
 		}
-	} else {
-		urlValues.Add(entity.QueryFieldWithRandom, "true")
 	}
 
 	return urlValues
@@ -42,6 +39,7 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 	urlValues := h.handleUrlValues(ctx, r.URL.Query())
 
 	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(urlValues)
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return

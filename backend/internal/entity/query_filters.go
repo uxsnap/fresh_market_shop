@@ -128,6 +128,7 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldCreatedBefore,
 		QueryFieldCreatedAfter,
 		QueryFieldCategoryUid,
+		QueryFieldCategoryUids,
 		QueryFieldName,
 		QueryFieldCookingTime,
 		QueryFieldWithRandom,
@@ -138,15 +139,15 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 			continue
 		}
 
-		_, ok := q.fieldsParsers[field]
+		parseField, ok := q.fieldsParsers[field]
 		if !ok {
 			log.Printf("parser for query field %s not found", field)
 			continue
 		}
 
-		// TODO: Add flag, the message is annoying
+		parseField(query, &queryFilters)
 		// if err := parseField(query, &queryFilters); err != nil {
-		// 	log.Printf("WARN: failed to parse field %s: %v", field, err)
+		// 	// log.Printf("WARN: failed to parse field %s: %v", field, err)
 		// }
 	}
 

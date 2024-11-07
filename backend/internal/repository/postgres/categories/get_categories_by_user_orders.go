@@ -2,6 +2,7 @@ package repositoryCategories
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
@@ -15,12 +16,14 @@ func (r *CategoriesRepository) GetCategoriesByUserOrders(ctx context.Context, us
 	categoryRow := pgEntity.NewCategoryRow()
 	productRow := pgEntity.NewProductRow()
 	orderProductsRow := pgEntity.NewOrderProductsRow()
+	orderRow := pgEntity.NewOrderRow()
 
-	sql, args, err := sq.Select(categoryRow.Columns()...).
+	sql, args, err := sq.Select("c.uid").
 		Distinct().
 		From(categoryRow.Table() + " c").
 		Join(productRow.Table() + " p on p.category_uid = c.uid").
-		Join(orderProductsRow.Table() + " op on op.product_uid = p.uid").
+		Join(fmt.Sprintf("%v o on o.user_uid = '%v'", orderRow.Table(), userUid.String())).
+		Join(orderProductsRow.Table() + " op on op.product_uid = p.uid and op.order_uid = o.uid").
 		ToSql()
 
 	if err != nil {
@@ -30,7 +33,7 @@ func (r *CategoriesRepository) GetCategoriesByUserOrders(ctx context.Context, us
 
 	rs, err := r.DB().Query(ctx, sql, args...)
 	if err != nil {
-		log.Printf("failed to get all categories: %v", err)
+		log.Printf("failed to get categories by orders: %v", err)
 		return []uuid.UUID{}, err
 	}
 

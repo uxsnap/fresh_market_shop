@@ -12,16 +12,51 @@ import { useEffect, useState } from "react";
 
 import styles from "./cart.module.css";
 import { PayButton } from "@/components/pages/cart/PayButton";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { makeOrder } from "@/api/cart/makeOrder";
+import { showErrorNotification } from "@/utils";
+import { AxiosError } from "axios";
+import { useAuthStore } from "@/store/auth";
 
 // TODO: Figure out right height proportions (CART_MAIN_HEIGHT)
 export default function CartPage() {
+  const router = useRouter();
   const items = useCartStore((s) => s.items);
+  const logged = useAuthStore((s) => s.logged);
 
   const [empty, setEmpty] = useState(false);
 
   useEffect(() => {
     setEmpty(!Object.keys(items).length);
   }, [items]);
+
+  useEffect(() => {
+    if (!logged) {
+      router.push("/");
+    }
+  }, [logged]);
+
+  const mutation = useMutation({
+    mutationFn: makeOrder,
+    onSuccess: () => {
+      router.push("/order");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+
+      console.log(error);
+    },
+  });
+
+  const handleCreateOrder = () => {
+    mutation.mutate({
+      products: Object.entries(items).map(([id, item]) => ({
+        productUid: id,
+        count: item.count,
+      })),
+    });
+  };
 
   const renderEmpty = () => {
     if (!empty) return;
@@ -51,7 +86,7 @@ export default function CartPage() {
               <Box className={styles.paymentBlock} w="100%">
                 <PaymentBlock
                   buttonText="Оформить заказ"
-                  onClick={() => console.log("ordered")}
+                  onClick={handleCreateOrder}
                 />
               </Box>
             )}

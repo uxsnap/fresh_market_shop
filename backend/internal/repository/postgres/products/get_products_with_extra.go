@@ -97,6 +97,18 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 		sql = sql.Limit(qFilters.Limit)
 	}
 
+	if len(qFilters.CategoryUids) > 0 {
+		categoryUidStrs := make([]string, len(qFilters.CategoryUids))
+
+		for ind, v := range qFilters.CategoryUids {
+			categoryUidStrs[ind] = fmt.Sprintf("'%v'", v.String())
+		}
+
+		sql = sql.OrderBy(
+			fmt.Sprintf("CASE WHEN p.category_uid in (%v) THEN 1 ELSE 2 END", strings.Join(categoryUidStrs, ",")),
+		)
+	}
+
 	if qFilters.WithRandom {
 		sql = sql.OrderBy("random()")
 	}
@@ -141,7 +153,7 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
 				product.Photos = nil
-				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
+				// log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
 				product.Photos = productPhotoRows.ToEntity()
 			}
@@ -230,7 +242,7 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(ctx context.Context,
 
 		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
-				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
+				// log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
 				product.Photos = productPhotoRows.ToEntity()
 			}
@@ -323,7 +335,7 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx co
 
 		if qFilters.WithPhotos {
 			if err := productPhotoRows.FromJson(jsonPhotosBuf); err != nil {
-				log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
+				// log.Printf("failed to unmarshal photos for product %s: %v", product.Uid, err)
 			} else {
 				product.Photos = productPhotoRows.ToEntity()
 			}
