@@ -43,8 +43,9 @@ export type ProductItem = {
   price: number;
   name: string;
   imgs: string[];
-  info: string;
   weight: number;
+  ccal: number;
+  description: string;
 };
 
 export type CartItem = {

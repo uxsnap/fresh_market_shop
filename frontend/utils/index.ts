@@ -25,7 +25,8 @@ export const convertProductToProductItem = (
   price: item.product.price,
   name: item.product.name,
   weight: item.product.weight,
-  info: `${item.product.weight}грамм/${item.product.ccal}ккал`,
+  ccal: item.product.ccal,
+  description: item.product.description,
 });
 
 export const formatDuration = (duration: number) => {

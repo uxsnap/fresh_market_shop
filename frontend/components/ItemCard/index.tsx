@@ -1,25 +1,17 @@
 "use client";
 
-import {
-  Card,
-  Text,
-  Button,
-  Container,
-  Stack,
-  useMatches,
-} from "@mantine/core";
-import { Counter } from "../Counter";
+import { Card, Text, Stack, useMatches } from "@mantine/core";
 import { ProductItem } from "@/types";
-import { getFallbackImg } from "@/utils";
 import { memo } from "react";
-import { useCartStore } from "@/store";
-import { ArrowsMaximize } from "../icons/ArrowsMaximize";
 
-import styles from "./ItemCard.module.css";
 import { ItemCardCarousel } from "./ItemCardCarousel";
+import { ItemCardIcon } from "./ItemCardIcon";
+import styles from "./ItemCard.module.css";
+import { ItemCounter } from "./ItemCounter";
 
 type Props = {
   item: ProductItem;
+  onExtended: () => void;
 };
 
 const mapTypeToValues: Record<string, any> = {
@@ -45,49 +37,23 @@ const mapTypeToValues: Record<string, any> = {
   },
 };
 
-// TODO: Remove unwanted rerenders thorough memoization of the state
-const ItemCounter = ({ item }: { item: ProductItem }) => {
-  const { incCartItem, decCartItem, addCartItem, getCount } = useCartStore();
-
-  const count = getCount(item.id);
-
-  return (
-    <Container fluid p={0} m={0} mt={8}>
-      {count === 0 ? (
-        <Button w="100%" onClick={() => addCartItem(item)} variant="accent">
-          Добавить
-        </Button>
-      ) : (
-        <Counter
-          count={count}
-          onDecrement={() => decCartItem(item.id)}
-          onIncrement={() => incCartItem(item.id)}
-        />
-      )}
-    </Container>
-  );
-};
-
-export const ItemCard = memo(({ item }: Props) => {
+export const ItemCard = memo(({ item, onExtended }: Props) => {
   const type = useMatches({
     base: "small",
     md: "default",
   });
 
-  const { maw, imgH, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
+  const { maw, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
     mapTypeToValues[type];
 
-  const { price, name, imgs = [], info } = item;
+  const { price, name, imgs = [], weight, ccal } = item;
 
   return (
     <Card p={8} w={maw} radius="md" withBorder pos="relative">
       <Card.Section>
-        <ArrowsMaximize
-          className={styles.icon}
-          fill="var(--mantine-color-accent-0)"
-        />
+        <ItemCardIcon type="max" onClick={onExtended} />
 
-        <ItemCardCarousel name={name} imgs={imgs} />
+        <ItemCardCarousel className={styles.img} name={name} imgs={imgs} />
       </Card.Section>
 
       <Stack mt={8} gap={4}>
@@ -101,7 +67,7 @@ export const ItemCard = memo(({ item }: Props) => {
           fz={infoFz}
           c="accent.2"
         >
-          {info}
+          {weight} грамм/{ccal} ккал.
         </Text>
       </Stack>
 

@@ -9,8 +9,9 @@ import {
 } from "@mantine/core";
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
-import { memo, PropsWithChildren } from "react";
-import styles from './ItemList.module.css';
+import { memo, PropsWithChildren, useCallback, useState } from "react";
+import styles from "./ItemList.module.css";
+import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
 
 type Props = {
   title?: string;
@@ -46,30 +47,55 @@ export const ItemList = memo(
     items,
     isFetching = false,
     scroll = true,
-  }: Props) => (
-    <Flex className={styles.root} gap={20} pos="relative" direction="column">
-      {!noTitle && (
-        <Title c="accent.0" order={1}>
-          {title}
-        </Title>
-      )}
+  }: Props) => {
+    const [curItem, setCurItem] = useState<ProductItem>();
 
-      <LoadingOverlay
-        visible={isFetching}
-        zIndex={1}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "primary.0", type: "bars" }}
-      />
+    const handleClose = useCallback(() => {
+      return setCurItem(undefined);
+    }, []);
 
-      {!isFetching && (
-        <Wrapper scroll={scroll}>
-          <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
-            {(items ?? []).map((item, ind) => (
-              <ItemCard item={item} key={ind} />
-            ))}
-          </Flex>
-        </Wrapper>
-      )}
-    </Flex>
-  )
+    return (
+      <>
+        <ItemCardExtended item={curItem} close={handleClose} />
+
+        <Flex
+          className={styles.root}
+          gap={20}
+          pos="relative"
+          direction="column"
+        >
+          {!noTitle && (
+            <Title c="accent.0" order={1}>
+              {title}
+            </Title>
+          )}
+
+          <LoadingOverlay
+            visible={isFetching}
+            zIndex={1}
+            overlayProps={{ radius: "sm", blur: 2 }}
+            loaderProps={{ color: "primary.0", type: "bars" }}
+          />
+
+          {!isFetching && (
+            <Wrapper scroll={scroll}>
+              <Flex
+                wrap={scroll ? "nowrap" : "wrap"}
+                gap={12}
+                align="flex-start"
+              >
+                {(items ?? []).map((item, ind) => (
+                  <ItemCard
+                    item={item}
+                    key={ind}
+                    onExtended={() => setCurItem(item)}
+                  />
+                ))}
+              </Flex>
+            </Wrapper>
+          )}
+        </Flex>
+      </>
+    );
+  }
 );

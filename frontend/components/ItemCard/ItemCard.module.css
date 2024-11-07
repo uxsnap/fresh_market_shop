@@ -1,14 +1,7 @@
-.icon {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  height: 20px;
-  width: 20px;
-  cursor: pointer;
-  z-index: 1;
+.img {
+  height: 176px;
 
   @media (max-width: $mantine-breakpoint-md) {
-    height: 16px;
-    width: 16px;
+    height: 100px;
   }
 }

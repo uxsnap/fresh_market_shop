@@ -1,0 +1,10 @@
+.header {
+  border-bottom: 1px solid var(--mantine-color-bg-0);
+  padding: 12px;
+  padding-left: 20px;
+}
+
+
+.img {
+  height: 400px;
+}

@@ -1,129 +1,75 @@
-// "use client";
+"use client";
 
-// import {
-//   Card,
-//   Image,
-//   Text,
-//   Button,
-//   Container,
-//   Stack,
-//   useMatches,
-//   Box,
-// } from "@mantine/core";
-// import { ProductItem } from "@/types";
-// import { Carousel } from "@mantine/carousel";
-// import { getFallbackImg } from "@/utils";
-// import { memo } from "react";
-// import { useCartStore } from "@/store";
+import { Text, Stack, Group, Modal } from "@mantine/core";
+import { ProductItem } from "@/types";
+import { memo } from "react";
 
-// import styles from "./ItemCard.module.css";
-// import { ArrowsMinimize } from "@/components/icons/ArrowsMinimize";
+import styles from "./ItemExtendedCard.module.css";
+import { ItemCardCarousel } from "../ItemCardCarousel";
+import { ItemCounter } from "../ItemCounter";
+import { ItemCardIcon } from "../ItemCardIcon";
 
-// type Props = {
-//   item: ProductItem;
-// };
+type Props = {
+  item?: ProductItem;
+  close: () => void;
+};
 
+export const ItemCardExtended = memo(({ item, close }: Props) => {
+  const { price, name, imgs = [], description, ccal } = item || {};
 
-// // TODO: Remove unwanted rerenders thorough memoization of the state
-// const ItemCounter = ({ item }: { item: ProductItem }) => {
-//   const { incCartItem, decCartItem, addCartItem, getCount } = useCartStore();
+  return (
+    <Modal.Root
+      p={0}
+      style={{ top: 20, left: 20 }}
+      opened={!!item}
+      onClose={close}
+      closeOnClickOutside
+    >
+      <Modal.Overlay />
 
-//   const count = getCount(item.id);
+      <Modal.Content>
+        <Modal.Header className={styles.header}>
+          <Group w="100%" wrap="nowrap" align="center" justify="space-between">
+            <Text lh={1} truncate="end" fw={700} fz={32} c="accent.0">
+              {name}
+            </Text>
 
-//   return (
-//     <Container fluid p={0} m={0} mt={8}>
-//       {count === 0 ? (
-//         <Button w="100%" onClick={() => addCartItem(item)} variant="accent">
-//           Добавить
-//         </Button>
-//       ) : (
-//         <Counter
-//           count={count}
-//           onDecrement={() => decCartItem(item.id)}
-//           onIncrement={() => incCartItem(item.id)}
-//         />
-//       )}
-//     </Container>
-//   );
-// };
+            <ItemCardIcon type="min" onClick={close} />
+          </Group>
+        </Modal.Header>
 
-// export const ItemCardExtended = memo(({ item }: Props) => {
-//   const type = useMatches({
-//     base: "small",
-//     md: "default",
-//   });
+        <Modal.Body p={0}>
+          <ItemCardCarousel
+            className={styles.img}
+            imgs={imgs}
+            name={name ?? ""}
+          />
 
-//   const { maw, imgH, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
-//     mapTypeToValues[type];
+          <Stack p={12} gap={12} mt={12}>
+            <Stack gap={8}>
+              <Group align="flex-end" gap={12}>
+                <Text lh="26px" truncate="end" fw={700} fz={22} c="accent.0">
+                  Описание товара
+                </Text>
 
-//   const { price, name, imgs = [], info } = item;
+                <Text lh="23px" truncate="end" fw={700} fz={18} c="accent.2">
+                  {ccal} ккал/порция
+                </Text>
+              </Group>
 
-//   const fallbackSrc = getFallbackImg(name);
+              <Text lh={1} fz={14} c="accent.0">
+                {description}
+              </Text>
+            </Stack>
 
-//   return (
-//     <Card p={8} w={maw} radius="md" withBorder pos="relative">
-//       <Card.Section>
-//         <ArrowsMinimize
-//           className={styles.icon}
-//           fill="var(--mantine-color-accent-0)"
-//         />
-
-//         {!imgs.length ? (
-//           <Image
-//             style={{ userSelect: "none" }}
-//             src={""}
-//             fallbackSrc={fallbackSrc}
-//             height={imgH}
-//             alt="Norway"
-//             w="100%"
-//           />
-//         ) : (
-//           <Carousel withControls={false}>
-//             {imgs.map((img) => (
-//               <Carousel.Slide key={img}>
-//                 <Image
-//                   style={{ userSelect: "none" }}
-//                   loading="lazy"
-//                   src={img}
-//                   height={imgH}
-//                   alt="Norway"
-//                   fit="contain"
-//                   fallbackSrc={fallbackSrc}
-//                   w="100%"
-//                 />
-//               </Carousel.Slide>
-//             ))}
-//           </Carousel>
-//         )}
-//       </Card.Section>
-
-//       <Stack mt={8} gap={4}>
-//         <Text lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
-//           {price} Руб.
-//         </Text>
-//         <Text
-//           truncate="end"
-//           lh={`${infoLh}px`}
-//           fw={500}
-//           fz={infoFz}
-//           c="accent.2"
-//         >
-//           {info}
-//         </Text>
-//       </Stack>
-
-//       <Text
-//         truncate="end"
-//         lh={`${nameLh}px`}
-//         fw={500}
-//         fz={nameFz}
-//         mt={8}
-//         c="accent.0"
-//       >
-//         {name}
-//       </Text>
-
-//       <ItemCounter item={item} />
-//     </Card>
-//   );
-// });
+            <ItemCounter item={item}>
+              <Text fw="bold" fz={18}>
+                {price} ₽
+              </Text>
+            </ItemCounter>
+          </Stack>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
+  );
+});
