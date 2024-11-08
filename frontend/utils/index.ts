@@ -21,8 +21,7 @@ export const getFallbackImg = (name: string) => {
 };
 
 export const convertProductToProductItem = (
-  item: ProductWithPhotos,
-  _: any
+  item: ProductWithPhotos
 ): ProductItem => ({
   id: item.product.uid,
   imgs: (item.photos ?? []).map(

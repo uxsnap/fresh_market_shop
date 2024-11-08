@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Container,
+  Box,
   Flex,
   LoadingOverlay,
   ScrollArea,
@@ -9,9 +9,8 @@ import {
 } from "@mantine/core";
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
-import { memo, PropsWithChildren, useCallback, useState } from "react";
+import { memo, PropsWithChildren } from "react";
 import styles from "./ItemList.module.css";
-import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
 import { useProductStore } from "@/store/product";
 
 type Props = {
@@ -35,9 +34,9 @@ const Wrapper = ({
   }
 
   return (
-    <Container m={0} p={8}>
+    <Box miw="100%">
       {children}
-    </Container>
+    </Box>
   );
 };
 

@@ -40,12 +40,11 @@ export default function CartPage() {
   const mutation = useMutation({
     mutationFn: makeOrder,
     onSuccess: () => {
+      
       router.push("/order");
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
-
-      console.log(error);
     },
   });
 

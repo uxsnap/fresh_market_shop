@@ -6,14 +6,21 @@ import { getFallbackImg } from "@/utils";
 type Props = {
   img?: string;
   children: string;
+  onClick: () => void;
 };
 
-export const SmallCartItem = ({ children, img }: Props) => {
+export const SmallCartItem = ({ children, img, onClick }: Props) => {
   const fallbackSrc = getFallbackImg(children);
 
   return (
-    <Group className={styles.root} px={8} align="center" gap={8}>
-      <Image radius={8} mah={30} src={img ?? fallbackSrc} />
+    <Group onClick={onClick} className={styles.root} px={8} align="center" gap={8}>
+      <Image
+        radius={8}
+        h={40}
+        w={40}
+        fit="contain"
+        src={img ? `${process.env.NEXT_PUBLIC_API}/${img}` : fallbackSrc}
+      />
 
       <Text fw={600} fz={18} c="accent.0" lh={1}>
         {children}

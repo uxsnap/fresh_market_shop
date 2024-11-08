@@ -22,7 +22,7 @@ export const ItemCardExtended = memo(() => {
   return (
     <Modal.Root
       p={0}
-      style={{ top: 20, left: 20 }}
+      centered
       opened={!!curItem}
       onClose={handleClose}
       closeOnClickOutside

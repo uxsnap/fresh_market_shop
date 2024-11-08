@@ -36,16 +36,16 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		resp.Categories = append(resp.Categories, httpEntity.CategoryFromEntity(category))
 	}
 
-	if qFilters.ProductsWithCount || qFilters.ProductsWithPhotos {
+	if qFilters.WithCounts || qFilters.WithPhotos {
 		products, err := h.ProductsService.GetProductsByNameLikeWithExtra(ctx, qFilters.Name, qFilters)
 		if err != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 			return
 		}
 
-		resp.ProductsWithCounts = make([]httpEntity.ProductWithExtra, 0, len(products))
+		resp.Products = make([]httpEntity.ProductWithExtra, 0, len(products))
 		for _, product := range products {
-			resp.ProductsWithCounts = append(resp.ProductsWithCounts, httpEntity.ProductWithExtra{
+			resp.Products = append(resp.Products, httpEntity.ProductWithExtra{
 				Product: httpEntity.ProductFromEntity(product.Product),
 				Count:   product.StockQuantity,
 				Photos:  httpEntity.ProductPhotosFromEntity(product.Photos),
@@ -62,16 +62,17 @@ func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	resp.Products = make([]httpEntity.Product, 0, len(products))
+	resp.Products = make([]httpEntity.ProductWithExtra, 0, len(products))
 	for _, product := range products {
-		resp.Products = append(resp.Products, httpEntity.ProductFromEntity(product))
+		resp.Products = append(resp.Products, httpEntity.ProductWithExtra{
+			Product: httpEntity.ProductFromEntity(product),
+		})
 	}
 
 	httpUtils.WriteResponseJson(w, resp)
 }
 
 type multipleSearchResponse struct {
-	Products           []httpEntity.Product          `json:"products,omitempty"`
-	Categories         []httpEntity.Category         `json:"categories"`
-	ProductsWithCounts []httpEntity.ProductWithExtra `json:"productsWithCounts,omitempty"`
+	Products   []httpEntity.ProductWithExtra `json:"products,omitempty"`
+	Categories []httpEntity.Category         `json:"categories"`
 }

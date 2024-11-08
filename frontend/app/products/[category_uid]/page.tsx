@@ -5,7 +5,7 @@ import { getProductsByCategory } from "@/api/categories/getProductsByCategory";
 import { ItemList } from "@/components/ItemList";
 import { ProductItem } from "@/types";
 import { convertProductToProductItem } from "@/utils";
-import { Container } from "@mantine/core";
+import { Box } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -36,13 +36,13 @@ export default function ProductPage() {
     "Категория";
 
   return (
-    <Container p={8} m={0} miw="100%">
+    <Box p={8} miw="100%">
       <ItemList
         title={title}
         scroll={false}
         isFetching={isFetching}
         items={data}
       />
-    </Container>
+    </Box>
   );
 }

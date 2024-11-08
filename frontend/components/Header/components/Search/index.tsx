@@ -13,6 +13,8 @@ import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
 
 import styles from "./Search.module.css";
+import { useProductStore } from "@/store/product";
+import { convertProductToProductItem } from "@/utils";
 
 type Props = {
   className?: string;
@@ -24,6 +26,7 @@ export const Search = ({ className, maw = 400 }: Props) => {
   const [debounced] = useDebouncedValue(name, 200);
 
   const router = useRouter();
+  const setCurItem = useProductStore((s) => s.setCurItem);
 
   const { data, isFetching, isFetched } = useQuery({
     queryKey: [search.queryKey, debounced],
@@ -54,9 +57,13 @@ export const Search = ({ className, maw = 400 }: Props) => {
           {category.name}
         </CategoryItem>
       )),
-      ...products.map((product) => (
-        <SmallCartItem key={product.uid} img={product.img}>
-          {product.name}
+      ...products.map((item) => (
+        <SmallCartItem
+          onClick={() => setCurItem(convertProductToProductItem(item))}
+          key={item.product.uid}
+          img={item.photos?.[0].path}
+        >
+          {item.product.name}
         </SmallCartItem>
       )),
     ];

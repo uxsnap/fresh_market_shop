@@ -41,25 +41,23 @@ type QueryFilters struct {
 const defaultLimit = 10
 
 const (
-	QueryFieldLimit              = "limit"
-	QueryFieldLimitOnCategories  = "limit_on_categories"
-	QueryFieldLimitOnProducts    = "limit_on_products"
-	QueryFieldPage               = "page"
-	QueryFieldProductsWithCounts = "products_with_counts"
-	QueryFieldProductsWithPhotos = "products_with_photos"
-	QueryFieldWithCounts         = "with_counts"
-	QueryFieldWithPhotos         = "with_photos"
-	QueryFieldCcalMin            = "ccal_min"
-	QueryFieldCcalMax            = "ccal_max"
-	QueryFieldCreatedBefore      = "created_before"
-	QueryFieldCreatedAfter       = "created_after"
-	QueryFieldCategoryUid        = "category_uid"
-	QueryFieldName               = "name"
-	QueryFieldCookingTime        = "cooking_time"
-	QueryFieldRecipeUid          = "recipe_uid"
-	QueryFieldWithRandom         = "with_random"
-	QueryFieldUserUid            = "user_uid"
-	QueryFieldCategoryUids       = "category_uids"
+	QueryFieldLimit             = "limit"
+	QueryFieldLimitOnCategories = "limit_on_categories"
+	QueryFieldLimitOnProducts   = "limit_on_products"
+	QueryFieldPage              = "page"
+	QueryFieldWithCounts        = "with_counts"
+	QueryFieldWithPhotos        = "with_photos"
+	QueryFieldCcalMin           = "ccal_min"
+	QueryFieldCcalMax           = "ccal_max"
+	QueryFieldCreatedBefore     = "created_before"
+	QueryFieldCreatedAfter      = "created_after"
+	QueryFieldCategoryUid       = "category_uid"
+	QueryFieldName              = "name"
+	QueryFieldCookingTime       = "cooking_time"
+	QueryFieldRecipeUid         = "recipe_uid"
+	QueryFieldWithRandom        = "with_random"
+	QueryFieldUserUid           = "user_uid"
+	QueryFieldCategoryUids      = "category_uids"
 )
 
 type QueryFiltersParser struct {
@@ -70,25 +68,23 @@ type QueryFiltersParser struct {
 func NewQueryFiltersParser() *QueryFiltersParser {
 	return &QueryFiltersParser{
 		fieldsParsers: map[string]func(url.Values, *QueryFilters) error{
-			QueryFieldLimit:              parseLimit,
-			QueryFieldLimitOnCategories:  parseLimitOnCategories,
-			QueryFieldLimitOnProducts:    parseLimitOnProducts,
-			QueryFieldPage:               parsePage,
-			QueryFieldProductsWithCounts: parseProductsWithCounts,
-			QueryFieldProductsWithPhotos: parseProductsWithPhotos,
-			QueryFieldWithCounts:         parseWithCounts,
-			QueryFieldWithPhotos:         parseWithPhotos,
-			QueryFieldCcalMin:            parseCcalMin,
-			QueryFieldCcalMax:            parseCcalMax,
-			QueryFieldCreatedBefore:      parseCreatedBefore,
-			QueryFieldCreatedAfter:       parseCreatedAfter,
-			QueryFieldCategoryUid:        parseCategoryUid,
-			QueryFieldName:               parseName,
-			QueryFieldCookingTime:        parseCookingTime,
-			QueryFieldRecipeUid:          parseRecipeUid,
-			QueryFieldWithRandom:         parseWithRandom,
-			QueryFieldUserUid:            parseUserUid,
-			QueryFieldCategoryUids:       parseCategoryUids,
+			QueryFieldLimit:             parseLimit,
+			QueryFieldLimitOnCategories: parseLimitOnCategories,
+			QueryFieldLimitOnProducts:   parseLimitOnProducts,
+			QueryFieldPage:              parsePage,
+			QueryFieldWithCounts:        parseWithCounts,
+			QueryFieldWithPhotos:        parseWithPhotos,
+			QueryFieldCcalMin:           parseCcalMin,
+			QueryFieldCcalMax:           parseCcalMax,
+			QueryFieldCreatedBefore:     parseCreatedBefore,
+			QueryFieldCreatedAfter:      parseCreatedAfter,
+			QueryFieldCategoryUid:       parseCategoryUid,
+			QueryFieldName:              parseName,
+			QueryFieldCookingTime:       parseCookingTime,
+			QueryFieldRecipeUid:         parseRecipeUid,
+			QueryFieldWithRandom:        parseWithRandom,
+			QueryFieldUserUid:           parseUserUid,
+			QueryFieldCategoryUids:      parseCategoryUids,
 		},
 	}
 }
@@ -119,8 +115,6 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldLimitOnCategories,
 		QueryFieldLimitOnProducts,
 		QueryFieldPage,
-		QueryFieldProductsWithCounts,
-		QueryFieldProductsWithPhotos,
 		QueryFieldWithCounts,
 		QueryFieldWithPhotos,
 		QueryFieldCcalMin,
@@ -199,14 +193,6 @@ func parsePage(query url.Values, qFilters *QueryFilters) error {
 		return err
 	}
 	return nil
-}
-
-func parseProductsWithCounts(query url.Values, qFilters *QueryFilters) error {
-	return parseBool(query, QueryFieldProductsWithCounts, &qFilters.ProductsWithCount)
-}
-
-func parseProductsWithPhotos(query url.Values, qFilters *QueryFilters) error {
-	return parseBool(query, QueryFieldProductsWithPhotos, &qFilters.ProductsWithPhotos)
 }
 
 func parseWithCounts(query url.Values, qFilters *QueryFilters) error {

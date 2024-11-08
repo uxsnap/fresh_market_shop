@@ -12,7 +12,7 @@ export type Category = {
 };
 
 export type ProductsWithCategories = {
-  products: Product[];
+  products: ProductWithPhotos[];
   categories: Category[];
 };
 

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -11,8 +12,15 @@ import (
 
 func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
+	urlValues := r.URL.Query()
 
-	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(r.URL.Query())
+	categoryUid := chi.URLParam(r, "category_uid")
+	urlValues.Set(entity.QueryFieldCategoryUid, categoryUid)
+
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithRequired(entity.QueryFieldCategoryUid).
+		ParseQuery(urlValues)
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return
