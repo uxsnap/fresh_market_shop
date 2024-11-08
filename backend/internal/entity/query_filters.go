@@ -34,7 +34,8 @@ type QueryFilters struct {
 	OffsetOnEach       uint64
 	CookingTime        int64
 	RecipeUid          uuid.UUID
-	UserUid            uuid.UUID
+	OrderUid           uuid.UUID
+	UserUidForOrder    uuid.UUID
 	CategoryUids       []uuid.UUID
 }
 
@@ -58,6 +59,7 @@ const (
 	QueryFieldWithRandom        = "with_random"
 	QueryFieldUserUid           = "user_uid"
 	QueryFieldCategoryUids      = "category_uids"
+	QueryFieldUserUidForOrder   = "user_uid_for_order"
 )
 
 type QueryFiltersParser struct {
@@ -83,7 +85,7 @@ func NewQueryFiltersParser() *QueryFiltersParser {
 			QueryFieldCookingTime:       parseCookingTime,
 			QueryFieldRecipeUid:         parseRecipeUid,
 			QueryFieldWithRandom:        parseWithRandom,
-			QueryFieldUserUid:           parseUserUid,
+			QueryFieldUserUidForOrder:   parseUserUidForOrder,
 			QueryFieldCategoryUids:      parseCategoryUids,
 		},
 	}
@@ -126,6 +128,7 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldName,
 		QueryFieldCookingTime,
 		QueryFieldWithRandom,
+		QueryFieldUserUidForOrder,
 	}
 
 	for _, field := range queryFiltersFields {
@@ -250,9 +253,9 @@ func parseWithRandom(query url.Values, qFilters *QueryFilters) error {
 	return parseBool(query, QueryFieldWithRandom, &qFilters.WithRandom)
 }
 
-func parseUserUid(query url.Values, qFilters *QueryFilters) error {
+func parseUserUidForOrder(query url.Values, qFilters *QueryFilters) error {
 	var err error
-	qFilters.UserUid, err = uuid.FromString(query.Get(QueryFieldUserUid))
+	qFilters.UserUidForOrder, err = uuid.FromString(query.Get(QueryFieldUserUidForOrder))
 	if err != nil {
 		return err
 	}

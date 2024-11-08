@@ -1,13 +1,13 @@
 -- +goose Up
 -- +goose StatementBegin
 
-CREATE TYPE order_status AS ENUM('created','in_progress','done');
+CREATE TYPE order_status AS ENUM('in_progress','done');
 
 CREATE TABLE orders (
     uid uuid PRIMARY KEY,
     num SERIAL NOT NULL,
     user_uid uuid NOT NULL REFERENCES users(uid),
-    status order_status not null default 'created',
+    status order_status not null default 'in_progress',
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );

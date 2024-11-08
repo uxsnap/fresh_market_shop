@@ -113,6 +113,18 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 		sql = sql.OrderBy("random()")
 	}
 
+	if !uuid.Equal(qFilters.UserUidForOrder, uuid.UUID{}) {
+		orderRow := pgEntity.NewOrderRow()
+		orderProductRow := pgEntity.NewOrderProductsRow()
+
+		sql = sql.
+			Join(fmt.Sprintf(
+				// TODO: Убрать статус in_progress, когда будет добавлен 4 этап заказа
+				orderRow.Table()+" o on o.user_uid = '%v' and o.status in ('in_progress', 'done')", qFilters.UserUidForOrder,
+			)).
+			Join(orderProductRow.Table() + " op on op.product_uid = p.uid and o.uid = op.order_uid")
+	}
+
 	stmt, args, err := sql.Offset(qFilters.Offset).ToSql()
 	if err != nil {
 		log.Printf("failed to build sql query: %v", err)

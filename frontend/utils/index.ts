@@ -60,7 +60,7 @@ export const showErrorNotification = (
 ) => {
   notifications.show({
     title: "Ошибка!",
-    message: error.response?.data.error.message,
+    message: error.response?.data?.error?.message,
     color: "red",
   });
 };
