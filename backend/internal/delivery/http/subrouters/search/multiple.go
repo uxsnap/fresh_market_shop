@@ -2,6 +2,7 @@ package searchSubrouter
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -11,6 +12,8 @@ import (
 
 func (h *SearchSubrouter) multipleSearch(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
+
+	fmt.Println(r.URL.Query())
 
 	qFilters, err := entity.NewQueryFiltersParser().WithRequired(
 		entity.QueryFieldName,

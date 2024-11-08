@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-query";
 import { verifyUser } from "@/api/auth/verify";
 import { useAuthStore } from "@/store/auth";
+import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
 
 const queryClient = new QueryClient();
 
@@ -64,7 +65,11 @@ const MainApp = ({ children }: PropsWithChildren) => {
         <SideMenu />
       </AppShell.Navbar>
 
-      <AppShell.Main>{children}</AppShell.Main>
+      <AppShell.Main>
+        {children}
+
+        <ItemCardExtended />
+      </AppShell.Main>
     </AppShell>
   );
 };

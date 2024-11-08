@@ -12,6 +12,7 @@ import { ProductItem } from "@/types";
 import { memo, PropsWithChildren, useCallback, useState } from "react";
 import styles from "./ItemList.module.css";
 import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
+import { useProductStore } from "@/store/product";
 
 type Props = {
   title?: string;
@@ -48,16 +49,10 @@ export const ItemList = memo(
     isFetching = false,
     scroll = true,
   }: Props) => {
-    const [curItem, setCurItem] = useState<ProductItem>();
-
-    const handleClose = useCallback(() => {
-      return setCurItem(undefined);
-    }, []);
+    const setCurItem = useProductStore(s => s.setCurItem);
 
     return (
       <>
-        <ItemCardExtended item={curItem} close={handleClose} />
-
         <Flex
           className={styles.root}
           gap={20}

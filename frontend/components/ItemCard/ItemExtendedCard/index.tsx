@@ -1,28 +1,30 @@
 "use client";
 
 import { Text, Stack, Group, Modal } from "@mantine/core";
-import { ProductItem } from "@/types";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
 import styles from "./ItemExtendedCard.module.css";
 import { ItemCardCarousel } from "../ItemCardCarousel";
 import { ItemCounter } from "../ItemCounter";
 import { ItemCardIcon } from "../ItemCardIcon";
+import { useProductStore } from "@/store/product";
 
-type Props = {
-  item?: ProductItem;
-  close: () => void;
-};
+export const ItemCardExtended = memo(() => {
+  const curItem = useProductStore((s) => s.curItem);
+  const setCurItem = useProductStore((s) => s.setCurItem);
 
-export const ItemCardExtended = memo(({ item, close }: Props) => {
-  const { price, name, imgs = [], description, ccal } = item || {};
+  const handleClose = useCallback(() => {
+    return setCurItem();
+  }, []);
+
+  const { price, name, imgs = [], description, ccal } = curItem || {};
 
   return (
     <Modal.Root
       p={0}
       style={{ top: 20, left: 20 }}
-      opened={!!item}
-      onClose={close}
+      opened={!!curItem}
+      onClose={handleClose}
       closeOnClickOutside
     >
       <Modal.Overlay />
@@ -34,7 +36,7 @@ export const ItemCardExtended = memo(({ item, close }: Props) => {
               {name}
             </Text>
 
-            <ItemCardIcon type="min" onClick={close} />
+            <ItemCardIcon type="min" onClick={handleClose} />
           </Group>
         </Modal.Header>
 
@@ -62,7 +64,7 @@ export const ItemCardExtended = memo(({ item, close }: Props) => {
               </Text>
             </Stack>
 
-            <ItemCounter item={item}>
+            <ItemCounter item={curItem}>
               <Text fw="bold" fz={18}>
                 {price} ₽
               </Text>

@@ -9,6 +9,7 @@ export const search = (name: string) => {
       limit_on_categories: 10,
       page: 0,
       products_with_count: false,
+      products_with_photos: true,
     },
   });
 };

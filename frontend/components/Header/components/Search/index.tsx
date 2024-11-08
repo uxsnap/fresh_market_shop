@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import cn from "classnames";
 import { Text } from "@mantine/core";
+import { useRouter } from "next/navigation";
 
 import styles from "./Search.module.css";
 
@@ -21,6 +22,8 @@ type Props = {
 export const Search = ({ className, maw = 400 }: Props) => {
   const [name, setName] = useState("");
   const [debounced] = useDebouncedValue(name, 200);
+
+  const router = useRouter();
 
   const { data, isFetching, isFetched } = useQuery({
     queryKey: [search.queryKey, debounced],
@@ -44,10 +47,17 @@ export const Search = ({ className, maw = 400 }: Props) => {
 
     return [
       ...categories?.map((category) => (
-        <CategoryItem key={category.uid}>{category.name}</CategoryItem>
+        <CategoryItem
+          key={category.uid}
+          onClick={() => router.push(`/products/${category.uid}`)}
+        >
+          {category.name}
+        </CategoryItem>
       )),
       ...products.map((product) => (
-        <SmallCartItem key={product.uid}>{product.name}</SmallCartItem>
+        <SmallCartItem key={product.uid} img={product.img}>
+          {product.name}
+        </SmallCartItem>
       )),
     ];
   };
@@ -59,6 +69,7 @@ export const Search = ({ className, maw = 400 }: Props) => {
         w="100%"
         maw={maw}
         size="md"
+        className={styles.input}
         leftSection={<Glass size={16} />}
         placeholder="Поиск товаров и категорий"
         value={name}
