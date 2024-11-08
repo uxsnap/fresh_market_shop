@@ -9,8 +9,12 @@ CREATE TABLE delivery IF NOT EXISTS (
     from_latitude NUMERIC(10, 8) NOT NULL,
     to_longitude NUMERIC(10, 8) NOT NULL,
     to_latitude NUMERIC(10, 8) NOT NULL,
+    address VARCHAR(50),
+    receiver VARCHAR(50),
     delivery_time interval,
-    price INT
+    price INT,
+    created_at timestamp,
+    updated_at timestamp
 );
 
 -- +goose StatementEnd
