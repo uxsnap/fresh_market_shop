@@ -58,6 +58,8 @@ CREATE TABLE products (
     updated_at TIMESTAMP NOT NULL
 );
 
+create index ix_products_category_uid on products (category_uid);
+
 -- Создание таблицы "products_count" для хранения количества продуктов в наличии
 CREATE TABLE products_count (
     product_uid uuid NOT NULL REFERENCES products(uid) ON DELETE CASCADE,
@@ -313,6 +315,8 @@ INSERT INTO public.products_count (product_uid,stock_quantity) VALUES
 
 -- +goose Down
 -- SQL в этой секции будет выполнен для отката изменений
+
+DROP INDEX IF EXISTS ix_products_category_uid;
 
 -- Удаление всех созданных таблиц
 DROP TABLE IF EXISTS product_photos;

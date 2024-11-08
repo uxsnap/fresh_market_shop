@@ -10,7 +10,7 @@ import { publicApiErrorResponse } from "@/utils";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
-export const proxyDefault = async (req: NextRequest) => {
+export const proxyDefault = async (req: NextRequest, body?: any) => {
   const url = req.url?.replace(
     process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
     ""
@@ -66,9 +66,15 @@ export const proxyDefault = async (req: NextRequest) => {
       ...req,
       url,
       baseURL: process.env.NEXT_PUBLIC_API,
-      data: req.body,
+      data: body,
+      method: req.method,
       headers: {
-        ...Object.assign({}, ...headers),
+        ...Object.assign(
+          {
+            "Content-Type": "application/json",
+          },
+          ...headers
+        ),
       },
     });
 

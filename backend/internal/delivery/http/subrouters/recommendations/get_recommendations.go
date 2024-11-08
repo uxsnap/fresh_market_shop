@@ -3,24 +3,59 @@ package recommendationsSubrouter
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
+func (h *RecommendationsSubrouter) handleUrlValues(ctx context.Context, urlValues url.Values) url.Values {
+	userInfo, err := httpEntity.AuthUserInfoFromContext(ctx)
 
-	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(r.URL.Query())
+	urlValues.Set(entity.QueryFieldWithRandom, "true")
+
+	if err == nil {
+		urlValues.Set(entity.QueryFieldUserUid, userInfo.UserUid.String())
+	}
+
+	categoryUids, err := h.ProductsService.GetCategoriesByUserOrders(
+		ctx, userInfo.UserUid,
+	)
+
+	if err == nil && len(categoryUids) != 0 {
+		for _, uid := range categoryUids {
+			urlValues.Add(entity.QueryFieldCategoryUids, uid.String())
+		}
+	}
+
+	return urlValues
+}
+
+func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	urlValues := h.handleUrlValues(ctx, r.URL.Query())
+
+	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(urlValues)
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
+		return
+	}
+
+	if err != nil {
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError,
+			errorWrapper.NewError(errorWrapper.RecommendationsError, "не удалось получить продукты юзера"),
+		)
 		return
 	}
 
 	products, err := h.ProductsService.GetProductsWithExtra(
 		ctx, qFilters,
 	)
+
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return

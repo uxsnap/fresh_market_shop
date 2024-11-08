@@ -59,17 +59,14 @@ export const serializeCookie = (name: string, val: string, age: number) => {
   });
 };
 
-export const deleteAuthCookies = () => {
-  return Response.json(
-    {},
-    {
-      status: 200,
-      headers: [
-        ["Set-Cookie", serializeCookie("access_jwt", "", -1)],
-        ["Set-Cookie", serializeCookie("refresh_jwt", "", -1)],
-      ],
-    }
-  );
+export const deleteAuthCookies = (resp = {}) => {
+  return Response.json(resp, {
+    status: 200,
+    headers: [
+      ["Set-Cookie", serializeCookie("access_jwt", "", -1)],
+      ["Set-Cookie", serializeCookie("refresh_jwt", "", -1)],
+    ],
+  });
 };
 
 export const prepareAuthCookies = (
