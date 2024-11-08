@@ -27,6 +27,7 @@ type ProductsService interface {
 	CreateCategory(ctx context.Context, category entity.Category) (uuid.UUID, error)
 	GetCategoriesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Category, error)
 	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, error)
+	GetCategoriesByUserOrders(ctx context.Context, userUid uuid.UUID) ([]uuid.UUID, error)
 	GetAllCategories(ctx context.Context) ([]entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
 	DeleteCategory(ctx context.Context, uid uuid.UUID) error
@@ -71,5 +72,5 @@ type RecipesService interface {
 }
 
 type OrdersService interface {
-	CreateOrder(ctx context.Context, productsCounts entity.ProductsCounts) (uuid.UUID, error)
+	CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error)
 }

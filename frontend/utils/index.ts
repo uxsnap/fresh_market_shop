@@ -1,5 +1,11 @@
-import { ProductItem, ProductWithPhotos, RecipeStep } from "@/types";
-import axios from "axios";
+import {
+  ErrorWrapper,
+  ProductItem,
+  ProductWithPhotos,
+  RecipeStep,
+} from "@/types";
+import { notifications } from "@mantine/notifications";
+import { AxiosError } from "axios";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -45,7 +51,17 @@ export const getRecipeStepImg = (step: RecipeStep) => {
 };
 
 export const publicApiErrorResponse = (error: unknown) => {
-  return Response.json(axios.isAxiosError(error) ? error?.response : error, {
-    status: axios.isAxiosError(error) ? error?.response?.status || 500 : 500,
+  return Response.json((error as any)?.response.data, {
+    status: 500,
+  });
+};
+
+export const showErrorNotification = (
+  error: AxiosError<{ error: ErrorWrapper }>
+) => {
+  notifications.show({
+    title: "Ошибка!",
+    message: error.response?.data.error.message,
+    color: "red",
   });
 };

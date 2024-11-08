@@ -31,7 +31,7 @@ export const PayButton = () => {
   const handleCreateOrder = () => {
     mutation.mutate({
       products: Object.entries(items).map(([id, item]) => ({
-        product_uid: id,
+        productUid: id,
         count: item.count,
       })),
     });

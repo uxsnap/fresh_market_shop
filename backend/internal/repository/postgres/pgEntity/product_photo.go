@@ -2,7 +2,6 @@ package pgEntity
 
 import (
 	"encoding/json"
-	"log"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -101,7 +100,7 @@ func (ppr *ProductPhotoRows) FromJson(bts []byte) error {
 	ppr.rows = nil
 
 	if err := json.Unmarshal(bts, &ppr.rows); err != nil {
-		log.Printf("failed to unmarshal product photos: %v", err)
+		// log.Printf("failed to unmarshal product photos: %v", err)
 		return err
 	}
 	return nil

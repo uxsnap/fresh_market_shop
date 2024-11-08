@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
     case "/logout":
       return proxyLogout();
     default:
-      return proxyDefault(req);
+      const body = await req.json();
+      return proxyDefault(req, body);
   }
 }
