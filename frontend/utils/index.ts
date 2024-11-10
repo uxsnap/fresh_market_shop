@@ -64,3 +64,11 @@ export const showErrorNotification = (
     color: "red",
   });
 };
+
+export const showSuccessNotification = (message: string) => {
+  notifications.show({
+    title: "Успешно!",
+    message,
+    color: "secondary.0",
+  });
+};
