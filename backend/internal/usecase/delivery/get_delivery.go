@@ -19,3 +19,14 @@ func (uc *UseCaseDelivery) GetDeliveryByOrderUid(ctx context.Context, orderUid u
 	}
 	return delivery, isFound, nil
 }
+
+func (uc *UseCaseDelivery) GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error) {
+	log.Printf("usecaseDelivery.GetDeliveryByUid: %s", uid)
+
+	delivery, isFound, err := uc.deliveryRepository.GetDeliveryByUid(ctx, uid)
+	if err != nil {
+		log.Printf("failed to get delivery by uid %s: %v", uid, err)
+		return entity.Delivery{}, false, errors.WithStack(err)
+	}
+	return delivery, isFound, nil
+}
