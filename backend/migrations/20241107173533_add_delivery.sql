@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 
 -- todo: добавить статус для интеграции с доставкой
-CREATE TABLE delivery IF NOT EXISTS (
+CREATE TABLE delivery (
     uid uuid PRIMARY KEY,
     order_uid uuid,
     from_longitude NUMERIC(10, 8) NOT NULL,
