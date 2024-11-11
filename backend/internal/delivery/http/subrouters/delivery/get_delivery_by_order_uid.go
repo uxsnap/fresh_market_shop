@@ -2,6 +2,7 @@ package deliverySubrouter
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -21,12 +22,12 @@ func (h *DeliverySubrouter) GetDeliveryByOrderUid(w http.ResponseWriter, r *http
 		return
 	}
 
-	delivery, isFound, err := h.DeliveryService.GetDeliveryByUid(ctx, orderUid)
+	delivery, isFound, err := h.DeliveryService.GetDeliveryByOrderUid(ctx, orderUid)
 	if err != nil {
 		log.Printf("failed to get delivery by order uid: %v", err)
 		httpUtils.WriteErrorResponse(
 			w, http.StatusInternalServerError,
-			errorWrapper.NewError(errorWrapper.InternalError, "не удалось получить информацию о доставке по заказу"))
+			errorWrapper.NewError(errorWrapper.InternalError, fmt.Sprintf("не удалось получить информацию о доставке по заказу: %s", err.Error())))
 		return
 	}
 	if !isFound {

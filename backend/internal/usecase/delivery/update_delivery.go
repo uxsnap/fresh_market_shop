@@ -62,6 +62,10 @@ func (uc *UseCaseDelivery) UpdateDelivery(ctx context.Context, delivery entity.D
 		log.Printf("failed to update delivery: cant update field `order_uid`")
 		return errors.New("cant update field `order_uid`")
 	}
+	if delivery.Price <= 0 {
+		log.Printf("failed to update delivery: invalid delivery price")
+		return errors.New("invalid delivery price")
+	}
 
 	if delivery.ToLatitude != savedDelivery.ToLatitude {
 		savedDelivery.ToLatitude = delivery.ToLatitude
@@ -75,10 +79,13 @@ func (uc *UseCaseDelivery) UpdateDelivery(ctx context.Context, delivery entity.D
 	if delivery.Receiver != savedDelivery.Receiver {
 		savedDelivery.Receiver = delivery.Receiver
 	}
+	if delivery.Price != savedDelivery.Price {
+		savedDelivery.Price = delivery.Price
+	}
 
 	savedDelivery.UpdatedAt = time.Now().UTC()
 
-	if err := uc.deliveryRepository.UpdateDelivery(ctx, delivery); err != nil {
+	if err := uc.deliveryRepository.UpdateDelivery(ctx, savedDelivery); err != nil {
 		log.Printf("failed to update delivery %s: %v", delivery.Uid, err)
 		return errors.WithStack(err)
 	}

@@ -18,5 +18,6 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Put("/", ds.UpdateDelivery)
 		r.Get("/{uid}", ds.GetDeliveryByUid)
 		r.Get("/by_order/{order_uid}", ds.GetDeliveryByOrderUid)
+		r.Get("/time_and_price/by_order/{order_uid}", ds.GetDeliveryTimeAndPriceForOrder)
 	}
 }

@@ -37,6 +37,7 @@ func (dr *DeliveryRow) FromEntity(delivery entity.Delivery) *DeliveryRow {
 	dr.ToLatitude = delivery.ToLatitude
 	dr.Address = delivery.Address
 	dr.Receiver = delivery.Receiver
+	dr.Price = delivery.Price
 	dr.Time = pgtype.Interval{
 		Microseconds: delivery.Time,
 		Status:       pgtype.Present,
@@ -63,6 +64,7 @@ func (dr *DeliveryRow) ToEntity() entity.Delivery {
 		Address:       dr.Address,
 		Receiver:      dr.Receiver,
 		Time:          dr.Time.Microseconds,
+		Price:         dr.Price,
 		CreatedAt:     dr.CreatedAt.Time,
 		UpdatedAt:     dr.UpdatedAt.Time,
 	}

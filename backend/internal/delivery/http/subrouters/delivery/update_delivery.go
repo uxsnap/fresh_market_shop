@@ -2,6 +2,7 @@ package deliverySubrouter
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -22,7 +23,7 @@ func (h *DeliverySubrouter) UpdateDelivery(w http.ResponseWriter, r *http.Reques
 
 	if err := h.DeliveryService.UpdateDelivery(ctx, httpEntity.DeliveryToEntity(delivery)); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
-			errorWrapper.InternalError, "не удалось обновить информацию о доставке",
+			errorWrapper.InternalError, fmt.Sprintf("не удалось обновить информацию о доставке: %s", err.Error()),
 		))
 		return
 	}
