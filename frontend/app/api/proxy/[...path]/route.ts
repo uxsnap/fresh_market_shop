@@ -4,9 +4,20 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
+import { proxyUserInfo } from "@/services/proxy/userInfo";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
+  const url = req.url?.replace(
+    process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
+    ""
+  );
+
+  switch (url) {
+    case "/userInfo":
+      return proxyUserInfo();
+  }
+
   return proxyDefault(req);
 }
 

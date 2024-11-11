@@ -14,7 +14,7 @@ import styles from "./cart.module.css";
 import { PayButton } from "@/components/pages/cart/PayButton";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { makeOrder } from "@/api/cart/makeOrder";
+import { makeOrder } from "@/api/order/makeOrder";
 import { showErrorNotification } from "@/utils";
 import { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth";

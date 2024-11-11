@@ -99,8 +99,8 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 		tokenCookie := httpUtils.GetBearerToken(r)
 
 		if tokenCookie == "" {
-			log.Printf("auth middleware: failed to get jwt token")
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "auth middleware: failed to get jwt token"))
+			log.Printf("отсутствует токен")
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "отсутствует токен"))
 			return
 		}
 

@@ -7,7 +7,7 @@ import { Box, Button, Group, Text } from "@mantine/core";
 import styles from "./PayButton.module.css";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { makeOrder } from "@/api/cart/makeOrder";
+import { makeOrder } from "@/api/order/makeOrder";
 import { useRouter } from "next/navigation";
 
 export const PayButton = () => {

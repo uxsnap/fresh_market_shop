@@ -8,6 +8,7 @@ type UseCaseOrders struct {
 	ordersRepository        OrdersRepository
 	orderProductsRepository OrderProductsRepository
 	productsCountRepository ProductsCountRepository
+	productsRepository      ProductsRepository
 
 	txManager *transaction.Manager
 }
@@ -16,12 +17,14 @@ func New(
 	ordersRepository OrdersRepository,
 	orderProductsRepository OrderProductsRepository,
 	productsCountRepository ProductsCountRepository,
+	productsRepository ProductsRepository,
 	txManager *transaction.Manager,
 ) *UseCaseOrders {
 	return &UseCaseOrders{
 		ordersRepository:        ordersRepository,
 		orderProductsRepository: orderProductsRepository,
 		productsCountRepository: productsCountRepository,
+		productsRepository:      productsRepository,
 		txManager:               txManager,
 	}
 }
