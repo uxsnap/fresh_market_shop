@@ -957,6 +957,81 @@
 		{
 			"name": "search",
 			"item": []
+		},
+		{
+			"name": "delivery",
+			"item": [
+				{
+					"name": "get_by_uid",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzEyMjg3OTgsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjNhNTQ2NmEyLWQyMjktNDQzMC04NzgyLTc2OGRlY2FjZGVmOCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.zCDDl2q7vJoeITEBNSeMCjotlRYl368p3J2dR11Wptc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/delivery/44fe01a9-fbc6-4c52-905a-ce089f284a54",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"delivery",
+								"44fe01a9-fbc6-4c52-905a-ce089f284a54"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by order uid",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update delivery",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get time and price by order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzEzMjc4MzEsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6Ijc1ZTQ0ZTE5LWJmZWQtNGRlNy05NmQ1LTc2OWU5MTUwODU3YiIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.s94H7i6b6FBCNw_dCPt8ddLkjjQQepkQPIpdE2BI43c",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/delivery/time_and_price/by_order/44fe01a9-fbc6-4c52-905a-ce089f284a52",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"delivery",
+								"time_and_price",
+								"by_order",
+								"44fe01a9-fbc6-4c52-905a-ce089f284a52"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

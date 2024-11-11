@@ -74,3 +74,10 @@ type RecipesService interface {
 type OrdersService interface {
 	CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error)
 }
+
+type DeliveryService interface {
+	UpdateDelivery(ctx context.Context, delivery entity.Delivery) error
+	GetDeliveryTimeAndPriceForOrder(ctx context.Context, orderUid uuid.UUID) (deliveryTime int64, deliveryPrice int64, err error)
+	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
+	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)
+}
