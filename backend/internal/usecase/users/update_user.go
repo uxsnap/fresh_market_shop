@@ -3,38 +3,53 @@ package useCaseUsers
 import (
 	"context"
 	"log"
+	"net/mail"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) error {
-	log.Printf("ucUsers.UpdateUser: email %s username %s", user.Email, user.Username)
+func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) *errorWrapper.Error {
+	log.Printf("ucUsers.UpdateUser: email %s firstName %s lastName %s", user.Email, user.FirstName, user.LastName)
 
 	savedUser, isFound, err := uc.usersRepository.GetUserByUid(ctx, user.Uid)
 	if err != nil {
 		log.Printf("failed to update user %s: %v", user.Uid, err)
-		return errors.WithStack(err)
+		return errorWrapper.NewError(
+			errorWrapper.UserInfoError, "не удалось найти пользователя с таким uid",
+		)
 	}
 	if !isFound {
 		log.Printf("failed to update user %s: user not found", user.Uid)
-		return errors.New("user not found")
+		return errorWrapper.NewError(
+			errorWrapper.UserInfoError, "не найден пользователь с таким uid",
+		)
 	}
 
-	// TODO: несогласованность данных. Сделать отдельный метод для обновления email. а здесь запретить это делать!
-	if len(user.Email) != 0 && user.Email != savedUser.Email {
-		savedUser.Email = user.Email
-	}
-	if len(user.Username) != 0 && user.Username != savedUser.Username {
-		savedUser.Username = user.Username
+	if _, err = mail.ParseAddress(user.Email); err != nil {
+		return errorWrapper.NewError(
+			errorWrapper.UserEmailError, "неправильный формат email",
+		)
 	}
 
-	savedUser.UpdatedAt = time.Now().UTC()
+	if len(user.FirstName) < 2 {
+		return errorWrapper.NewError(
+			errorWrapper.UserNameError, "длина имени и фамилии пользователя должна быть больше 1",
+		)
+	}
 
-	if err := uc.usersRepository.UpdateUser(ctx, savedUser); err != nil {
+	if time.Since(savedUser.UpdatedAt).Minutes() < 15 {
+		return errorWrapper.NewError(
+			errorWrapper.UserInfoError, "данные пользователя можно обновлять раз в 15 минут",
+		)
+	}
+
+	if err := uc.usersRepository.UpdateUser(ctx, user); err != nil {
 		log.Printf("failed to update user %s: %v", user.Uid, err)
-		return errors.WithStack(err)
+		return errorWrapper.NewError(
+			errorWrapper.UserInfoError, "не получилось обновить пользователя",
+		)
 	}
 	return nil
 }

@@ -9,8 +9,10 @@ import (
 
 type User struct {
 	Uid       uuid.UUID `json:"uid"`
-	Username  string    `json:"username"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
 	Email     string    `json:"email"`
+	Birthday  time.Time `json:"birthday"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -18,8 +20,10 @@ type User struct {
 func UserFromEntity(user entity.User) User {
 	return User{
 		Uid:       user.Uid,
-		Username:  user.Username,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
 		Email:     user.Email,
+		Birthday:  user.Birthday,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
 	}
@@ -28,9 +32,11 @@ func UserFromEntity(user entity.User) User {
 func UserToEntity(user User) entity.User {
 	return entity.User{
 		Uid:       user.Uid,
-		Username:  user.Username,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
 		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
+		Birthday:  user.Birthday,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 }

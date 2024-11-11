@@ -1,13 +1,12 @@
 import axios from "axios";
 import { publicApiErrorResponse } from "@/utils";
-import { NextRequest } from "next/server";
 import {
   deleteAuthCookies,
   getAuthCookieTokensFromServer,
   parseJwt,
 } from "./cookies";
 
-export const proxyUserInfo = async () => {
+export const proxyUser = async () => {
   try {
     const { tokens } = await getAuthCookieTokensFromServer();
 
@@ -17,7 +16,11 @@ export const proxyUserInfo = async () => {
 
     const parsed = parseJwt(tokens.access_jwt);
 
-    return Response.json(parsed, { status: 200 });
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API}/users/${parsed?.user_uid}`
+    );
+
+    return Response.json(response, { status: 200 });
   } catch (error) {
     return publicApiErrorResponse(error);
   }

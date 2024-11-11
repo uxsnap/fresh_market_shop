@@ -1,6 +1,8 @@
 package pgEntity
 
 import (
+	"time"
+
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
@@ -11,8 +13,10 @@ const usersTableName = "users"
 
 type UserRow struct {
 	Uid       pgtype.UUID
-	Username  string
+	FirstName string
+	LastName  string
 	Email     string
+	Birthday  pgtype.Timestamp
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }
@@ -26,15 +30,44 @@ func (ur *UserRow) FromEntity(user entity.User) *UserRow {
 		Bytes:  user.Uid,
 		Status: pgtype.Present,
 	}
-	ur.Username = user.Username
+
+	ur.FirstName = user.FirstName
+	ur.LastName = user.LastName
 	ur.Email = user.Email
-	ur.CreatedAt = pgtype.Timestamp{
-		Time:   user.CreatedAt,
-		Status: pgStatusFromTime(user.CreatedAt),
+
+	if user.Birthday.Unix() <= 0 {
+		ur.Birthday = pgtype.Timestamp{
+			Status: pgtype.Null,
+		}
+	} else {
+		ur.Birthday = pgtype.Timestamp{
+			Time:   user.Birthday,
+			Status: pgtype.Present,
+		}
 	}
-	ur.UpdatedAt = pgtype.Timestamp{
-		Time:   user.UpdatedAt,
-		Status: pgStatusFromTime(user.UpdatedAt),
+
+	if user.CreatedAt.Unix() <= 0 {
+		ur.CreatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
+			Status: pgtype.Present,
+		}
+	} else {
+		ur.CreatedAt = pgtype.Timestamp{
+			Time:   user.CreatedAt,
+			Status: pgtype.Present,
+		}
+	}
+
+	if user.UpdatedAt.Unix() <= 0 {
+		ur.UpdatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
+			Status: pgtype.Present,
+		}
+	} else {
+		ur.UpdatedAt = pgtype.Timestamp{
+			Time:   user.UpdatedAt,
+			Status: pgtype.Present,
+		}
 	}
 	return ur
 }
@@ -42,7 +75,9 @@ func (ur *UserRow) FromEntity(user entity.User) *UserRow {
 func (ur *UserRow) ToEntity() entity.User {
 	return entity.User{
 		Uid:       ur.Uid.Bytes,
-		Username:  ur.Username,
+		FirstName: ur.FirstName,
+		LastName:  ur.LastName,
+		Birthday:  ur.Birthday.Time,
 		Email:     ur.Email,
 		CreatedAt: ur.CreatedAt.Time,
 		UpdatedAt: ur.UpdatedAt.Time,
@@ -50,11 +85,11 @@ func (ur *UserRow) ToEntity() entity.User {
 }
 
 var usersTableColumns = []string{
-	"uid", "username", "email", "created_at", "updated_at",
+	"uid", "first_name", "last_name", "email", "birthday", "created_at", "updated_at",
 }
 
 func (ur *UserRow) Values() []interface{} {
-	return []interface{}{ur.Uid, ur.Username, ur.Email, ur.CreatedAt, ur.UpdatedAt}
+	return []interface{}{ur.Uid, ur.FirstName, ur.LastName, ur.Email, ur.Birthday, ur.CreatedAt, ur.UpdatedAt}
 }
 
 func (ur *UserRow) Columns() []string {
@@ -66,15 +101,15 @@ func (ur *UserRow) Table() string {
 }
 
 func (ur *UserRow) Scan(row pgx.Row) error {
-	return row.Scan(&ur.Uid, &ur.Username, &ur.Email, &ur.CreatedAt, &ur.UpdatedAt)
+	return row.Scan(&ur.Uid, &ur.FirstName, &ur.LastName, &ur.Email, &ur.Birthday, &ur.CreatedAt, &ur.UpdatedAt)
 }
 
 func (ur *UserRow) ColumnsForUpdate() []string {
-	return []string{"username", "email", "updated_at"}
+	return []string{"first_name", "last_name", "birthday", "email", "updated_at"}
 }
 
 func (ur *UserRow) ValuesForUpdate() []interface{} {
-	return []interface{}{ur.Username, ur.Email, ur.UpdatedAt}
+	return []interface{}{ur.FirstName, ur.LastName, ur.Birthday.Time, ur.Email, ur.UpdatedAt.Time}
 }
 
 func (ur *UserRow) ConditionUidEqual() sq.Eq {

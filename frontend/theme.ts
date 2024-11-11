@@ -114,9 +114,9 @@ export const theme = createTheme({
           case "md":
             return {
               wrapper: {
-                "--input-height": rem(38),
+                "--input-height": rem(42),
                 "--input-padding-x": rem(8),
-                "--input-fz": rem(12),
+                "--input-fz": rem(18),
               },
             };
           default:
@@ -141,9 +141,9 @@ export const theme = createTheme({
           case "md":
             return {
               wrapper: {
-                "--input-height": rem(38),
+                "--input-height": rem(42),
                 "--input-padding-x": rem(8),
-                "--input-fz": rem(12),
+                "--input-fz": rem(18),
               },
             };
           default:

@@ -1,11 +1,10 @@
 "use client";
 
 import {
-  DateInputProps,
   DatesProvider,
   DatePickerInput as MantineDatePickerInput,
 } from "@mantine/dates";
-import { ComponentProps, useState } from "react";
+import { ComponentProps } from "react";
 
 import "@mantine/dates/styles.css";
 import "dayjs/locale/ru";
@@ -20,6 +19,7 @@ export const DateInput = (
       label="Дата Рождения"
       placeholder="ДД.ММ.ГГГГ"
       classNames={{
+        input: styles.input,
         weekdaysRow: styles.weekdaysRow,
         calendarHeader: styles.calendarHeader,
         day: styles.day,

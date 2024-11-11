@@ -5,6 +5,7 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 type ProductsService interface {
@@ -47,8 +48,8 @@ type AuthService interface {
 }
 
 type UsersService interface {
-	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error)
-	UpdateUser(ctx context.Context, user entity.User) error
+	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, *errorWrapper.Error)
+	UpdateUser(ctx context.Context, user entity.User) *errorWrapper.Error
 	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
 	DeleteUser(ctx context.Context, uid uuid.UUID) error
 

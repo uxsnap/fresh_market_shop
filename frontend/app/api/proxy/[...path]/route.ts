@@ -4,7 +4,7 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
-import { proxyUserInfo } from "@/services/proxy/userInfo";
+import { proxyUser } from "@/services/proxy/user";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -14,8 +14,8 @@ export async function GET(req: NextRequest) {
   );
 
   switch (url) {
-    case "/userInfo":
-      return proxyUserInfo();
+    case "/user":
+      return proxyUser();
   }
 
   return proxyDefault(req);

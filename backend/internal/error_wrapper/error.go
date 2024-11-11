@@ -11,6 +11,9 @@ const (
 	JwtAuthMiddleware     = "jwt_auth_middleware"
 	RecommendationsError  = "recommendations_error"
 	CategoriesError       = "categories_error"
+	UserInfoError         = "user_info_error"
+	UserEmailError        = "user_email_error"
+	UserNameError         = "user_name_error"
 )
 
 type Error struct {

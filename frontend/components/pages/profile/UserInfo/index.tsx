@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserInfo } from "@/api/user/getUserInfo";
+import { getUser } from "@/api/user/getUser";
 import { updateUser } from "@/api/user/updateUser";
 import { Avatar } from "@/components/Avatar";
 import { DateInput } from "@/components/DateInput";
@@ -13,8 +13,8 @@ import { useEffect } from "react";
 
 export const UserInfo = () => {
   const { data } = useQuery({
-    queryFn: getUserInfo,
-    queryKey: [getUserInfo.queryKey],
+    queryFn: getUser,
+    queryKey: [getUser.queryKey],
   });
 
   const form = useForm({

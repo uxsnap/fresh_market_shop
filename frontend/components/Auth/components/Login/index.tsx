@@ -59,8 +59,8 @@ export const Login = ({ onChange, close }: Props) => {
         <Button
           onClick={() => onChange("forgotPass")}
           p={0}
-          fz={10}
-          h={12}
+          fz={14}
+          h={24}
           size="xs"
           variant="outline"
         >
@@ -69,8 +69,8 @@ export const Login = ({ onChange, close }: Props) => {
         <Button
           onClick={() => onChange("reg")}
           p={0}
-          fz={10}
-          h={12}
+          fz={14}
+          h={24}
           size="xs"
           variant="outline"
         >
