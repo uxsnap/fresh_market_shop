@@ -50,7 +50,7 @@ type AuthService interface {
 type UsersService interface {
 	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, *errorWrapper.Error)
 	UpdateUser(ctx context.Context, user entity.User) *errorWrapper.Error
-	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
+	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, *errorWrapper.Error)
 	DeleteUser(ctx context.Context, uid uuid.UUID) error
 
 	AddDeliveryAddress(ctx context.Context, address entity.DeliveryAddress) (uuid.UUID, error)

@@ -1,4 +1,3 @@
-import { publicApiErrorResponse } from "@/utils";
 import axios from "axios";
 import {
   deleteAuthCookies,
@@ -13,15 +12,10 @@ export const proxyLogout = async () => {
 
     const body = { uid: parsed?.user_uid };
 
-    await axios.post(
-      `${process.env.NEXT_PUBLIC_API}/auth/logout`,
-      body,
-      {
-        headers: { Authorization: `Bearer ${tokens?.access_jwt}` },
-      }
-    );
+    await axios.post(`${process.env.NEXT_PUBLIC_API}/auth/logout`, body, {
+      headers: { Authorization: `Bearer ${tokens?.access_jwt}` },
+    });
+  } finally {
     return deleteAuthCookies();
-  } catch (error) {
-    return publicApiErrorResponse(error);
   }
 };

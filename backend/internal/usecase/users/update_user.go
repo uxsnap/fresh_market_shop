@@ -2,7 +2,6 @@ package useCaseUsers
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/mail"
 	"time"
@@ -39,8 +38,6 @@ func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) *error
 			errorWrapper.UserNameError, "длина имени и фамилии пользователя должна быть больше 1",
 		)
 	}
-
-	fmt.Println(time.Since(savedUser.UpdatedAt).Minutes())
 
 	if time.Since(savedUser.UpdatedAt).Minutes() < 15 {
 		return errorWrapper.NewError(

@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/consts"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
@@ -40,8 +41,8 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("failed to update user %s in gw: %v", req.Uid, err)
 	}
 
-	http.SetCookie(w, httpUtils.NewCookie(accessJwtCookieName, accessJwt))
-	http.SetCookie(w, httpUtils.NewCookie(refreshJwtCookieName, refreshJwt))
+	http.SetCookie(w, httpUtils.NewCookie(consts.ACCESS_JWT_COOKIE_NAME, accessJwt))
+	http.SetCookie(w, httpUtils.NewCookie(consts.REFRESH_JWT_COOKIE_NAME, refreshJwt))
 
 	w.WriteHeader(http.StatusOK)
 }

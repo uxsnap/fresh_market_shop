@@ -55,12 +55,16 @@ export const publicApiErrorResponse = (error: unknown) => {
   });
 };
 
+export const getErrorBody = (error: AxiosError<{ error: ErrorWrapper }>) => {
+  return error.response?.data?.error;
+};
+
 export const showErrorNotification = (
   error: AxiosError<{ error: ErrorWrapper }>
 ) => {
   notifications.show({
     title: "Ошибка!",
-    message: error.response?.data?.error?.message,
+    message: getErrorBody(error)?.message,
     color: "red",
   });
 };
@@ -71,4 +75,10 @@ export const showSuccessNotification = (message: string) => {
     message,
     color: "secondary.0",
   });
+};
+
+export const isDateNull = (date?: string) => {
+  const d = dayJs(date);
+
+  return !date || !d.isValid() || d.year() <= 1;
 };

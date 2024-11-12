@@ -1,53 +1,85 @@
 "use client";
 
+import { logoutUser } from "@/api/auth/logout";
 import { getUser } from "@/api/user/getUser";
 import { updateUser } from "@/api/user/updateUser";
 import { Avatar } from "@/components/Avatar";
 import { DateInput } from "@/components/DateInput";
 import { ShadowBox } from "@/components/ShadowBox";
-import { showSuccessNotification } from "@/utils";
+import { jwtError } from "@/constants";
+import { useAuthStore } from "@/store/auth";
+import { ErrorWrapper, User } from "@/types";
+import { getErrorBody, isDateNull, showSuccessNotification } from "@/utils";
 import { Box, Button, Group, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { hasLength, isEmail, useForm } from "@mantine/form";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useEffect } from "react";
 
+type Form = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  birthday: null | Date;
+};
+
+const getInitialValues = (data?: User) => ({
+  email: data?.email ?? "",
+  firstName: data?.firstName ?? "",
+  lastName: data?.lastName ?? "",
+  birthday: isDateNull(data?.birthday) ? null : new Date(data?.birthday + ""),
+});
+
 export const UserInfo = () => {
-  const { data } = useQuery({
+  const logged = useAuthStore((s) => s.logged);
+
+  const { data, error } = useQuery({
     queryFn: getUser,
-    queryKey: [getUser.queryKey],
+    queryKey: [getUser.queryKey, logged],
+    enabled: logged,
   });
 
-  const form = useForm({
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    const errorBody = getErrorBody(
+      error as AxiosError<{ error: ErrorWrapper }>
+    );
+
+    if (errorBody?.type === jwtError) {
+      logoutUser();
+    }
+  }, [error]);
+
+  const form = useForm<Form>({
     mode: "uncontrolled",
-    initialValues: {
-      email: data?.data.email ?? "",
-      firstName: "",
-      lastName: "",
-      birthday: "",
-    },
+    initialValues: getInitialValues(data?.data),
     validate: {
-      email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Неправильный формат email",
-      firstName: (value) =>
-        value.length > 0 ? null : "Длина имени должна быть больше 0",
-      lastName: (value) =>
-        value.length > 0 ? null : "Длина фамилии должна быть больше 0",
+      email: isEmail("Неправильный формат email"),
+      firstName: hasLength({ min: 1 }, "Длина имени должна быть больше 1"),
     },
   });
 
   useEffect(() => {
-    form.setFieldValue("email", data?.data.email ?? "");
+    if (!data) {
+      return;
+    }
+
+    form.initialize(getInitialValues(data?.data));
   }, [data]);
 
   const mutation = useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
+      form.resetDirty();
       showSuccessNotification("Пользователь успешно обновлен!");
     },
   });
 
   const handleSubmit = form.onSubmit((values) => {
-    mutation.mutate(values);
+    mutation.mutate(values as any);
   });
 
   return (
@@ -81,7 +113,16 @@ export const UserInfo = () => {
                 {...form.getInputProps("lastName")}
               />
 
-              <DateInput {...form.getInputProps("birthday")} />
+              <DateInput clearable {...form.getInputProps("birthday")} />
+
+              <Button
+                disabled={!form.isDirty()}
+                type="submit"
+                w="100%"
+                variant="accent"
+              >
+                Сохранить
+              </Button>
             </Stack>
           </Stack>
         </ShadowBox>

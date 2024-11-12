@@ -4,9 +4,12 @@ import {
   deleteAuthCookies,
   getAuthCookieTokensFromServer,
   parseJwt,
+  parseResponseCookies,
+  setAuthCookiesFromResponse,
 } from "./cookies";
+import { NextRequest } from "next/server";
 
-export const proxyUser = async () => {
+export const proxyUpdateUser = async (req: NextRequest) => {
   try {
     const { tokens } = await getAuthCookieTokensFromServer();
 
@@ -16,14 +19,19 @@ export const proxyUser = async () => {
 
     const parsed = parseJwt(tokens.access_jwt);
 
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API}/users/${parsed?.user_uid}`,
+    const body = await req.json();
+
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API}/users`,
+      { ...body, uid: parsed?.user_uid },
       {
         headers: { Authorization: `Bearer ${tokens.access_jwt}` },
       }
     );
 
-    return Response.json(response.data, { status: 200 });
+    const parsedResponse = parseResponseCookies(response);
+
+    return setAuthCookiesFromResponse(response.data, parsedResponse);
   } catch (error) {
     return publicApiErrorResponse(error);
   }
