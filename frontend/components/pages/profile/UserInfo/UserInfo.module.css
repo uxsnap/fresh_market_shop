@@ -1,6 +1,9 @@
 .root {
   width: 100%;
-  max-width: 386px;
+
+  @media (min-width: $mantine-breakpoint-md) {
+    max-width: 386px;
+  }
 }
 
 .wrapper {
