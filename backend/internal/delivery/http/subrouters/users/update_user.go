@@ -2,6 +2,7 @@ package usersSubrouter
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
@@ -33,8 +34,17 @@ func (h *UsersSubrouter) updateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	accessCookie := httpUtils.GetBearerToken(r)
+
 	if err := h.UsersService.UpdateUser(ctx, httpEntity.UserToEntity(user)); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	_, _, err = h.AuthService.UpdateAuthUser(ctx, accessCookie, user.Uid, user.Email, "")
+	if err != nil {
+		log.Printf("failed to update user %s: %v", user.Uid, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
