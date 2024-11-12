@@ -45,19 +45,13 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 		return
 	}
 
+	products, err := h.ProductsService.GetProductsWithExtra(
+		ctx, qFilters,
+	)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError,
 			errorWrapper.NewError(errorWrapper.RecommendationsError, "не удалось получить продукты юзера"),
 		)
-		return
-	}
-
-	products, err := h.ProductsService.GetProductsWithExtra(
-		ctx, qFilters,
-	)
-
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
 		return
 	}
 
