@@ -1,0 +1,36 @@
+.root {
+  width: 100%;
+  max-width: 386px;
+}
+
+.wrapper {
+  gap: 12px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    flex-direction: column;
+  }
+}
+
+.avatarWrapper {
+  padding: 0 68px;
+  padding-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    padding: 27px 20px;
+  }
+}
+
+.inputs {
+  flex-grow: 1;
+  padding: 20px;
+  gap: 12px;
+}

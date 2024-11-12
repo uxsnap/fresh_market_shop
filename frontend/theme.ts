@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Button,
   createTheme,
   DEFAULT_THEME,
   defaultVariantColorsResolver,
@@ -122,6 +123,12 @@ export const theme = createTheme({
           default:
             return { wrapper: {} };
         }
+      },
+    }),
+
+    Button: Button.extend({
+      classNames: {
+        root: classes.buttonRoot,
       },
     }),
 

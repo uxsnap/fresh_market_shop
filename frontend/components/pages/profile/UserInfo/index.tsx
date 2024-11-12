@@ -14,7 +14,10 @@ import { Box, Button, Group, Stack, TextInput } from "@mantine/core";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+
+import styles from "./UserInfo.module.css";
+import { useRouter } from "next/navigation";
 
 type Form = {
   email: string;
@@ -31,7 +34,9 @@ const getInitialValues = (data?: User) => ({
 });
 
 export const UserInfo = () => {
+  const router = useRouter();
   const logged = useAuthStore((s) => s.logged);
+  const setLogged = useAuthStore((s) => s.setLogged);
 
   const { data, error } = useQuery({
     queryFn: getUser,
@@ -70,6 +75,14 @@ export const UserInfo = () => {
     form.initialize(getInitialValues(data?.data));
   }, [data]);
 
+  const { mutate: logout, isPending } = useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      router.push("/");
+      setLogged(false);
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
@@ -82,60 +95,67 @@ export const UserInfo = () => {
     mutation.mutate(values as any);
   });
 
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
+
   return (
-    <form onSubmit={handleSubmit}>
-      <Box>
-        <ShadowBox>
-          <Stack gap={12}>
-            <Box px={68} pt={20}>
-              <Avatar />
-            </Box>
+    <form onSubmit={handleSubmit} className={styles.root}>
+      <ShadowBox w="100%">
+        <Stack className={styles.wrapper} gap={12}>
+          <Box className={styles.avatarWrapper}>
+            <Avatar />
+          </Box>
 
-            <Stack p={20} gap={12}>
-              <TextInput
-                size="md"
-                label="Email"
-                placeholder="Введите email"
-                {...form.getInputProps("email")}
-              />
+          <Stack className={styles.inputs}>
+            <TextInput
+              size="md"
+              label="Email"
+              placeholder="Введите email"
+              {...form.getInputProps("email")}
+            />
 
-              <TextInput
-                size="md"
-                label="Имя"
-                placeholder="Введите имя"
-                {...form.getInputProps("firstName")}
-              />
+            <TextInput
+              size="md"
+              label="Имя"
+              placeholder="Введите имя"
+              {...form.getInputProps("firstName")}
+            />
 
-              <TextInput
-                size="md"
-                label="Фамилия"
-                placeholder="Введите фамилию"
-                {...form.getInputProps("lastName")}
-              />
+            <TextInput
+              size="md"
+              label="Фамилия"
+              placeholder="Введите фамилию"
+              {...form.getInputProps("lastName")}
+            />
 
-              <DateInput clearable {...form.getInputProps("birthday")} />
+            <DateInput clearable {...form.getInputProps("birthday")} />
 
-              <Button
-                disabled={!form.isDirty()}
-                type="submit"
-                w="100%"
-                variant="accent"
-              >
-                Сохранить
-              </Button>
-            </Stack>
+            <Button
+              disabled={!form.isDirty()}
+              type="submit"
+              w="100%"
+              variant="accent"
+            >
+              Сохранить
+            </Button>
           </Stack>
-        </ShadowBox>
+        </Stack>
+      </ShadowBox>
 
-        <Group justify="space-between">
-          <Button p={0} variant="outline">
-            Выйти из системы
-          </Button>
-          <Button p={0} variant="outline" c="danger.0">
-            Удалить аккаунт
-          </Button>
-        </Group>
-      </Box>
+      <Group justify="space-between">
+        <Button
+          disabled={isPending}
+          onClick={handleLogout}
+          p={0}
+          variant="outline"
+        >
+          Выйти из системы
+        </Button>
+        <Button p={0} variant="outline" c="danger.0">
+          Удалить аккаунт
+        </Button>
+      </Group>
     </form>
   );
 };

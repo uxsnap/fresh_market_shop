@@ -56,3 +56,12 @@
   background-color: transparent;
   top: -1.75rem;
 }
+
+.buttonRoot {
+  &[data-variant="outline"] {
+    &:disabled,
+    &[data-disabled] {
+      background-color: transparent;
+    }
+  }
+}
