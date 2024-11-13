@@ -54,7 +54,7 @@ func (as *AssetsSubrouter) getUserPhoto(path string) func(w http.ResponseWriter,
 
 		workDir, _ := os.Getwd()
 
-		curFilePath := filepath.Join(filepath.Join(workDir, path), uid.String()) + ".*"
+		curFilePath := filepath.Join(filepath.Join(workDir, path), uid.String()) + ".webp"
 
 		ok := handleIsFileMatches(curFilePath)
 
@@ -63,7 +63,7 @@ func (as *AssetsSubrouter) getUserPhoto(path string) func(w http.ResponseWriter,
 			return
 		}
 
-		pathPrefix := strings.TrimSuffix(chi.RouteContext(r.Context()).RoutePattern(), "/{user_uid}.*")
+		pathPrefix := strings.TrimSuffix(chi.RouteContext(r.Context()).RoutePattern(), "/{user_uid}.webp")
 
 		fs := http.StripPrefix(pathPrefix, http.FileServer(http.Dir(path)))
 

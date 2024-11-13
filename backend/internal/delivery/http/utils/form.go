@@ -5,9 +5,7 @@ import (
 )
 
 var imgExtensions = map[string]bool{
-	"jpeg": true,
-	"jpg":  true,
-	"png":  true,
+	"webp": true,
 }
 
 func GetFileExtension(fileName string) string {

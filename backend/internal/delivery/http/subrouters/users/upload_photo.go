@@ -24,7 +24,7 @@ func (h *UsersSubrouter) uploadPhoto(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseMultipartForm(15 << 20)
+	r.ParseMultipartForm(5 << 20)
 
 	file, handler, err := r.FormFile("photo")
 	if err != nil {

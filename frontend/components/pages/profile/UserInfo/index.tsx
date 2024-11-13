@@ -104,7 +104,7 @@ export const UserInfo = () => {
       <ShadowBox w="100%">
         <Stack className={styles.wrapper} gap={12}>
           <Box className={styles.avatarWrapper}>
-            <Avatar />
+            <Avatar upload />
           </Box>
 
           <Stack className={styles.inputs}>

@@ -4,6 +4,7 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
+import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import { proxyUser } from "@/services/proxy/user";
 import { NextRequest } from "next/server";
@@ -15,6 +16,8 @@ export async function GET(req: NextRequest) {
   );
 
   switch (url) {
+    case "/user/photo":
+      return proxyGetPhoto();
     case "/user":
       return proxyUser();
   }
@@ -35,6 +38,8 @@ export async function POST(req: NextRequest) {
       return proxyVerify();
     case "/logout":
       return proxyLogout();
+    case "/user/photo":
+      return proxyUpdatePhoto(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

@@ -20,7 +20,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Group(func(r chi.Router) {
 			r.Use(as.Middleware.Auth)
 
-			r.Get("/photo/{user_uid}.*", as.getUserPhoto(consts.USER_PHOTO_PATH))
+			r.Get("/photo/{user_uid}.webp", as.getUserPhoto(consts.USER_PHOTO_PATH))
 		})
 	}
 }
