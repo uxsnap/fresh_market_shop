@@ -15,6 +15,7 @@ const (
 	UserEmailError        = "user_email_error"
 	UserNameError         = "user_name_error"
 	UserNotFoundError     = "user_not_found_error"
+	UserPhotoError        = "user_photo_error"
 )
 
 type Error struct {

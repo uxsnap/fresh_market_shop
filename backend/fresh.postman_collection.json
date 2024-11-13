@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4030f8ee-147f-4e41-87a1-9e2ca13d5cd7",
+		"_postman_id": "57bd99f0-08f5-4234-9ec7-a1ae7baf9c72",
 		"name": "fresh",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17443477",
-		"_collection_link": "https://orange-comet-294040.postman.co/workspace/s~e64ff750-e2ed-4184-9cec-62efcab26471/collection/17443477-4030f8ee-147f-4e41-87a1-9e2ca13d5cd7?action=share&source=collection_link&creator=17443477"
+		"_exporter_id": "12232823"
 	},
 	"item": [
 		{
@@ -132,20 +131,59 @@
 				},
 				{
 					"name": "get user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTI3OTMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjUyMjA0NDkwLWNlZDEtNDRhYS1iNTg3LWQwYzdjZjdhNDUyNCIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.Q9EQq01QgxuZ3fkvnnKt5L2EMSCau4n6UoV7u9v3Os8",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/bd260aa8-837e-48cc-9e2c-5fac5ef62609",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"bd260aa8-837e-48cc-9e2c-5fac5ef62609"
+							]
+						}
 					},
 					"response": []
 				},
 				{
 					"name": "update user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0MTAzMjUsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6ImVjZWE0NGQ2LWFkYzAtNDRiNS05YmJiLTQyNWQyOGY5ODViOCIsInVzZXJfdWlkIjoiOGQ4ZjE0MDctZWI5MS00ZDY5LTlkNmYtZWYxYzEzMTgxODZkIn0.gAX2qgR7kvIYDIMLULxjGGlgLOCPESGzZHrQZpydBfc",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"uid\": \"b0477677-ebf8-4fe9-863a-ea9cba0d190a\",\n    \"username\": \"govnoEd\",\n    \"email\": \"new@new\",\n    \"createdAt\": \"2024-10-31T14:02:58.400746Z\",\n    \"updatedAt\": \"2024-10-31T14:03:41.422004Z\"\n}",
+							"raw": "{\n    \"uid\": \"8d8f1407-eb91-4d69-9d6f-ef1c1318186d\",\n    \"firstName\": \"govnoEd\",\n    \"email\": \"new@new\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,6 +204,91 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "upload photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTczODMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjFkYjIyNjEyLTYzOTUtNGRiMy04OGM0LWUxYWM5MzkyYjM2NiIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.DL5xBgXm9GJo2xvJ6isjY92fTRh9fZ_uKS5uC_32Ig0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/Users/nuxxx/Desktop/59d336e5-36ed-459a-895d-42cdb871cab8.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/bd260aa8-837e-48cc-9e2c-5fac5ef62609/photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"bd260aa8-837e-48cc-9e2c-5fac5ef62609",
+								"photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get photo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTczODMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjFkYjIyNjEyLTYzOTUtNGRiMy04OGM0LWUxYWM5MzkyYjM2NiIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.DL5xBgXm9GJo2xvJ6isjY92fTRh9fZ_uKS5uC_32Ig0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "image/png",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/assets/photo/bd260aa8-837e-48cc-9e2c-5fac5ef62609",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assets",
+								"photo",
+								"bd260aa8-837e-48cc-9e2c-5fac5ef62609"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -179,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
+							"raw": "{\n    \"email\": \"test@test\",\n    \"name\": \"zalupov pidaras\",\n    \"password\": \"hui123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -446,6 +569,9 @@
 									"language": "json"
 								}
 							}
+						},
+						"url": {
+							"raw": ""
 						}
 					},
 					"response": []
@@ -483,7 +609,10 @@
 					"name": "get all categories",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -936,7 +1065,10 @@
 					"name": "get recipe by uid",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -944,7 +1076,10 @@
 					"name": "get recipes",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				}
@@ -957,81 +1092,6 @@
 		{
 			"name": "search",
 			"item": []
-		},
-		{
-			"name": "delivery",
-			"item": [
-				{
-					"name": "get_by_uid",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzEyMjg3OTgsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjNhNTQ2NmEyLWQyMjktNDQzMC04NzgyLTc2OGRlY2FjZGVmOCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.zCDDl2q7vJoeITEBNSeMCjotlRYl368p3J2dR11Wptc",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8080/delivery/44fe01a9-fbc6-4c52-905a-ce089f284a54",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"delivery",
-								"44fe01a9-fbc6-4c52-905a-ce089f284a54"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get by order uid",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "update delivery",
-					"request": {
-						"method": "GET",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "get time and price by order",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzEzMjc4MzEsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6Ijc1ZTQ0ZTE5LWJmZWQtNGRlNy05NmQ1LTc2OWU5MTUwODU3YiIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.s94H7i6b6FBCNw_dCPt8ddLkjjQQepkQPIpdE2BI43c",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8080/delivery/time_and_price/by_order/44fe01a9-fbc6-4c52-905a-ce089f284a52",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"delivery",
-								"time_and_price",
-								"by_order",
-								"44fe01a9-fbc6-4c52-905a-ce089f284a52"
-							]
-						}
-					},
-					"response": []
-				}
-			]
 		}
 	]
 }
