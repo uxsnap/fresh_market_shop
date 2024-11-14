@@ -1,5 +1,4 @@
-import { Burger, Button, Group, Stack } from "@mantine/core";
-import { Menu } from "../icons/Menu";
+import { Burger, Group, Stack } from "@mantine/core";
 import { Location } from "../Location";
 import styles from "./Header.module.css";
 import { CartButton } from "./components/CartButton";
