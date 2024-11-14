@@ -9,15 +9,6 @@ CREATE TABLE users_cards (
     expired varchar(5)
 );
 
---- remove after mvp
-CREATE TABLE full_cards (
-    uid uuid PRIMARY KEY,
-    user_uid uuid,
-    number varchar(16),
-    expired varchar(5),
-    cvv varchar(3)
-);
-
 CREATE TABLE payments (
     uid uuid PRIMARY KEY,
     user_uid uuid,
@@ -36,6 +27,5 @@ CREATE TABLE payments (
 -- +goose StatementBegin
 
 DROP TABLE payments;
-DROP TABLE test_card;
 DROP TABLE users_cards;
 -- +goose StatementEnd

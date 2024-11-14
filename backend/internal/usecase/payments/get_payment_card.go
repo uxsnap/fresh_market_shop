@@ -20,15 +20,3 @@ func (uc *UseCasePayments) GetUserPaymentCardByUid(ctx context.Context, cardUid 
 
 	return card, isFound, nil
 }
-
-func (uc *UseCasePayments) GetUserFullPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) (entity.UserFullPaymentCard, bool, error) {
-	log.Printf("usecasePayments.GetUserFullPaymentCardByUid: %s", cardUid)
-
-	card, isFound, err := uc.paymentsRepository.GetUserFullPaymentCardByUid(ctx, cardUid)
-	if err != nil {
-		log.Printf("failed to get user full payment card by uid %s: %v", cardUid, err)
-		return entity.UserFullPaymentCard{}, false, errors.WithStack(err)
-	}
-
-	return card, isFound, nil
-}

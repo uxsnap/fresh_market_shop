@@ -50,17 +50,7 @@ func (uc *UseCasePayments) AddUserPaymentCard(ctx context.Context, userFullCard 
 		Expired:     userFullCard.Expired,
 	}
 
-	if err := uc.txManager.NewPgTransaction().Execute(ctx, func(ctx context.Context) error {
-
-		if err := uc.paymentsRepository.CreateUserFullPaymentCard(ctx, userFullCard); err != nil {
-			return err
-		}
-		if err := uc.paymentsRepository.CreateUserPaymentCard(ctx, userCard); err != nil {
-			return err
-		}
-
-		return nil
-	}); err != nil {
+	if err := uc.paymentsRepository.CreateUserPaymentCard(ctx, userCard); err != nil {
 		log.Printf("failed to add user (%s) payment card: %v", userFullCard.UserUid, err)
 		return uuid.UUID{}, errors.WithStack(err)
 	}

@@ -26,11 +26,11 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 
 			r.Post("/", rs.CreatePayment)
 			r.Get("/{payment_uid}", rs.GetPayment)
-			r.Get("/", rs.GetPayments)
 			r.Get("/by_order/{order_uid}", rs.GetOrderPayment)
+			r.Get("/", rs.GetPayments)
 
 			// TODO: remove
-			
+
 		})
 	}
 }

@@ -8,13 +8,6 @@ import (
 )
 
 type PaymentsRepository interface {
-	// remove after mvp
-	CreateUserFullPaymentCard(ctx context.Context, card entity.UserFullPaymentCard) error
-	GetUserFullPaymentCardByUid(ctx context.Context, uid uuid.UUID) (entity.UserFullPaymentCard, bool, error)
-	GetUserFullPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserFullPaymentCard, error)
-	DeleteUserFullPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) error
-	DeleteUserFullPaymentCards(ctx context.Context, userUid uuid.UUID) error
-	//
 	CreateUserPaymentCard(ctx context.Context, card entity.UserPaymentCard) error
 	GetUserPaymentCardByUid(ctx context.Context, uid uuid.UUID) (entity.UserPaymentCard, bool, error)
 	GetUserPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserPaymentCard, error)

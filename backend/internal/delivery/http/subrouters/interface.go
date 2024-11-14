@@ -94,8 +94,4 @@ type PaymentsService interface {
 	GetUserPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserPaymentCard, error)
 	DeleteUserPaymentCard(ctx context.Context, cardUid uuid.UUID) error
 	DeleteUserPaymentCards(ctx context.Context, userUid uuid.UUID) error
-
-	// remove after mvp
-	GetUserFullPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) (entity.UserFullPaymentCard, bool, error)
-	GetUserFullPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserFullPaymentCard, error)
 }

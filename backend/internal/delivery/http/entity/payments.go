@@ -20,7 +20,7 @@ func UserPaymentCardFromEntity(card entity.UserPaymentCard) UserPaymentCard {
 		Uid:         card.Uid,
 		UserUid:     card.UserUid,
 		ExternalUid: card.ExternalUid,
-		Number:      card.Number,
+		Number:      "**** **** **** " + card.Number,
 		Expired:     card.Expired,
 	}
 }

@@ -93,13 +93,13 @@ func (pr *PaymentRow) ConditionUserUidEqual() sq.Eq {
 
 func (pr *PaymentRow) ConditionOrderUidEqual() sq.Eq {
 	return sq.Eq{
-		"order_uid": pr.Uid,
+		"order_uid": pr.OrderUid,
 	}
 }
 
 func (pr *PaymentRow) ConditionCardUidEqual() sq.Eq {
 	return sq.Eq{
-		"order_uid": pr.Uid,
+		"card_uid": pr.CardUid,
 	}
 }
 
