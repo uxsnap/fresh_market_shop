@@ -83,3 +83,17 @@ type DeliveryService interface {
 	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
 	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)
 }
+
+type PaymentsService interface {
+	CreatePayment(ctx context.Context, payment entity.Payment) (uuid.UUID, error)
+	GetPayment(ctx context.Context, paymentUid uuid.UUID) (entity.Payment, bool, error)
+	GetOrderPayment(ctx context.Context, orderUid uuid.UUID) (entity.Payment, bool, error)
+	GetUserPayments(ctx context.Context, userUid uuid.UUID) ([]entity.Payment, error)
+	GetCardPayments(ctx context.Context, cardUid uuid.UUID) ([]entity.Payment, error)
+
+	AddUserPaymentCard(ctx context.Context, userFullCard entity.UserFullPaymentCard) (uuid.UUID, error)
+	GetUserPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) (entity.UserPaymentCard, bool, error)
+	GetUserPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserPaymentCard, error)
+	DeleteUserPaymentCard(ctx context.Context, cardUid uuid.UUID) error
+	DeleteUserPaymentCards(ctx context.Context, userUid uuid.UUID) error
+}

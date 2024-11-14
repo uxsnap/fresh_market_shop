@@ -28,7 +28,7 @@ func NewOrderRow() *OrderRow {
 	return &OrderRow{}
 }
 
-func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
+func (p *OrderRow) FromEntity(order entity.Order) *OrderRow {
 	p.Uid = pgtype.UUID{
 		Bytes:  order.Uid,
 		Status: pgtype.Present,
@@ -65,7 +65,7 @@ func (p *OrderRow) FromEntity(order entity.Order) (*OrderRow, error) {
 		}
 	}
 
-	return p, nil
+	return p
 }
 
 func (p *OrderRow) ToEntity() entity.Order {
