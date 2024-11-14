@@ -19,13 +19,6 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx := context.Background()
 
-	uid, err := h.AuthService.Register(ctx, req.Email, req.Password)
-	if err != nil {
-		log.Printf("failed to register user: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
-		return
-	}
-
 	nameSlice := strings.Split(req.Name, " ")
 	firstName := nameSlice[0]
 	lastName := ""
@@ -38,6 +31,13 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
 			errorWrapper.UserNameError, "длина имени пользователя должна быть больше 1",
 		))
+		return
+	}
+
+	uid, err := h.AuthService.Register(ctx, req.Email, req.Password)
+	if err != nil {
+		log.Printf("failed to register user: %v", err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return
 	}
 
