@@ -1,3 +1,8 @@
+.input {
+  font-size: 16px;
+  height: 42px;
+}
+
 .wrapper,
 .day {
   color: var(--mantine-color-accent-0);

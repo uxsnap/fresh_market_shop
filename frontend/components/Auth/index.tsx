@@ -101,12 +101,12 @@ export const Auth = () => {
 
       <Modal.Content right={0}>
         <Modal.Body p={12}>
-          <Title order={4} mb={12} c="accent.0">
+          <Title order={2} mb={12} c="accent.0">
             {title}
           </Title>
 
           {text && (
-            <Text fz={12} lh="14px" c="accent.0">
+            <Text fz={14} lh="14px" c="accent.0">
               {text}
             </Text>
           )}

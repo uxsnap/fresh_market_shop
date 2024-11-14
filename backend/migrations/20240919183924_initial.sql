@@ -4,8 +4,10 @@
 -- Создание таблицы "users"
 CREATE TABLE users (
     uid uuid PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
     email VARCHAR(30) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255),
+    birthday TIMESTAMP,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL
 );

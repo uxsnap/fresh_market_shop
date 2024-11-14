@@ -25,37 +25,37 @@ func NewMiddleware(authService AuthService) *Middleware {
 func (m *Middleware) verifyToken(ctx context.Context, tokenCookie string) (*httpEntity.AuthUserInfo, *errorWrapper.Error) {
 	if err := m.VerifyJwt(ctx, tokenCookie); err != nil {
 		log.Printf("auth middleware: invalid jwt token: %v", err)
-		return nil, errorWrapper.NewError(err.Error(), "auth middleware: invalid jwt token")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 
 	token, _ := jwt.Parse(tokenCookie, nil)
 	if token == nil {
 		log.Printf("auth middleware: failed to parse jwt token: empty token")
-		return nil, errorWrapper.NewError("empty token", "auth middleware: failed to parse jwt token")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 	claims, _ := token.Claims.(jwt.MapClaims)
 	userUidStr, ok := claims["user_uid"]
 	if !ok {
 		log.Printf("auth middleware: invalid jwt: user_uid is empty")
-		return nil, errorWrapper.NewError("", "auth middleware: invalid jwt")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 
 	userUid, err := uuid.FromString(userUidStr.(string))
 	if err != nil {
 		log.Printf("auth middleware: invalid jwt: user_uid is invalid")
-		return nil, errorWrapper.NewError("", "auth middleware: invalid jwt")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 
 	userRole, ok := claims["role"]
 	if !ok {
 		log.Printf("auth middleware: invalid jwt: role is empty")
-		return nil, errorWrapper.NewError("", "auth middleware: invalid jwt")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 
 	userPermissions, ok := claims["permissions"]
 	if !ok {
 		log.Printf("auth middleware: invalid jwt: permissions is empty")
-		return nil, errorWrapper.NewError("", "auth middleware: invalid jwt")
+		return nil, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "неправильный токен")
 	}
 
 	userInfo := httpEntity.AuthUserInfo{
@@ -99,8 +99,8 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 		tokenCookie := httpUtils.GetBearerToken(r)
 
 		if tokenCookie == "" {
-			log.Printf("auth middleware: failed to get jwt token")
-			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "auth middleware: failed to get jwt token"))
+			log.Printf("отсутствует токен")
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "отсутствует токен"))
 			return
 		}
 

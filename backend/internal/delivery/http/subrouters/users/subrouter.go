@@ -18,6 +18,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(us.Middleware.Auth)
 
 			r.Get("/{user_uid}", us.getUser)
+			r.Post("/{user_uid}/photo", us.uploadPhoto)
 			r.Put("/", us.updateUser)
 
 			r.Post("/{user_uid}/delivery_address", us.addDeliveryAddress)

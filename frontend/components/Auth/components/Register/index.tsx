@@ -17,6 +17,7 @@ export const Register = ({ onChange, close }: Props) => {
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -43,6 +44,13 @@ export const Register = ({ onChange, close }: Props) => {
       <Flex gap={16} direction="column">
         <TextInput
           size="md"
+          label="Имя и фамилия"
+          placeholder="Введите имя и фамилию"
+          {...form.getInputProps("name")}
+        />
+
+        <TextInput
+          size="md"
           label="Email"
           placeholder="Введите email"
           {...form.getInputProps("email")}
@@ -59,8 +67,8 @@ export const Register = ({ onChange, close }: Props) => {
         <Button
           onClick={() => onChange("forgotPass")}
           p={0}
-          fz={10}
-          h={12}
+          fz={14}
+          h={24}
           size="xs"
           variant="outline"
         >
@@ -69,8 +77,8 @@ export const Register = ({ onChange, close }: Props) => {
         <Button
           onClick={() => onChange("login")}
           p={0}
-          fz={10}
-          h={12}
+          fz={14}
+          h={24}
           size="xs"
           variant="outline"
         >

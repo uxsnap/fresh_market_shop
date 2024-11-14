@@ -5,11 +5,16 @@
   font-weight: 500;
   color: var(--mantine-color-accent-0);
   font-size: 14px;
-  padding: 12px;
-  padding-bottom: 8px;
+  padding: 8px;
 
-  &.bottom {
-    padding-top: 8px;
-    padding-bottom: 12px;
+  div {
+    border-radius: 12px;
+    padding: 4px 6px;
+  }
+
+  &:hover {
+    div {
+      background: var(--mantine-color-secondary-0);
+    }
   }
 }

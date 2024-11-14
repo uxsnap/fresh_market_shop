@@ -4,7 +4,7 @@ import { AppShell } from "@mantine/core";
 import { Header } from "../Header";
 import { SideMenu } from "../SideMenu";
 import { PropsWithChildren, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import {
   QueryClient,
@@ -19,6 +19,7 @@ const queryClient = new QueryClient();
 
 const MainApp = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
+  const router = useRouter();
   const setLogged = useAuthStore((s) => s.setLogged);
 
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
@@ -41,11 +42,17 @@ const MainApp = ({ children }: PropsWithChildren) => {
   const { mutate } = useMutation({
     mutationFn: verifyUser,
     onSuccess: ({ isValid }) => {
+      if (!isValid) {
+        router.push("/");
+      }
+
       setLogged(isValid);
     },
   });
 
-  useEffect(mutate, []);
+  useEffect(() => {
+    mutate();
+  }, [children]);
 
   return (
     <AppShell

@@ -20,3 +20,7 @@ type ProductsCountRepository interface {
 type OrderProductsRepository interface {
 	AddOrderProducts(ctx context.Context, orderProducts []entity.OrderProducts) error
 }
+
+type ProductsRepository interface {
+	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+}
