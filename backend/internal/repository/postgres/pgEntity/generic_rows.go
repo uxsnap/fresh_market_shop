@@ -8,17 +8,18 @@ type ToEntityConverter[K any] interface {
 	ToEntity() K
 }
 
-type Row[K any] interface {
+type Row[T, K any] interface {
 	Scan(row pgx.Row) error
 	ToEntityConverter[K]
+	New() T
 }
 
 // T == *pgEntity....Row эта Row реализует методы => []T == []*pgEntity...Row
-type Rows[T Row[K], K any] struct {
+type Rows[T Row[T, K], K any] struct {
 	rows []T
 }
 
-func NewRows[T Row[K], K any]() *Rows[T, K] {
+func NewRows[T Row[T, K], K any]() *Rows[T, K] {
 	return &Rows[T, K]{}
 }
 
@@ -26,13 +27,13 @@ func (rs *Rows[T, K]) ScanAll(rows pgx.Rows) error {
 	rs.rows = []T{}
 
 	for rows.Next() {
-		// new (T) => new (*pgEntity.Row) ==> * (*pgEntity.Row) ==> * -> nil
-		newRow := new(T)
+		// a := new (T) => new (*pgEntity.Row) ==> * (*pgEntity.Row) ==> * -> nil <=> *a=nil (type of T)
+		newRow := T.New(*new(T))
 
-		if err := T.Scan(*newRow, rows); err != nil {
+		if err := T.Scan(newRow, rows); err != nil {
 			return err
 		}
-		rs.rows = append(rs.rows, *newRow)
+		rs.rows = append(rs.rows, newRow)
 	}
 	return nil
 }
@@ -44,7 +45,7 @@ func (rs *Rows[T, K]) ToEntity() []K {
 
 	res := make([]K, len(rs.rows))
 	for i := 0; i < len(rs.rows); i++ {
-		res[i] = rs.rows[i].ToEntity() // ?why?
+		res[i] = rs.rows[i].ToEntity()
 	}
 	return res
 }

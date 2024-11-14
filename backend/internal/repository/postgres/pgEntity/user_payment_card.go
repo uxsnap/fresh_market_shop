@@ -7,7 +7,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-const userPaymentCardsTable = "users_cards"
+const userPaymentCardsTable = "payment_cards"
 
 type UserPaymentCardRow struct {
 	Uid         pgtype.UUID
@@ -18,6 +18,10 @@ type UserPaymentCardRow struct {
 }
 
 func NewUserPaymentCardRow() *UserPaymentCardRow {
+	return &UserPaymentCardRow{}
+}
+
+func (ur *UserPaymentCardRow) New() *UserPaymentCardRow {
 	return &UserPaymentCardRow{}
 }
 

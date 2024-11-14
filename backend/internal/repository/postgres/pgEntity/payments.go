@@ -23,6 +23,10 @@ func NewPaymentRow() *PaymentRow {
 	return &PaymentRow{}
 }
 
+func (pr *PaymentRow) New() *PaymentRow {
+	return &PaymentRow{}
+}
+
 func (pr *PaymentRow) FromEntity(payment entity.Payment) *PaymentRow {
 	pr.Uid = pgUidFromUUID(payment.Uid)
 	pr.UserUid = pgUidFromUUID(payment.UserUid)
