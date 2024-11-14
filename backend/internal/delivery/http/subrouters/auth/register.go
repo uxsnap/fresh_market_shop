@@ -22,7 +22,7 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 	uid, err := h.AuthService.Register(ctx, req.Email, req.Password)
 	if err != nil {
 		log.Printf("failed to register user: %v", err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return
 	}
 
@@ -43,6 +43,10 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 		LastName:  nameSlice[1],
 	}); err != nil {
 		log.Printf("failed to create user %s in gw: %v", uid, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
+			errorWrapper.UserNameError, err.Error(),
+		))
+		return
 	}
 
 	httpUtils.WriteResponseJson(w, RegisterResponse{
