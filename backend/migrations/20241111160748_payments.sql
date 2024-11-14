@@ -27,5 +27,5 @@ CREATE TABLE payments (
 -- +goose StatementBegin
 
 DROP TABLE payments;
-DROP TABLE users_cards;
+DROP TABLE payment_cards;
 -- +goose StatementEnd
