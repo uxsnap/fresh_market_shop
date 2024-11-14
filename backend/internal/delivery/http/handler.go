@@ -39,6 +39,7 @@ func New(
 	recipesService subrouters.RecipesService,
 	ordersService subrouters.OrdersService,
 	deliveryService subrouters.DeliveryService,
+	paymentsService subrouters.PaymentsService,
 ) *Handler {
 	subroutersMiddleware := subrouters.NewMiddleware(authService)
 
@@ -52,6 +53,7 @@ func New(
 			RecipesService:  recipesService,
 			OrdersService:   ordersService,
 			DeliveryService: deliveryService,
+			PaymentsService: paymentsService,
 			Middleware:      subroutersMiddleware,
 		},
 	}
