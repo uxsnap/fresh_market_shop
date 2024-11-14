@@ -36,6 +36,9 @@ type QueryFilters struct {
 	RecipeUid          uuid.UUID
 	UserUid            uuid.UUID
 	CategoryUids       []uuid.UUID
+	OrderUid           uuid.UUID
+	CardUid            uuid.UUID
+	OrdersUids         []uuid.UUID
 }
 
 const defaultLimit = 10
@@ -58,6 +61,9 @@ const (
 	QueryFieldWithRandom        = "with_random"
 	QueryFieldUserUid           = "user_uid"
 	QueryFieldCategoryUids      = "category_uids"
+	QueryFieldOrderUid          = "order_uid"
+	QueryFieldCardUid           = "card_uid"
+	QueryFieldOrdersUids        = "orders_uids"
 )
 
 type QueryFiltersParser struct {
@@ -85,6 +91,9 @@ func NewQueryFiltersParser() *QueryFiltersParser {
 			QueryFieldWithRandom:        parseWithRandom,
 			QueryFieldUserUid:           parseUserUid,
 			QueryFieldCategoryUids:      parseCategoryUids,
+			QueryFieldOrderUid:          parseOrderUid,
+			QueryFieldCardUid:           parseCardUid,
+			QueryFieldOrdersUids:        parseOrdersUids,
 		},
 	}
 }
@@ -126,6 +135,11 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldName,
 		QueryFieldCookingTime,
 		QueryFieldWithRandom,
+		QueryFieldRecipeUid,
+		QueryFieldUserUid,
+		QueryFieldOrderUid,
+		QueryFieldCardUid,
+		QueryFieldOrdersUids,
 	}
 
 	for _, field := range queryFiltersFields {
@@ -276,6 +290,40 @@ func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
 		qFilters.CategoryUids = append(qFilters.CategoryUids, categoryUid)
 	}
 
+	return nil
+}
+
+func parseOrderUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.OrderUid, err = uuid.FromString(query.Get(QueryFieldOrderUid))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseOrdersUids(query url.Values, qFilters *QueryFilters) error {
+	uuidsStrings, ok := query[QueryFieldOrdersUids]
+	if !ok {
+		return errors.Errorf("field %s not found in query", QueryFieldOrdersUids)
+	}
+
+	for _, uuidString := range uuidsStrings {
+		orderUid, err := uuid.FromString(uuidString)
+		if err != nil {
+			return err
+		}
+		qFilters.OrdersUids = append(qFilters.OrdersUids, orderUid)
+	}
+	return nil
+}
+
+func parseCardUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.CardUid, err = uuid.FromString(query.Get(QueryFieldCardUid))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
