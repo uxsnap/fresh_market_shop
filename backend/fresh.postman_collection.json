@@ -1032,6 +1032,225 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "payments",
+			"item": [
+				{
+					"name": "add payment card",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzE1OTAyOTksInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjdiY2Y5N2FjLWI2ZjAtNGMzYy1iZmM3LWEwNmMwNDU1NGRlOCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.sbHLBpNcohSSx9cWDY2O3-ApSDvdD1kHDfpcfGduBQQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \t\"userUid\": \"2785abd7-aa95-439b-b01d-310c9ca19fc2\",\n\t    \"number\": \"1111111111111111\",\n\t    \"expired\":\"11/28\",\n\t    \"cvv\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/payments/cards",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								"cards"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get payment card",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzE1OTAyOTksInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjdiY2Y5N2FjLWI2ZjAtNGMzYy1iZmM3LWEwNmMwNDU1NGRlOCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.sbHLBpNcohSSx9cWDY2O3-ApSDvdD1kHDfpcfGduBQQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/cards/30bda0e4-a903-422c-8c8f-32a37f5b4283",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								"cards",
+								"30bda0e4-a903-422c-8c8f-32a37f5b4283"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user payment cards",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzE2MDMwNzcsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6ImUyYTVjNWM3LTRkOWItNGM2Mi1iOTgzLWMwZWU0YzViNTRkZSIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.4FsORkc-k87ek0yIgffl_oud42d34O-zYb2cTi8NEoo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments/cards/by_user/2785abd7-aa95-439b-b01d-310c9ca19fc2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								"cards",
+								"by_user",
+								"2785abd7-aa95-439b-b01d-310c9ca19fc2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete payment card",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/payments/cards/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								"cards",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user payment cards",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/payments/cards/by_user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments",
+								"cards",
+								"by_user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzE1OTk0MjAsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjgzYzU0ZjQzLWRlMTYtNGM2OC05ZTAwLTNlM2E1ZDVmYzYwNCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.2krB9wTT1bjvlsCAlcfmWGhlC4fojAixNg7UASk36js",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"userUid\":\"2785abd7-aa95-439b-b01d-310c9ca19fc2\",\n\t\"orderUid\": \"44fe01a9-fbc6-4c52-905a-ce089f284a52\",\n\t\"cardUid\":\"460c092f-0421-4261-b46b-0bcff6d9143f\",\n\t\"sum\":123,\n\t\"currency\":\"RUB\",\n\t\"time\": \"2024-11-14T14:58:33.716526Z\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get payment",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get order payment",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get payments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJubyIsImV4cGlyZWRfYXQiOjE3MzE1OTk0MjAsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjgzYzU0ZjQzLWRlMTYtNGM2OC05ZTAwLTNlM2E1ZDVmYzYwNCIsInVzZXJfdWlkIjoiMjc4NWFiZDctYWE5NS00MzliLWIwMWQtMzEwYzljYTE5ZmMyIn0.2krB9wTT1bjvlsCAlcfmWGhlC4fojAixNg7UASk36js",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/payments?user_uid=2785abd7-aa95-439b-b01d-310c9ca19fc2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"payments"
+							],
+							"query": [
+								{
+									"key": "user_uid",
+									"value": "2785abd7-aa95-439b-b01d-310c9ca19fc2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
