@@ -25,6 +25,7 @@ type PaymentsRepository interface {
 	GetPaymentByUid(ctx context.Context, uid uuid.UUID) (entity.Payment, bool, error)
 	GetPaymentByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Payment, bool, error)
 	GetPaymentsByUserUid(ctx context.Context, userUid uuid.UUID) ([]entity.Payment, error)
+	GetPaymentsByCardUid(ctx context.Context, cardUid uuid.UUID) ([]entity.Payment, error)
 }
 
 type UsersService interface {
