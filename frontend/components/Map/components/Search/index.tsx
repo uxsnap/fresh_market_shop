@@ -1,15 +1,18 @@
 import { Select } from "@mantine/core";
-import { UseFormReturnType } from "@mantine/form";
 import { useState } from "react";
-import { MapForm } from "../../types";
+import { useMapFormContext } from "../../context";
 
 type Props = {
   className: string;
-  form: UseFormReturnType<MapForm>;
 };
 
-export const Search = ({ className, form }: Props) => {
+export const Search = ({ className }: Props) => {
   const [searchValue, setSearchValue] = useState("");
+  const form = useMapFormContext();
+
+  form.watch("address", ({ value }) => {
+    setSearchValue(value);
+  });
 
   return (
     <Select
@@ -21,6 +24,7 @@ export const Search = ({ className, form }: Props) => {
       onSearchChange={setSearchValue}
       searchable
       limit={5}
+      key={form.key("address")}
       {...form.getInputProps("address")}
     />
   );

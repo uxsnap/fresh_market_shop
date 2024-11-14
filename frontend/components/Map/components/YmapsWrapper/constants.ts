@@ -20,3 +20,7 @@ export const DEFAULT_COORDS = {
 };
 
 export const MAP_MODULES = ["geolocation", "geocode"];
+
+export interface ExtendedGeoObject extends ymaps.IGeoObject {
+  getAddressLine(): string;
+}
