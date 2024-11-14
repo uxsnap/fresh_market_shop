@@ -4,7 +4,11 @@ import {
   FileButton,
   Avatar as MantineAvatar,
   LoadingOverlay,
+  Text,
+  Group,
+  Box,
 } from "@mantine/core";
+import cn from "classnames";
 
 import { User } from "../icons/User";
 import { processImgFile } from "@/utils";
@@ -14,6 +18,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { uploadPhoto } from "@/api/user/uploadPhoto";
 import { useRef } from "react";
 import { getPhoto } from "@/api/user/getPhoto";
+import { Plus } from "../icons/Plus";
 
 type Props = {
   src?: string;
@@ -59,25 +64,33 @@ export const Avatar = ({ size = "default", upload = false }: Props) => {
       accept="image/png,image/jpeg,image/jpg,image/webp"
     >
       {(props) => (
-        <MantineAvatar
-          className={styles.root}
-          src={data?.data.src ?? ""}
-          c="bg.1"
-          size={size === "default" ? 250 : 38}
-          {...props}
-        >
-          <LoadingOverlay
-            visible={isFetching || isPending}
-            zIndex={1}
-            overlayProps={{ radius: "sm", blur: 2 }}
-            loaderProps={{ color: "primary.0", type: "bars" }}
-          />
+        <Box className={cn(styles.root, upload && styles.upload)}>
+          <Group className={styles.uploadInfo}>
+            <Plus size={20} fill="var(--mantine-color-accent-0)" />
+            <Text span c="var(--mantine-color-accent-0)" fz={22} fw="bold">
+              Изменить фото
+            </Text>
+          </Group>
 
-          <User
-            fill={`var(--mantine-color-accent-2`}
-            size={size === "default" ? 100 : 19}
-          />
-        </MantineAvatar>
+          <MantineAvatar
+            src={data?.data.src ?? ""}
+            c="bg.1"
+            size={size === "default" ? 250 : 38}
+            {...props}
+          >
+            <LoadingOverlay
+              visible={isFetching || isPending}
+              zIndex={1}
+              overlayProps={{ radius: "sm", blur: 2 }}
+              loaderProps={{ color: "primary.0", type: "bars" }}
+            />
+
+            <User
+              fill={`var(--mantine-color-accent-2`}
+              size={size === "default" ? 100 : 19}
+            />
+          </MantineAvatar>
+        </Box>
       )}
     </FileButton>
   );
