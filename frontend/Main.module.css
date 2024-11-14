@@ -1,7 +1,7 @@
 .label {
   color: var(--mantine-color-accent-0);
   font-weight: 400;
-  font-size: 12px;
+  font-size: 16px;
   margin-bottom: 4px;
 }
 
@@ -24,7 +24,7 @@
 
   input::placeholder {
     color: var(--mantine-color-accent-2);
-    font-size: 12px;
+    font-size: 16px;
   }
 
   &[data-error="true"] {
@@ -55,4 +55,13 @@
   font-weight: 400;
   background-color: transparent;
   top: -1.75rem;
+}
+
+.buttonRoot {
+  &[data-variant="outline"] {
+    &:disabled,
+    &[data-disabled] {
+      background-color: transparent;
+    }
+  }
 }

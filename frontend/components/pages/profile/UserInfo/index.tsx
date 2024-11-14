@@ -1,100 +1,161 @@
 "use client";
 
-import { getUserInfo } from "@/api/user/getUserInfo";
+import { logoutUser } from "@/api/auth/logout";
+import { getUser } from "@/api/user/getUser";
 import { updateUser } from "@/api/user/updateUser";
 import { Avatar } from "@/components/Avatar";
 import { DateInput } from "@/components/DateInput";
 import { ShadowBox } from "@/components/ShadowBox";
-import { showSuccessNotification } from "@/utils";
+import { jwtError } from "@/constants";
+import { useAuthStore } from "@/store/auth";
+import { ErrorWrapper, User } from "@/types";
+import { getErrorBody, isDateNull, showSuccessNotification } from "@/utils";
 import { Box, Button, Group, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { hasLength, isEmail, useForm } from "@mantine/form";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { AxiosError } from "axios";
+import { useCallback, useEffect } from "react";
+
+import styles from "./UserInfo.module.css";
+import { useRouter } from "next/navigation";
+
+type Form = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  birthday: null | Date;
+};
+
+const getInitialValues = (data?: User) => ({
+  email: data?.email ?? "",
+  firstName: data?.firstName ?? "",
+  lastName: data?.lastName ?? "",
+  birthday: isDateNull(data?.birthday) ? null : new Date(data?.birthday + ""),
+});
 
 export const UserInfo = () => {
-  const { data } = useQuery({
-    queryFn: getUserInfo,
-    queryKey: [getUserInfo.queryKey],
+  const router = useRouter();
+  const logged = useAuthStore((s) => s.logged);
+  const setLogged = useAuthStore((s) => s.setLogged);
+
+  const { data, error } = useQuery({
+    queryFn: getUser,
+    queryKey: [getUser.queryKey, logged],
+    enabled: logged,
   });
 
-  const form = useForm({
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    const errorBody = getErrorBody(
+      error as AxiosError<{ error: ErrorWrapper }>
+    );
+
+    if (errorBody?.type === jwtError) {
+      logoutUser();
+    }
+  }, [error]);
+
+  const form = useForm<Form>({
     mode: "uncontrolled",
-    initialValues: {
-      email: data?.data.email ?? "",
-      firstName: "",
-      lastName: "",
-      birthday: "",
-    },
+    initialValues: getInitialValues(data?.data),
     validate: {
-      email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Неправильный формат email",
-      firstName: (value) =>
-        value.length > 0 ? null : "Длина имени должна быть больше 0",
-      lastName: (value) =>
-        value.length > 0 ? null : "Длина фамилии должна быть больше 0",
+      email: isEmail("Неправильный формат email"),
+      firstName: hasLength({ min: 1 }, "Длина имени должна быть больше 1"),
     },
   });
 
   useEffect(() => {
-    form.setFieldValue("email", data?.data.email ?? "");
+    if (!data) {
+      return;
+    }
+
+    form.initialize(getInitialValues(data?.data));
   }, [data]);
+
+  const { mutate: logout, isPending } = useMutation({
+    mutationFn: logoutUser,
+    onSuccess: () => {
+      router.push("/");
+      setLogged(false);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: updateUser,
     onSuccess: () => {
+      form.resetDirty();
       showSuccessNotification("Пользователь успешно обновлен!");
     },
   });
 
   const handleSubmit = form.onSubmit((values) => {
-    mutation.mutate(values);
+    mutation.mutate(values as any);
   });
 
+  const handleLogout = useCallback(() => {
+    logout();
+  }, [logout]);
+
   return (
-    <form onSubmit={handleSubmit}>
-      <Box>
-        <ShadowBox>
-          <Stack gap={12}>
-            <Box px={68} pt={20}>
-              <Avatar />
-            </Box>
+    <form onSubmit={handleSubmit} className={styles.root}>
+      <ShadowBox w="100%">
+        <Stack className={styles.wrapper} gap={12}>
+          <Box className={styles.avatarWrapper}>
+            <Avatar upload />
+          </Box>
 
-            <Stack p={20} gap={12}>
-              <TextInput
-                size="md"
-                label="Email"
-                placeholder="Введите email"
-                {...form.getInputProps("email")}
-              />
+          <Stack className={styles.inputs}>
+            <TextInput
+              size="md"
+              label="Email"
+              placeholder="Введите email"
+              {...form.getInputProps("email")}
+            />
 
-              <TextInput
-                size="md"
-                label="Имя"
-                placeholder="Введите имя"
-                {...form.getInputProps("firstName")}
-              />
+            <TextInput
+              size="md"
+              label="Имя"
+              placeholder="Введите имя"
+              {...form.getInputProps("firstName")}
+            />
 
-              <TextInput
-                size="md"
-                label="Фамилия"
-                placeholder="Введите фамилию"
-                {...form.getInputProps("lastName")}
-              />
+            <TextInput
+              size="md"
+              label="Фамилия"
+              placeholder="Введите фамилию"
+              {...form.getInputProps("lastName")}
+            />
 
-              <DateInput {...form.getInputProps("birthday")} />
-            </Stack>
+            <DateInput clearable {...form.getInputProps("birthday")} />
+
+            <Button
+              disabled={!form.isDirty()}
+              type="submit"
+              w="100%"
+              variant="accent"
+            >
+              Сохранить
+            </Button>
           </Stack>
-        </ShadowBox>
+        </Stack>
+      </ShadowBox>
 
-        <Group justify="space-between">
-          <Button p={0} variant="outline">
-            Выйти из системы
-          </Button>
-          <Button p={0} variant="outline" c="danger.0">
-            Удалить аккаунт
-          </Button>
-        </Group>
-      </Box>
+      <Group justify="space-between">
+        <Button
+          disabled={isPending}
+          onClick={handleLogout}
+          p={0}
+          variant="outline"
+        >
+          Выйти из системы
+        </Button>
+        <Button p={0} variant="outline" c="danger.0">
+          Удалить аккаунт
+        </Button>
+      </Group>
     </form>
   );
 };

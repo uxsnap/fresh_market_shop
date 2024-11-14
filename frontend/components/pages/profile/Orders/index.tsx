@@ -6,7 +6,9 @@ export const Orders = () => {
   return (
     <ShadowBox p={12} mah={480} style={{ overflowY: "auto" }}>
       <Stack gap={16}>
-        <Title>История заказов</Title>
+        <Title c="accent.0" order={3}>
+          История заказов
+        </Title>
 
         <OrderItemList />
       </Stack>

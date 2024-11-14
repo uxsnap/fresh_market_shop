@@ -93,6 +93,16 @@ export type JwtData = {
   user_uid: string;
 };
 
+export type User = {
+  uid: string;
+  firstName: string;
+  lastName: string;
+  birthday: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type ErrorWrapper = {
   type: string;
   message: string;

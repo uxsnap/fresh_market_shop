@@ -11,6 +11,7 @@ import "google/protobuf/empty.proto";
 service Auth {
     rpc Register(RegisterRequest) returns (RegisterResponse);
     rpc UpdateUser(UpdateUserRequest) returns (JwtResponse); // required accessJwt in ctx
+    rpc UpdateEmail(UpdateEmailRequest) returns (JwtResponse);
     rpc GetUser(GetUserRequest) returns (GetUserResponse); // required accessJwt in ctx
     rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
 
@@ -42,6 +43,11 @@ message UpdateUserRequest {
     string uid = 1;
     string email = 2;
     string password = 3;
+}
+
+message UpdateEmailRequest {
+    string uid = 1;
+    string email = 2;
 }
 
 message GetUserRequest {

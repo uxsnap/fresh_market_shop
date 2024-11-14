@@ -27,6 +27,5 @@ button.burger {
   align-items: center;
   justify-content: center;
 
-  border: 1px solid var(--mantine-color-accent-0);
   border-radius: 8px;
 }

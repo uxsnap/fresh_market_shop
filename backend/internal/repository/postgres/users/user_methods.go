@@ -2,6 +2,7 @@ package repositoryUsers
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/jackc/pgx/v4"
@@ -14,7 +15,11 @@ import (
 func (r *UsersRepository) CreateUser(ctx context.Context, user entity.User) error {
 	log.Printf("usersRepository.CreateUser: uid %s", user.Uid)
 
-	if err := r.Create(ctx, pgEntity.NewUserRow().FromEntity(user)); err != nil {
+	ur := pgEntity.NewUserRow().FromEntity(user)
+
+	fmt.Println(ur)
+
+	if err := r.Create(ctx, ur); err != nil {
 		log.Printf("failed to create user %s: %v", user.Uid, err)
 		return errors.WithStack(err)
 	}

@@ -7,13 +7,6 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func validateUser(user entity.User) error {
-	if len(user.Email) == 0 {
-		return fmt.Errorf("email is empty")
-	}
-	return nil
-}
-
 func validateDeliveryAddress(address entity.DeliveryAddress) error {
 	if uuid.Equal(address.UserUid, uuid.UUID{}) {
 		return fmt.Errorf("user uid is empty")

@@ -105,7 +105,7 @@ func (p *OrderRow) Scan(row pgx.Row) error {
 
 func (p *OrderRow) ColumnsForUpdate() []string {
 	return []string{
-		"sum", "updated_at",
+		"num", "sum", "updated_at",
 	}
 }
 

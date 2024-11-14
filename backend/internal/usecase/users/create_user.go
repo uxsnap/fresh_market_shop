@@ -3,20 +3,23 @@ package useCaseUsers
 import (
 	"context"
 	"log"
+	"net/mail"
 	"time"
 
-	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error) {
-	log.Printf("ucUsers.CreateUser: email %s username %s", user.Email, user.Username)
+func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, *errorWrapper.Error) {
+	log.Printf("ucUsers.CreateUser: email %s username %s", user.Email, user.FirstName)
 
-	if err := validateUser(user); err != nil {
-		log.Printf("failed to create user: %v", err)
-		return uuid.UUID{}, err
+	if _, err := mail.ParseAddress(user.Email); err != nil {
+		return uuid.UUID{}, errorWrapper.NewError(
+			errorWrapper.UserEmailError, "неправильный формат email",
+		)
 	}
+
 	if uuid.Equal(user.Uid, uuid.UUID{}) {
 		user.Uid = uuid.NewV4()
 	}
@@ -25,7 +28,9 @@ func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.
 
 	if err := uc.usersRepository.CreateUser(ctx, user); err != nil {
 		log.Printf("failed to create user:%v", err)
-		return uuid.UUID{}, errors.WithStack(err)
+		return uuid.UUID{}, errorWrapper.NewError(
+			errorWrapper.UserInfoError, "не удалось создать пользователя",
+		)
 	}
 	return user.Uid, nil
 }

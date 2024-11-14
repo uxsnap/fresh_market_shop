@@ -4,7 +4,9 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
-import { proxyUserInfo } from "@/services/proxy/userInfo";
+import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
+import { proxyUpdateUser } from "@/services/proxy/updateUser";
+import { proxyUser } from "@/services/proxy/user";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -14,8 +16,10 @@ export async function GET(req: NextRequest) {
   );
 
   switch (url) {
-    case "/userInfo":
-      return proxyUserInfo();
+    case "/user/photo":
+      return proxyGetPhoto();
+    case "/user":
+      return proxyUser();
   }
 
   return proxyDefault(req);
@@ -34,6 +38,23 @@ export async function POST(req: NextRequest) {
       return proxyVerify();
     case "/logout":
       return proxyLogout();
+    case "/user/photo":
+      return proxyUpdatePhoto(req);
+    default:
+      const body = await req.json();
+      return proxyDefault(req, body);
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const url = req.url?.replace(
+    process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
+    ""
+  );
+
+  switch (url) {
+    case "/user":
+      return proxyUpdateUser(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);
