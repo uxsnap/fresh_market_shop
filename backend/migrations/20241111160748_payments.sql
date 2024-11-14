@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 
-CREATE TABLE users_cards (
+CREATE TABLE payment_cards (
     uid uuid PRIMARY KEY,
     user_uid uuid,
     external_uid uuid,
