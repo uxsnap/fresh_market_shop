@@ -11,7 +11,7 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, *errorWrapper.Error) {
+func (uc *UseCaseUsers) CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error) {
 	log.Printf("ucUsers.CreateUser: email %s username %s", user.Email, user.FirstName)
 
 	if _, err := mail.ParseAddress(user.Email); err != nil {

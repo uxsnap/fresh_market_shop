@@ -9,7 +9,7 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (uc *UseCaseUsers) GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, *errorWrapper.Error) {
+func (uc *UseCaseUsers) GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error) {
 	log.Printf("ucUsers.GetUser: uid %s", uid)
 
 	user, isFound, err := uc.usersRepository.GetUserByUid(ctx, uid)

@@ -10,7 +10,7 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) *errorWrapper.Error {
+func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) error {
 	log.Printf("ucUsers.UpdateUser: email %s firstName %s lastName %s", user.Email, user.FirstName, user.LastName)
 
 	savedUser, isFound, err := uc.usersRepository.GetUserByUid(ctx, user.Uid)
