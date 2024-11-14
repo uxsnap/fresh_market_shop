@@ -51,12 +51,10 @@ func (r *PaymentsRepository) GetPaymentByOrderUid(ctx context.Context, orderUid 
 	return paymentRow.ToEntity(), true, nil
 }
 
-
-
 func (r *PaymentsRepository) GetPaymentsByUserUid(ctx context.Context, userUid uuid.UUID) ([]entity.Payment, error) {
 	log.Printf("paymentsRepository.GetPaymentsByUserUid: %s", userUid)
 
-	paymentRow := pgEntity.NewPaymentRow()
+	paymentRow := pgEntity.NewPaymentRow().FromEntity(entity.Payment{UserUid: userUid})
 	paymentRows := pgEntity.NewPaymentRows()
 	if err := r.GetSome(ctx, paymentRow, paymentRows, paymentRow.ConditionUserUidEqual()); err != nil {
 		log.Printf("failed to get payments by user uid %s: %v", userUid, err)
@@ -66,3 +64,15 @@ func (r *PaymentsRepository) GetPaymentsByUserUid(ctx context.Context, userUid u
 	return paymentRows.ToEntity(), nil
 }
 
+func (r *PaymentsRepository) GetPaymentsByCardUid(ctx context.Context, cardUid uuid.UUID) ([]entity.Payment, error) {
+	log.Printf("paymentsRepository.GetPaymentsByCardUid: %s", cardUid)
+
+	paymentRow := pgEntity.NewPaymentRow().FromEntity(entity.Payment{CardUid: cardUid})
+	paymentRows := pgEntity.NewPaymentRows()
+	if err := r.GetSome(ctx, paymentRow, paymentRows, paymentRow.ConditionCardUidEqual()); err != nil {
+		log.Printf("failed to get payments by card uid %s: %v", cardUid, err)
+		return nil, errors.WithStack(err)
+	}
+
+	return paymentRows.ToEntity(), nil
+}
