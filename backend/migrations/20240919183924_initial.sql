@@ -16,7 +16,7 @@ CREATE TABLE users (
 CREATE TABLE delivery_addresses (
     uid uuid PRIMARY KEY,
     user_uid uuid NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
-    latitude NUMERIC(10, 8) NOT NULL,  -- Широта с точностью до 8 знаков после запятой
+    latitude NUMERIC(11, 8) NOT NULL,  -- Широта с точностью до 8 знаков после запятой
     longitude NUMERIC(11, 8) NOT NULL, -- Долгота с точностью до 8 знаков после запятой
     city_name VARCHAR(30) NOT NULL,
     street_name VARCHAR(30) NOT NULL,
