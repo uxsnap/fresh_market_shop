@@ -216,6 +216,8 @@ func (sp *serviceProvider) DeliveryService(ctx context.Context) *ucDelivery.UseC
 	if sp.ucDelivery == nil {
 		sp.ucDelivery = ucDelivery.New(
 			sp.DeliveryRepository(ctx),
+			sp.UsersService(ctx),
+			sp.OrdersService(ctx),
 			sp.TxManager(ctx),
 		)
 	}

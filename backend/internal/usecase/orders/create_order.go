@@ -9,7 +9,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (s *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error) {
+func (uc *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error) {
 	log.Printf("ucOrders.CreateOrder: user uid %s", userUid)
 
 	order := entity.Order{
@@ -26,24 +26,24 @@ func (s *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, prod
 		}
 	}
 
-	if err := s.txManager.NewPgTransaction().Execute(ctx, func(ctx context.Context) error {
+	if err := uc.txManager.NewPgTransaction().Execute(ctx, func(ctx context.Context) error {
 
-		if err := s.productsCountRepository.CheckIfAllItemsExist(ctx, productsCounts); err != nil {
+		if err := uc.productsCountRepository.CheckIfAllItemsExist(ctx, productsCounts); err != nil {
 			log.Printf("failed to validate order creation: %v", err)
 			return err
 		}
 
-		if err := s.productsCountRepository.UpdateCount(ctx, productsCounts); err != nil {
+		if err := uc.productsCountRepository.UpdateCount(ctx, productsCounts); err != nil {
 			log.Printf("failed to update products count: %v", err)
 			return err
 		}
 
-		if err := s.ordersRepository.CreateOrder(ctx, order); err != nil {
+		if err := uc.ordersRepository.CreateOrder(ctx, order); err != nil {
 			log.Printf("failed to create order: %v", err)
 			return err
 		}
 
-		if err := s.orderProductsRepository.AddOrderProducts(ctx, orderProducts); err != nil {
+		if err := uc.orderProductsRepository.AddOrderProducts(ctx, orderProducts); err != nil {
 			log.Printf("failed to create order: %v", err)
 			return err
 		}

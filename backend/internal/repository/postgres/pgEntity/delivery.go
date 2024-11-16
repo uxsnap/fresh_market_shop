@@ -20,6 +20,7 @@ type DeliveryRow struct {
 	Receiver      string
 	Time          pgtype.Interval
 	Price         int64
+	Status        string
 	CreatedAt     pgtype.Timestamp
 	UpdatedAt     pgtype.Timestamp
 }
@@ -38,6 +39,7 @@ func (dr *DeliveryRow) FromEntity(delivery entity.Delivery) *DeliveryRow {
 	dr.Address = delivery.Address
 	dr.Receiver = delivery.Receiver
 	dr.Price = delivery.Price
+	dr.Status = string(delivery.Status)
 	dr.Time = pgtype.Interval{
 		Microseconds: delivery.Time,
 		Status:       pgtype.Present,
@@ -65,6 +67,7 @@ func (dr *DeliveryRow) ToEntity() entity.Delivery {
 		Receiver:      dr.Receiver,
 		Time:          dr.Time.Microseconds,
 		Price:         dr.Price,
+		Status:        entity.DeliveryStatus(dr.Status),
 		CreatedAt:     dr.CreatedAt.Time,
 		UpdatedAt:     dr.UpdatedAt.Time,
 	}
@@ -73,14 +76,14 @@ func (dr *DeliveryRow) ToEntity() entity.Delivery {
 var deliveryTableColumns = []string{
 	"uid", "order_uid", "from_longitude", "from_latitude",
 	"to_longitude", "to_latitude", "address", "receiver",
-	"delivery_time", "price", "created_at", "updated_at",
+	"delivery_time", "price", "status", "created_at", "updated_at",
 }
 
 func (dr *DeliveryRow) Values() []interface{} {
 	return []interface{}{
 		dr.Uid, dr.OrderUid, dr.FromLongitude, dr.FromLatitude,
 		dr.ToLongitude, dr.ToLatitude, dr.Address, dr.Receiver,
-		dr.Time, dr.Price, dr.CreatedAt, dr.UpdatedAt,
+		dr.Time, dr.Price, dr.Status, dr.CreatedAt, dr.UpdatedAt,
 	}
 }
 
@@ -96,7 +99,7 @@ func (dr *DeliveryRow) Scan(row pgx.Row) error {
 	return row.Scan(
 		&dr.Uid, &dr.OrderUid, &dr.FromLongitude, &dr.FromLatitude,
 		&dr.ToLongitude, &dr.ToLatitude, &dr.Address, &dr.Receiver,
-		&dr.Time, &dr.Price, &dr.CreatedAt, &dr.UpdatedAt,
+		&dr.Time, &dr.Price, &dr.Status, &dr.CreatedAt, &dr.UpdatedAt,
 	)
 }
 
@@ -104,7 +107,7 @@ func (dr *DeliveryRow) ColumnsForUpdate() []string {
 	return []string{
 		"from_longitude", "from_latitude",
 		"to_longitude", "to_latitude", "address", "receiver",
-		"delivery_time", "price", "updated_at",
+		"delivery_time", "price", "status", "updated_at",
 	}
 }
 
@@ -112,7 +115,7 @@ func (dr *DeliveryRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
 		dr.FromLongitude, dr.FromLatitude,
 		dr.ToLongitude, dr.ToLatitude, dr.Address, dr.Receiver,
-		dr.Time, dr.Price, dr.UpdatedAt,
+		dr.Time, dr.Price, dr.Status, dr.UpdatedAt,
 	}
 }
 

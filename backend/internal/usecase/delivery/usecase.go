@@ -6,15 +6,21 @@ import (
 
 type UseCaseDelivery struct {
 	deliveryRepository DeliveryRepository
+	usersService       UsersService
+	ordersService      OrdersService
 	txManager          *transaction.Manager
 }
 
 func New(
 	deliveryRepository DeliveryRepository,
+	usersService UsersService,
+	ordersService OrdersService,
 	txManager *transaction.Manager,
 ) *UseCaseDelivery {
 	return &UseCaseDelivery{
 		deliveryRepository: deliveryRepository,
+		usersService:       usersService,
+		ordersService:      ordersService,
 		txManager:          txManager,
 	}
 }

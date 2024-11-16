@@ -1,6 +1,8 @@
 -- +goose Up
 -- +goose StatementBegin
 
+CREATE TYPE delivery_status AS ENUM('calculated', 'new', 'in_progress', 'deliveried', 'failed');
+
 -- todo: добавить статус для интеграции с доставкой
 CREATE TABLE delivery (
     uid uuid PRIMARY KEY,
@@ -13,13 +15,19 @@ CREATE TABLE delivery (
     receiver VARCHAR(50),
     delivery_time interval,
     price INT,
+    sratus delivery_status;
     created_at timestamp,
     updated_at timestamp
 );
+
+CREATE INDEX idx_delivery_order_uid ON delivery (order_uid);
 
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE delivery IF EXISTS;
+DROP INDEX idx_delivery_order_uid;
+DROP TABLE delivery;
+DROP TYPE delivery_status;
+
 -- +goose StatementEnd

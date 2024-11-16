@@ -17,6 +17,17 @@ type Delivery struct {
 	Receiver      string
 	Time          int64
 	Price         int64
+	Status        DeliveryStatus
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
+
+type DeliveryStatus string
+
+const (
+	DeliveryStatusCalculated DeliveryStatus = "calculated"
+	DeliveryStatusNew        DeliveryStatus = "new"
+	DeliveryStatusInProgress DeliveryStatus = "in_progress"
+	DeliveryStatusDeliveried DeliveryStatus = "deliveried"
+	DeliveryStatusFailed     DeliveryStatus = "failed"
+)

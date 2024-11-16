@@ -14,3 +14,12 @@ type DeliveryRepository interface {
 	UpdateDelivery(ctx context.Context, delivery entity.Delivery) error
 	GetDeliveryHistoryByUser(ctx context.Context, userUid uuid.UUID) ([]entity.Delivery, error)
 }
+
+type UsersService interface {
+	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
+	GetDeliveryAddress(ctx context.Context, uid uuid.UUID) (entity.DeliveryAddress, bool, error)
+}
+
+type OrdersService interface {
+	GetOrder(ctx context.Context, orderUid uuid.UUID) (entity.Order, bool, error)
+}

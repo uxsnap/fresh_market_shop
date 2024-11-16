@@ -24,3 +24,11 @@ type OrderProductsRepository interface {
 type ProductsRepository interface {
 	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 }
+
+type DeliveryService interface {
+	
+}
+
+type PaymentService interface {
+	
+}

@@ -2,6 +2,7 @@ package subrouters
 
 import (
 	"context"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -78,6 +79,12 @@ type OrdersService interface {
 
 type DeliveryService interface {
 	UpdateDelivery(ctx context.Context, delivery entity.Delivery) error
+	CalculateDelivery(
+		ctx context.Context,
+		userUid uuid.UUID,
+		orderUid uuid.UUID,
+		deliveryAddressUid uuid.UUID,
+	) (deliveryPrice int64, deliveryTime time.Duration, err error)
 	GetDeliveryTimeAndPriceForOrder(ctx context.Context, orderUid uuid.UUID) (deliveryTime int64, deliveryPrice int64, err error)
 	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
 	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)

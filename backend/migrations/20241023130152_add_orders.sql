@@ -6,6 +6,7 @@ CREATE TYPE order_status AS ENUM('in_progress','done');
 CREATE TABLE orders (
     uid uuid PRIMARY KEY,
     num SERIAL NOT NULL,
+    sum INT,
     user_uid uuid NOT NULL REFERENCES users(uid),
     status order_status not null default 'in_progress',
     created_at TIMESTAMP NOT NULL,

@@ -10,6 +10,7 @@ type Order struct {
 	Uid       uuid.UUID
 	UserUid   uuid.UUID
 	Num       int64
+	Sum       int64
 	Status    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
