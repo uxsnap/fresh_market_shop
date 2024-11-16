@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "57bd99f0-08f5-4234-9ec7-a1ae7baf9c72",
+		"_postman_id": "4030f8ee-147f-4e41-87a1-9e2ca13d5cd7",
 		"name": "fresh",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "12232823"
+		"_exporter_id": "17443477",
+		"_collection_link": "https://orange-comet-294040.postman.co/workspace/s~e64ff750-e2ed-4184-9cec-62efcab26471/collection/17443477-4030f8ee-147f-4e41-87a1-9e2ca13d5cd7?action=share&source=collection_link&creator=17443477"
 	},
 	"item": [
 		{
@@ -16,7 +17,22 @@
 							"name": "add_address",
 							"request": {
 								"method": "POST",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbHVwYUBrb255YTMiLCJleHBpcmVkX2F0IjoxNzMxNzgzNjQ5LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJ1c2VyIiwic2Vzc2lvbl91aWQiOiI0ZDQyMjM5MS0wMGMyLTQ0MDYtOTU3My0yNzE5NTIxNWZiOGEiLCJ1c2VyX3VpZCI6IjIwOWQwY2FlLTM5NjAtNDc1MC04Y2U4LWI5MTAzMzIwN2NlOCJ9.0O5FJGk4AUA9kJVCUvGU5j_F5SidDxZtq5gCwqkFtpU",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userUid\": \"209d0cae-3960-4750-8ce8-b91033207ce8\",\n    \"latitude\": 20.23423,\n    \"longitude\": 54.23,\n    \"cityName\": \"Калининград\",\n    \"streetName\": \"Черняховского\",\n    \"houseNumber\": 32,\n    \"building\": 2,\n    \"floor\": 5,\n    \"apartment\": 146\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_address",
 									"protocol": "http",
@@ -131,59 +147,20 @@
 				},
 				{
 					"name": "get user",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTI3OTMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjUyMjA0NDkwLWNlZDEtNDRhYS1iNTg3LWQwYzdjZjdhNDUyNCIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.Q9EQq01QgxuZ3fkvnnKt5L2EMSCau4n6UoV7u9v3Os8",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": []
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/bd260aa8-837e-48cc-9e2c-5fac5ef62609",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"bd260aa8-837e-48cc-9e2c-5fac5ef62609"
-							]
-						}
+						"header": []
 					},
 					"response": []
 				},
 				{
 					"name": "update user",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0MTAzMjUsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6ImVjZWE0NGQ2LWFkYzAtNDRiNS05YmJiLTQyNWQyOGY5ODViOCIsInVzZXJfdWlkIjoiOGQ4ZjE0MDctZWI5MS00ZDY5LTlkNmYtZWYxYzEzMTgxODZkIn0.gAX2qgR7kvIYDIMLULxjGGlgLOCPESGzZHrQZpydBfc",
-									"type": "string"
-								}
-							]
-						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"uid\": \"8d8f1407-eb91-4d69-9d6f-ef1c1318186d\",\n    \"firstName\": \"govnoEd\",\n    \"email\": \"new@new\"\n}",
+							"raw": "{\n    \"uid\": \"b0477677-ebf8-4fe9-863a-ea9cba0d190a\",\n    \"username\": \"govnoEd\",\n    \"email\": \"new@new\",\n    \"createdAt\": \"2024-10-31T14:02:58.400746Z\",\n    \"updatedAt\": \"2024-10-31T14:03:41.422004Z\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -204,91 +181,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "upload photo",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTczODMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjFkYjIyNjEyLTYzOTUtNGRiMy04OGM0LWUxYWM5MzkyYjM2NiIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.DL5xBgXm9GJo2xvJ6isjY92fTRh9fZ_uKS5uC_32Ig0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "photo",
-									"type": "file",
-									"src": "/Users/nuxxx/Desktop/59d336e5-36ed-459a-895d-42cdb871cab8.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/bd260aa8-837e-48cc-9e2c-5fac5ef62609/photo",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"bd260aa8-837e-48cc-9e2c-5fac5ef62609",
-								"photo"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get photo",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE0OTczODMsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjFkYjIyNjEyLTYzOTUtNGRiMy04OGM0LWUxYWM5MzkyYjM2NiIsInVzZXJfdWlkIjoiYmQyNjBhYTgtODM3ZS00OGNjLTllMmMtNWZhYzVlZjYyNjA5In0.DL5xBgXm9GJo2xvJ6isjY92fTRh9fZ_uKS5uC_32Ig0",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "image/png",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8080/assets/photo/bd260aa8-837e-48cc-9e2c-5fac5ef62609",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"assets",
-								"photo",
-								"bd260aa8-837e-48cc-9e2c-5fac5ef62609"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -302,7 +194,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test\",\n    \"name\": \"zalupov pidaras\",\n    \"password\": \"hui123\"\n}",
+							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -438,10 +330,16 @@
 					"name": "update user",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjJodWlsa2FwaW9AbWFpbC5ydXMiLCJleHBpcmVkX2F0IjoxNzMxNjA3MzYwLCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJ1c2VyIiwic2Vzc2lvbl91aWQiOiI1YzFhZDA5OS05NjVjLTRlZGQtODQwOC0xYjBmMDI5NjIyYmEiLCJ1c2VyX3VpZCI6IjhlOTA2Yjc0LTBkZjMtNGFkZS1hMWQ0LWZhMTZiZmQwM2M5NyJ9.RGr6sZ7eI1mTOHfvosRIABGHAMJ-w4JrnSsFC4NbWrg",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"uid\": \"66b5cf1a-ef10-430c-9308-c43dbe49f761\",\n    \"email\": \"new@new\",\n    \"password\": \"new\"\n}",
+							"raw": "{\n    \"uid\": \"8e906b74-0df3-4ade-a1d4-fa16bfd03c97\",\n    \"email\": \"new@new\",\n    \"password\": \"new\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -569,9 +467,6 @@
 									"language": "json"
 								}
 							}
-						},
-						"url": {
-							"raw": ""
 						}
 					},
 					"response": []
@@ -609,10 +504,7 @@
 					"name": "get all categories",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
+						"header": []
 					},
 					"response": []
 				},
@@ -729,6 +621,14 @@
 								"orders"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "pay order",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -1065,10 +965,7 @@
 					"name": "get recipe by uid",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
+						"header": []
 					},
 					"response": []
 				},
@@ -1076,10 +973,7 @@
 					"name": "get recipes",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": ""
-						}
+						"header": []
 					},
 					"response": []
 				}
@@ -1161,6 +1055,35 @@
 								"time_and_price",
 								"by_order",
 								"44fe01a9-fbc6-4c52-905a-ce089f284a52"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "calculate delivery",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orderUid\": \"2f4b337a-309f-4f02-8f23-b97501f31a27\",\n    \"deliveryAddressUid\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/delivery/calculate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"delivery",
+								"calculate"
 							]
 						}
 					},
