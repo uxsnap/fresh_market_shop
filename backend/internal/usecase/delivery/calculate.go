@@ -77,6 +77,7 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 		ToLongitude:   deliveryAddress.Longitude,
 		ToLatitude:    deliveryAddress.Latitude,
 		Address:       addressStr,
+		Status:        entity.DeliveryStatusCalculated,
 		Receiver:      user.FirstName + " " + user.LastName,
 		Time:          int64(deliveryTime),
 		Price:         deliveryPrice,

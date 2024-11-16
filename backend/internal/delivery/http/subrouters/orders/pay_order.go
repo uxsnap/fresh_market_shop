@@ -12,7 +12,7 @@ import (
 func (h *OrdersSubrouter) PayOrder(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	userInfo := httpUtils.GetUserInfoFromContext(ctx)
+	userInfo, _ := httpEntity.AuthUserInfoFromContext(ctx)
 
 	var req PayOrderRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {

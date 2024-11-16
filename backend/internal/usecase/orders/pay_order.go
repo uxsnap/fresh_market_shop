@@ -37,6 +37,8 @@ func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderU
 		log.Printf("delivery with order uid %s not found: %v", orderUid, err)
 		return uuid.UUID{}, errors.New("delivery not found")
 	}
+	delivery.Status = entity.DeliveryStatusNew
+	delivery.UpdatedAt = time.Now().UTC()
 
 	payment := entity.Payment{
 		UserUid:  userUid,
@@ -54,6 +56,10 @@ func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderU
 		var err error
 		if err = uc.ordersRepository.UpdateOrder(ctx, order); err != nil {
 			log.Printf("failed to update order status %s: %v", orderUid, err)
+			return errors.WithStack(err)
+		}
+		if err = uc.deliveryService.UpdateDelivery(ctx, delivery); err != nil {
+			log.Printf("failed to update delivery status: %v", err)
 			return errors.WithStack(err)
 		}
 

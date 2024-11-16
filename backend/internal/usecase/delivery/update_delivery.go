@@ -82,6 +82,9 @@ func (uc *UseCaseDelivery) UpdateDelivery(ctx context.Context, delivery entity.D
 	if delivery.Price != savedDelivery.Price {
 		savedDelivery.Price = delivery.Price
 	}
+	if delivery.Status != savedDelivery.Status {
+		savedDelivery.Status = delivery.Status
+	}
 
 	savedDelivery.UpdatedAt = time.Now().UTC()
 

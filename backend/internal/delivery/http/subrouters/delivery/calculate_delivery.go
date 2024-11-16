@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
+	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	userInfo := httpUtils.GetUserInfoFromContext(ctx)
+	userInfo, _ := httpEntity.AuthUserInfoFromContext(ctx)
 
 	var req CalculateDeliveryRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {

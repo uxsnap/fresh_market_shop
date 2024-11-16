@@ -28,6 +28,7 @@ type ProductsRepository interface {
 
 type DeliveryService interface {
 	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
+	UpdateDelivery(ctx context.Context, delivery entity.Delivery) error
 }
 
 type PaymentsService interface {
