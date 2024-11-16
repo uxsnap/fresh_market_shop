@@ -219,7 +219,6 @@ func (sp *serviceProvider) DeliveryService(ctx context.Context) *ucDelivery.UseC
 		sp.ucDelivery = ucDelivery.New(
 			sp.DeliveryRepository(ctx),
 			sp.UsersService(ctx),
-			sp.OrdersService(ctx),
 			sp.TxManager(ctx),
 		)
 	}
@@ -231,7 +230,6 @@ func (sp *serviceProvider) PaymentsService(ctx context.Context) *ucPayments.UseC
 		sp.ucPayments = ucPayments.New(
 			sp.PaymentsRepository(ctx),
 			sp.UsersService(ctx),
-			sp.OrdersService(ctx),
 			sp.TxManager(ctx),
 		)
 	}

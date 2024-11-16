@@ -24,7 +24,3 @@ type PaymentsRepository interface {
 type UsersService interface {
 	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
 }
-
-type OrdersService interface {
-	GetOrder(ctx context.Context, orderUid uuid.UUID) (entity.Order, bool, error)
-}

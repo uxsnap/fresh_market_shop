@@ -18,7 +18,17 @@ func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, req.DeliveryAddressUid)
+	order, isFound, err := h.OrdersService.GetOrder(ctx, req.OrderUid)
+	if err != nil {
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
+		return
+	}
+	if !isFound {
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("bad request", "order not found"))
+		return
+	}
+
+	deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, order.Sum, req.DeliveryAddressUid)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return

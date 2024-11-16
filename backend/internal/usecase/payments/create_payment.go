@@ -37,16 +37,6 @@ func (uc *UseCasePayments) CreatePayment(ctx context.Context, payment entity.Pay
 		payment.PaymentTime = time.Now().UTC()
 	}
 
-	_, orderExists, err := uc.ordersService.GetOrder(ctx, payment.OrderUid)
-	if err != nil {
-		log.Printf("failed to create payment: failed to get order %s", payment.OrderUid)
-		return uuid.UUID{}, errors.WithStack(err)
-	}
-	if !orderExists {
-		log.Printf("failed to create payment: order %s not found", payment.OrderUid)
-		return uuid.UUID{}, errors.New("order not found")
-	}
-
 	_, userExists, err := uc.usersService.GetUser(ctx, payment.UserUid)
 	if err != nil {
 		log.Printf("failed to create payment: failed to get user %s", payment.UserUid)

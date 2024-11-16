@@ -15,7 +15,7 @@ CREATE TABLE delivery (
     receiver VARCHAR(50),
     delivery_time interval,
     price INT,
-    sratus delivery_status;
+    sratus delivery_status,
     created_at timestamp,
     updated_at timestamp
 );

@@ -17,6 +17,7 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	ctx context.Context,
 	userUid uuid.UUID,
 	orderUid uuid.UUID,
+	orderPrice int64,
 	deliveryAddressUid uuid.UUID,
 ) (deliveryPrice int64, deliveryTime time.Duration, err error) {
 	log.Printf("usecaseDelivery.CalculateDelivery: order uid %s", orderUid)
@@ -29,16 +30,6 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	if !isFound {
 		log.Printf("user with uid %s not found", userUid)
 		return 0, 0, errors.New("user not found")
-	}
-
-	order, isFound, err := uc.ordersService.GetOrder(ctx, orderUid)
-	if err != nil {
-		log.Printf("failed to get order by uid %s: %v", orderUid, err)
-		return 0, 0, errors.WithStack(err)
-	}
-	if !isFound {
-		log.Printf("order with uid %s not found", userUid)
-		return 0, 0, errors.New("order not found")
 	}
 
 	deliveryAddress, isFound, err := uc.usersService.GetDeliveryAddress(ctx, deliveryAddressUid)
@@ -61,7 +52,7 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	deliveryTime = time.Duration(int64(t)) * time.Minute
 	deliveryTime += 5 * time.Minute // 5 минут на подмыться
 
-	deliveryPrice = int64(dist/100*priceForHungredMetres) + int64(float64(order.Sum)*0.05)
+	deliveryPrice = int64(dist/100*priceForHungredMetres) + int64(float64(orderPrice)*0.05)
 
 	if deliveryPrice < minDeliveryPrice {
 		deliveryPrice = minDeliveryPrice
