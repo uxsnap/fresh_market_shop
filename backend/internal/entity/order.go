@@ -11,10 +11,19 @@ type Order struct {
 	UserUid   uuid.UUID
 	Num       int64
 	Sum       int64
-	Status    string
+	Status    OrderStatus
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type OrderStatus string
+
+const (
+	OrderStatusNew        OrderStatus = "new"
+	OrderStatusPaid       OrderStatus = "paid"
+	OrderStatusInProgress OrderStatus = "in_progress"
+	OrderStatusDone       OrderStatus = "done"
+)
 
 type OrderProducts struct {
 	OrderUid   uuid.UUID

@@ -206,6 +206,8 @@ func (sp *serviceProvider) OrdersService(ctx context.Context) *ucOrders.UseCaseO
 			sp.OrderProductsRepository(ctx),
 			sp.ProductsCountRepository(ctx),
 			sp.ProductsRepository(ctx),
+			sp.PaymentsService(ctx),
+			sp.DeliveryService(ctx),
 			sp.TxManager(ctx),
 		)
 	}

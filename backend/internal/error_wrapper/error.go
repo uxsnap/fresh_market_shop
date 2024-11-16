@@ -7,6 +7,7 @@ const (
 	JsonParsingError      = "json_parsing_error"
 	OrderCreateValidation = "order_create_validation"
 	OrderCreateError      = "order_create_error"
+	OrderUpdateError      = "order_update_error"
 	ProductCountError     = "product_count_error"
 	JwtAuthMiddleware     = "jwt_auth_middleware"
 	RecommendationsError  = "recommendations_error"

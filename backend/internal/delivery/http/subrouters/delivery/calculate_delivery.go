@@ -14,7 +14,7 @@ func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Req
 
 	var req CalculateDeliveryRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("bad request", err.Error()))
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JsonParsingError, err.Error()))
 		return
 	}
 

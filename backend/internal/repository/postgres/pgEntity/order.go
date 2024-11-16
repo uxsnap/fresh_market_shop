@@ -40,7 +40,7 @@ func (p *OrderRow) FromEntity(order entity.Order) *OrderRow {
 		Status: pgtype.Present,
 	}
 
-	p.Status = order.Status
+	p.Status = string(order.Status)
 	p.Sum = order.Sum
 
 	if order.CreatedAt.Unix() <= 0 {
@@ -76,7 +76,7 @@ func (p *OrderRow) ToEntity() entity.Order {
 		UserUid:   p.UserUid.Bytes,
 		Num:       p.Num,
 		Sum:       p.Sum,
-		Status:    p.Status,
+		Status:    entity.OrderStatus(p.Status),
 		CreatedAt: p.CreatedAt.Time,
 		UpdatedAt: p.UpdatedAt.Time,
 	}

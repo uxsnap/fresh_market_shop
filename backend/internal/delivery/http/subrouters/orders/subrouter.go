@@ -19,8 +19,8 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(s.Middleware.Auth)
 
 			r.Post("/", s.CreateOrder)
+			r.Post("/pay", s.PayOrder)
 			r.Get("/products", s.GetOrderedProducts)
 		})
-
 	}
 }

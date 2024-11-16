@@ -14,15 +14,15 @@ import (
 )
 
 func (r *OrdersRepository) CreateOrder(ctx context.Context, order entity.Order) error {
-	log.Printf("productsRepository.CreateProduct (uid: %s)", order.Uid)
+	log.Printf("productsRepository.CreateOrder (uid: %s)", order.Uid)
 
 	p := pgEntity.NewOrderRow().FromEntity(order)
 
 	stmt, args, err := squirrel.
 		Insert(p.Table()).
 		PlaceholderFormat(squirrel.Dollar).
-		Columns("uid", "user_uid", "sum", "created_at", "updated_at").
-		Values(p.Uid, p.UserUid, p.Sum, p.CreatedAt.Time, p.UpdatedAt.Time).ToSql()
+		Columns("uid", "user_uid", "sum", "status", "created_at", "updated_at").
+		Values(p.Uid, p.UserUid, p.Sum, p.Status, p.CreatedAt.Time, p.UpdatedAt.Time).ToSql()
 
 	if err != nil {
 		log.Printf("failed to create order %s: %v", order.Uid, err)
@@ -36,6 +36,17 @@ func (r *OrdersRepository) CreateOrder(ctx context.Context, order entity.Order) 
 		return errorWrapper.NewError(errorWrapper.OrderCreateError, "не удалось создать заказ")
 	}
 
+	return nil
+}
+
+func (r *OrdersRepository) UpdateOrder(ctx context.Context, order entity.Order) error {
+	log.Printf("productsRepository.UpdateOrder (uid: %s)", order.Uid)
+
+	p := pgEntity.NewOrderRow().FromEntity(order)
+	if err := r.Update(ctx, p, p.ConditionUidEqual()); err != nil {
+		log.Printf("failed to create order %s: %v", order.Uid, err)
+		return errorWrapper.NewError(errorWrapper.OrderUpdateError, "не удалось обновить заказ")
+	}
 	return nil
 }
 

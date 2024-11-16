@@ -74,6 +74,7 @@ type RecipesService interface {
 
 type OrdersService interface {
 	CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error)
+	PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID) (uuid.UUID, error)
 	GetOrderedProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 }
 

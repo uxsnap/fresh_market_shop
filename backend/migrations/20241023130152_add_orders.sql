@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 
-CREATE TYPE order_status AS ENUM('in_progress','done');
+CREATE TYPE order_status AS ENUM('new','paid','in_progress','done');
 
 CREATE TABLE orders (
     uid uuid PRIMARY KEY,

@@ -10,6 +10,9 @@ type UseCaseOrders struct {
 	productsCountRepository ProductsCountRepository
 	productsRepository      ProductsRepository
 
+	paymentsService PaymentsService
+	deliveryService DeliveryService
+
 	txManager *transaction.Manager
 }
 
@@ -18,6 +21,9 @@ func New(
 	orderProductsRepository OrderProductsRepository,
 	productsCountRepository ProductsCountRepository,
 	productsRepository ProductsRepository,
+	paymentsService PaymentsService,
+	deliveryService DeliveryService,
+
 	txManager *transaction.Manager,
 ) *UseCaseOrders {
 	return &UseCaseOrders{
@@ -25,6 +31,8 @@ func New(
 		orderProductsRepository: orderProductsRepository,
 		productsCountRepository: productsCountRepository,
 		productsRepository:      productsRepository,
+		paymentsService:         paymentsService,
+		deliveryService:         deliveryService,
 		txManager:               txManager,
 	}
 }

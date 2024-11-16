@@ -9,6 +9,7 @@ import (
 
 type OrdersRepository interface {
 	CreateOrder(ctx context.Context, order entity.Order) error
+	UpdateOrder(ctx context.Context, order entity.Order) error
 	GetOrderByUid(ctx context.Context, uid uuid.UUID) (entity.Order, bool, error)
 }
 
@@ -26,9 +27,10 @@ type ProductsRepository interface {
 }
 
 type DeliveryService interface {
-	
+	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
 }
 
-type PaymentService interface {
-	
+type PaymentsService interface {
+	GetUserPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) (entity.UserPaymentCard, bool, error)
+	CreatePayment(ctx context.Context, payment entity.Payment) (uuid.UUID, error)
 }

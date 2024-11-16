@@ -14,6 +14,7 @@ func (uc *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, pro
 
 	order := entity.Order{
 		UserUid: userUid,
+		Status:  entity.OrderStatusNew,
 		Uid:     uuid.NewV4(),
 	}
 
