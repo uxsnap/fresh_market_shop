@@ -1,13 +1,13 @@
 "use client";
 
-import { Card, Text, Stack, useMatches } from "@mantine/core";
+import { Card, Text, Stack, useMatches, Image } from "@mantine/core";
 import { ProductItem } from "@/types";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 
-import { ItemCardCarousel } from "./ItemCardCarousel";
 import { ItemCardIcon } from "./ItemCardIcon";
 import styles from "./ItemCard.module.css";
 import { ItemCounter } from "./ItemCounter";
+import { getFallbackImg } from "@/utils";
 
 type Props = {
   item: ProductItem;
@@ -48,12 +48,23 @@ export const ItemCard = memo(({ item, onExtended }: Props) => {
 
   const { price, name, imgs = [], weight, ccal } = item;
 
+  const fallbackSrc = useMemo(() => getFallbackImg(name), [name]);
+
   return (
     <Card p={8} w={maw} radius="md" withBorder pos="relative">
       <Card.Section>
         <ItemCardIcon type="max" onClick={onExtended} />
 
-        <ItemCardCarousel className={styles.img} name={name} imgs={imgs} />
+        <Image
+          style={{ userSelect: "none" }}
+          loading="lazy"
+          src={imgs[0]}
+          className={styles.img}
+          alt={name}
+          fit="contain"
+          fallbackSrc={fallbackSrc}
+          w="100%"
+        />
       </Card.Section>
 
       <Stack mt={8} gap={4}>
