@@ -1,5 +1,4 @@
 import { IconProps } from "@/types";
-import { rem } from "@mantine/core";
 
 export const Location = ({ size = 24 }: IconProps) => {
   return (

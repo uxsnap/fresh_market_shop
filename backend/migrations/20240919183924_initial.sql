@@ -12,20 +12,14 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL
 );
 
--- Создание таблицы "addresses" для хранения адресов доставки пользователей с широтой и долготой
-CREATE TABLE delivery_addresses (
+-- Создание таблицы "payment_cards" для хранения карт оплаты
+CREATE TABLE payment_cards (
     uid uuid PRIMARY KEY,
     user_uid uuid NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
-    latitude NUMERIC(10, 8) NOT NULL,  -- Широта с точностью до 8 знаков после запятой
-    longitude NUMERIC(11, 8) NOT NULL, -- Долгота с точностью до 8 знаков после запятой
-    city_name VARCHAR(30) NOT NULL,
-    street_name VARCHAR(30) NOT NULL,
-    house_number INT NOT NULL,
-    building INT NOT NULL,
-    floor INT NOT NULL,
-    apartment INT NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    card_number VARCHAR(16) NOT NULL,
+    card_holder_name VARCHAR(100) NOT NULL,
+    expiration_date DATE NOT NULL,
+    created_at TIMESTAMP NOT NULL
 );
 
 -- Создание таблицы "categories" для классификации товаров
@@ -315,6 +309,6 @@ DROP TABLE IF EXISTS product_photos;
 DROP TABLE IF EXISTS products_count;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS delivery_addresses;
+DROP TABLE IF EXISTS payment_cards;
 DROP TABLE IF EXISTS cities_handbook;
 DROP TABLE IF EXISTS users;

@@ -1,6 +1,4 @@
 .root {
-  border-bottom: 1px solid var(--mantine-color-bg-1);
-
   padding: 16px;
 
   @media (min-width: $mantine-breakpoint-md) {

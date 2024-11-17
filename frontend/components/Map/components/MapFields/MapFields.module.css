@@ -1,0 +1,27 @@
+.fieldsWrapper {
+  .address {
+    min-width: calc(100% - 150px);
+    flex-grow: 1;
+  }
+
+  .addressWrapper {
+    @media (max-width: $mantine-breakpoint-sm) {
+      flex-direction: column;
+
+      .address {
+        min-width: 100%;
+      }
+
+      .button {
+        min-width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    .addressWrapper {
+      margin-bottom: 16px;
+      order: 2;
+    }
+  }
+}
