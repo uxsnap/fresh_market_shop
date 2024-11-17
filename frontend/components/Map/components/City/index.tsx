@@ -1,13 +1,23 @@
-import { Select } from "@mantine/core";
 import { useState } from "react";
 import { useMapFormContext } from "../../context";
+import { useQuery } from "@tanstack/react-query";
+import { getCities } from "@/api/address/getCities";
+import { Select } from "@/components/Select";
 
 export const City = () => {
   const [searchValue, setSearchValue] = useState("");
   const form = useMapFormContext();
 
-  form.watch("address", ({ value }) => {
-    setSearchValue(value);
+  const { data } = useQuery({
+    queryFn: getCities,
+    queryKey: [getCities.queryKey],
+    select(data) {
+      return data.data.map((city) => ({
+        label: city.name,
+        value: city.uid,
+      }));
+    },
+    staleTime: Infinity,
   });
 
   return (
@@ -19,8 +29,9 @@ export const City = () => {
       searchValue={searchValue}
       onSearchChange={setSearchValue}
       searchable
-      key={form.key("address")}
-      {...form.getInputProps("address")}
+      key={form.key("city")}
+      data={data ?? []}
+      {...form.getInputProps("city")}
     />
   );
 };

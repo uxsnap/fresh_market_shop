@@ -4,6 +4,7 @@ import styles from "./BottomCards.module.css";
 import { Carousel } from "@mantine/carousel";
 import { Address } from "@/types";
 import { PropsWithChildren } from "react";
+import { useMapStore } from "@/store/map";
 
 type Props = {
   items: Address[];
@@ -25,18 +26,27 @@ const BottomCard = ({
   </Box>
 );
 
-export const BottomCards = ({ items }: Props) => (
-  <Stack gap={12} p={16} className={styles.root}>
-    <Carousel slideGap="sm" align="start" dragFree withControls={false}>
-      {items.map((item) => (
-        <Carousel.Slide key={item.uid} flex="1 0 auto">
-          <BottomCard city={item.cityUid}>{item.street}</BottomCard>
-        </Carousel.Slide>
-      ))}
-    </Carousel>
+export const BottomCards = ({ items }: Props) => {
+  const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
-    <Button type="submit" h={48} fz={18} variant="accent">
-      Добавить новый адрес
-    </Button>
-  </Stack>
-);
+  return (
+    <Stack gap={12} p={16} className={styles.root}>
+      <Carousel slideGap="sm" align="start" dragFree withControls={false}>
+        {items.map((item) => (
+          <Carousel.Slide key={item.uid} flex="1 0 auto">
+            <BottomCard city={item.cityUid}>{item.street}</BottomCard>
+          </Carousel.Slide>
+        ))}
+      </Carousel>
+
+      <Button
+        onClick={() => setIsFieldsModalOpen(true)}
+        h={48}
+        fz={18}
+        variant="accent"
+      >
+        Добавить новый адрес
+      </Button>
+    </Stack>
+  );
+};

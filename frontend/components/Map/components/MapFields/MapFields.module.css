@@ -7,3 +7,12 @@
     min-width: 100%;
   }
 }
+
+div.body {
+  padding: 0;
+  height: calc(100% - 74px);
+}
+
+section.content {
+  overflow-y: hidden;
+}

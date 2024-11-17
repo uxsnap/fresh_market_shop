@@ -1,4 +1,4 @@
-import { City } from "@/types";
+import { Address } from "@/types";
 import client from "../client";
 
 export const getAddresses = (
@@ -6,7 +6,7 @@ export const getAddresses = (
   name: string,
   house_number: string
 ) => {
-  return client.get<City[]>(`/addresses/${cityUid}`, {
+  return client.get<Address[]>(`/addresses/${cityUid}`, {
     params: { name, house_number },
   });
 };

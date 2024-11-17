@@ -1,8 +1,13 @@
 .root {
   background: rgba(var(--mantine-color-accent-0), 0.3);
 
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+
   @media (min-width: $mantine-breakpoint-md) {
-    display: none;
+    display: none !important;
   }
 }
 

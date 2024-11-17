@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   &.rotated {
     transform: rotate(180deg);
   }
@@ -17,7 +17,8 @@
     margin-top: 0;
   }
 
-  &[aria-selected="true"] {
-    background-color: var(--mantine-color-primary-2);
+  &:hover,
+  &[data-checked="true"] {
+    background-color: var(--mantine-color-primary-2) !important;
   }
 }
