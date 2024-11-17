@@ -1,36 +1,22 @@
 import styles from "./MapFields.module.css";
-import { Button, Group, Stack } from "@mantine/core";
-import { Search } from "../Search";
+import { Button, Stack } from "@mantine/core";
+import { City } from "../City";
 import { AdditionalFieldsForm } from "../AdditionalFieldsForm";
 import { memo } from "react";
+import { Street } from "../Street";
 
-export const MapFields = memo(() => {
-  return (
-    <Stack className={styles.fieldsWrapper}>
-      <Group
-        className={styles.addressWrapper}
-        grow
-        gap={16}
-        w="100%"
-        align="end"
-        wrap="nowrap"
-      >
-        <Search className={styles.address} />
+export const MapFields = memo(() => (
+  <Stack justify="space-between" className={styles.root}>
+    <Stack className={styles.addressWrapper} gap={16} w="100%" align="end">
+      <City />
 
-        <Button
-          type="submit"
-          className={styles.button}
-          h={42}
-          px={4}
-          fz={14}
-          maw={150}
-          variant="accent"
-        >
-          Добавить адрес
-        </Button>
-      </Group>
+      <Street />
 
       <AdditionalFieldsForm />
     </Stack>
-  );
-});
+
+    <Button type="submit" h={48} fz={18} variant="accent">
+      Сохранить адрес
+    </Button>
+  </Stack>
+));

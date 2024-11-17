@@ -1,0 +1,13 @@
+.root {
+  background: rgba(var(--mantine-color-accent-0), 0.3);
+
+  @media (min-width: $mantine-breakpoint-md) {
+    display: none;
+  }
+}
+
+.bottomCard {
+  min-width: 200px;
+  padding: 8;
+  border-radius: 8px;
+}

@@ -1,5 +1,5 @@
 .header {
-  padding: 20px 12px;
+  padding: 12px 20px;
   border-bottom: 1px solid var(--mantine-color-bg-1);
 
   @media (max-width: $mantine-breakpoint-sm) {
@@ -7,10 +7,13 @@
   }
 }
 
-.content {
-  min-width: 700px;
+section.content {
+  overflow-y: hidden;
+}
 
-  @media (max-width: $mantine-breakpoint-sm) {
-    min-width: 100%;
-  }
+.form {
+  width: auto;
+  height: calc(100vh - 70px);
+  display: flex;
+  align-items: flex-start;
 }

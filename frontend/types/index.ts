@@ -112,3 +112,12 @@ export type City = {
   uid: string;
   name: string;
 };
+
+export type Address = {
+  uid: string;
+  cityUid: string;
+  street: string;
+  houseNumber: string;
+  latitude: number;
+  longitude: number;
+};

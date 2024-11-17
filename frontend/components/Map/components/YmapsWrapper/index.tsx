@@ -50,9 +50,9 @@ export const YmapsWrapper = () => {
       }}
     >
       <YandexMap
-        modules={MAP_MODULES}
         width="100%"
-        height={450}
+        height="100%"
+        modules={MAP_MODULES}
         defaultState={DEFAULT_COORDS}
         onClick={handleCoords}
         onLoad={(ymaps: YMapsApi) => setMap(ymaps)}
