@@ -43,6 +43,18 @@ INSERT INTO addresses(city_uid, street, house_number, latitude, longitude)
 
 COMMIT;
 
+CREATE TABLE delivery_addresses (
+  uid uuid PRIMARY KEY,
+  user_uid uuid NOT NULL REFERENCES users (uid) ON DELETE CASCADE,
+  address_uid uuid NOT NULL REFERENCES addresses (uid) ON DELETE CASCADE,
+  apartment INT,
+  entrance INT,
+  floor INT,
+  code INT,
+  created_at TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP NOT NULL
+);
+
 -- +goose StatementEnd
 
 -- +goose Down
