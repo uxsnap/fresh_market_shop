@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  Box,
-  Flex,
-  LoadingOverlay,
-  ScrollArea,
-  Title,
-} from "@mantine/core";
+import { Box, Flex, LoadingOverlay, Title } from "@mantine/core";
 import { ItemCard } from "../ItemCard";
 import { ProductItem } from "@/types";
-import { memo, PropsWithChildren } from "react";
+import { Children, memo, PropsWithChildren } from "react";
 import styles from "./ItemList.module.css";
 import { useProductStore } from "@/store/product";
+import { Carousel } from "@mantine/carousel";
 
 type Props = {
   title?: string;
@@ -27,15 +22,19 @@ const Wrapper = ({
 }: PropsWithChildren<{ scroll: boolean }>) => {
   if (scroll) {
     return (
-      <ScrollArea type="never" w="100%">
-        {children}
-      </ScrollArea>
+      <Carousel slideGap="sm" align="start" dragFree withControls={false}>
+        {Children.map(children, (child) => (
+          <Carousel.Slide flex="1 0 auto">{child}</Carousel.Slide>
+        ))}
+      </Carousel>
     );
   }
 
   return (
     <Box miw="100%">
-      {children}
+      <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
+        {children}
+      </Flex>
     </Box>
   );
 };
@@ -48,7 +47,7 @@ export const ItemList = memo(
     isFetching = false,
     scroll = true,
   }: Props) => {
-    const setCurItem = useProductStore(s => s.setCurItem);
+    const setCurItem = useProductStore((s) => s.setCurItem);
 
     return (
       <>
@@ -73,19 +72,13 @@ export const ItemList = memo(
 
           {!isFetching && (
             <Wrapper scroll={scroll}>
-              <Flex
-                wrap={scroll ? "nowrap" : "wrap"}
-                gap={12}
-                align="flex-start"
-              >
-                {(items ?? []).map((item, ind) => (
-                  <ItemCard
-                    item={item}
-                    key={ind}
-                    onExtended={() => setCurItem(item)}
-                  />
-                ))}
-              </Flex>
+              {(items ?? []).map((item, ind) => (
+                <ItemCard
+                  item={item}
+                  key={ind}
+                  onExtended={() => setCurItem(item)}
+                />
+              ))}
             </Wrapper>
           )}
         </Flex>
