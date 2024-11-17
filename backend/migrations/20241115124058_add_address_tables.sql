@@ -19,6 +19,7 @@ CREATE TABLE addresses (
 
 CREATE INDEX ix_addresses_city_uid on addresses (city_uid);
 CREATE INDEX ix_addresses_street on addresses (street);
+CREATE INDEX ix_addresses_house_number on addresses (house_number);
 
 BEGIN;
 
@@ -49,6 +50,7 @@ COMMIT;
 
 DROP INDEX ix_addresses_city_uid;
 DROP INDEX ix_addresses_street;
+DROP INDEX ix_addresses_house_number;
 
 DROP TABLE cities;
 DROP TABLE addresses;

@@ -8,4 +8,5 @@ import (
 
 type AddressesRepository interface {
 	GetCities(ctx context.Context) ([]entity.City, error)
+	GetAddresses(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Address, error)
 }

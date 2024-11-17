@@ -8,7 +8,7 @@ import (
 )
 
 func (s *UseCaseAddresses) GetCities(ctx context.Context) ([]entity.City, error) {
-	log.Printf("ucOrders.CreateOrder")
+	log.Printf("ucOrders.GetCities")
 
 	cities, err := s.addressesRepository.GetCities(ctx)
 

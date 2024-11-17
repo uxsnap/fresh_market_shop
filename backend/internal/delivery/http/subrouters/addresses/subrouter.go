@@ -17,6 +17,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(as.Middleware.Auth)
 
 			r.Get("/cities", as.GetCities)
+			r.Get("/{city_uid}", as.GetAddresses)
 		})
 	}
 }

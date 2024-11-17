@@ -23,3 +23,34 @@ func CityToEntity(city City) entity.City {
 		Name: city.Name,
 	}
 }
+
+type Address struct {
+	Uid         uuid.UUID `json:"uid"`
+	CityUid     uuid.UUID `json:"city_uid"`
+	Street      string    `json:"street"`
+	HouseNumber string    `json:"houseNumber"`
+	Latitude    float64   `json:"latitude"`
+	Longitude   float64   `json:"longitude"`
+}
+
+func AddressFromEntity(address entity.Address) Address {
+	return Address{
+		Uid:         address.Uid,
+		CityUid:     address.CityUid,
+		Street:      address.Street,
+		HouseNumber: address.HouseNumber,
+		Latitude:    address.Latitude,
+		Longitude:   address.Longitude,
+	}
+}
+
+func AddressToEntity(address Address) entity.Address {
+	return entity.Address{
+		Uid:         address.Uid,
+		CityUid:     address.CityUid,
+		Street:      address.Street,
+		HouseNumber: address.HouseNumber,
+		Latitude:    address.Latitude,
+		Longitude:   address.Longitude,
+	}
+}
