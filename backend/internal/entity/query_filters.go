@@ -36,9 +36,12 @@ type QueryFilters struct {
 	CookingTime        int64
 	RecipeUid          uuid.UUID
 	OrderUid           uuid.UUID
+	UserUid            uuid.UUID
 	UserUidForOrder    uuid.UUID
 	CityUid            uuid.UUID
 	CategoryUids       []uuid.UUID
+	CardUid            uuid.UUID
+	OrdersUids         []uuid.UUID
 }
 
 const defaultLimit = 10
@@ -62,6 +65,9 @@ const (
 	QueryFieldUserUid           = "user_uid"
 	QueryFieldCityUid           = "city_uid"
 	QueryFieldCategoryUids      = "category_uids"
+	QueryFieldOrderUid          = "order_uid"
+	QueryFieldCardUid           = "card_uid"
+	QueryFieldOrdersUids        = "orders_uids"
 	QueryFieldUserUidForOrder   = "user_uid_for_order"
 	QueryFieldHouseNumber       = "house_number"
 )
@@ -93,6 +99,10 @@ func NewQueryFiltersParser() *QueryFiltersParser {
 			QueryFieldCategoryUids:      parseCategoryUids,
 			QueryFieldCityUid:           parseCityUid,
 			QueryFieldHouseNumber:       parseHouseNumber,
+			QueryFieldOrderUid:          parseOrderUid,
+			QueryFieldCardUid:           parseCardUid,
+			QueryFieldOrdersUids:        parseOrdersUids,
+			QueryFieldUserUid:           parseUserUid,
 		},
 	}
 }
@@ -134,6 +144,11 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		QueryFieldName,
 		QueryFieldCookingTime,
 		QueryFieldWithRandom,
+		QueryFieldRecipeUid,
+		QueryFieldUserUid,
+		QueryFieldOrderUid,
+		QueryFieldCardUid,
+		QueryFieldOrdersUids,
 		QueryFieldUserUidForOrder,
 		QueryFieldCityUid,
 		QueryFieldHouseNumber,
@@ -284,6 +299,15 @@ func parseUserUidForOrder(query url.Values, qFilters *QueryFilters) error {
 	return nil
 }
 
+func parseUserUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.UserUid, err = uuid.FromString(query.Get(QueryFieldUserUid))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
 	uuidsStrings, ok := query[QueryFieldCategoryUids]
 
@@ -301,6 +325,40 @@ func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
 		qFilters.CategoryUids = append(qFilters.CategoryUids, categoryUid)
 	}
 
+	return nil
+}
+
+func parseOrderUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.OrderUid, err = uuid.FromString(query.Get(QueryFieldOrderUid))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseOrdersUids(query url.Values, qFilters *QueryFilters) error {
+	uuidsStrings, ok := query[QueryFieldOrdersUids]
+	if !ok {
+		return errors.Errorf("field %s not found in query", QueryFieldOrdersUids)
+	}
+
+	for _, uuidString := range uuidsStrings {
+		orderUid, err := uuid.FromString(uuidString)
+		if err != nil {
+			return err
+		}
+		qFilters.OrdersUids = append(qFilters.OrdersUids, orderUid)
+	}
+	return nil
+}
+
+func parseCardUid(query url.Values, qFilters *QueryFilters) error {
+	var err error
+	qFilters.CardUid, err = uuid.FromString(query.Get(QueryFieldCardUid))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

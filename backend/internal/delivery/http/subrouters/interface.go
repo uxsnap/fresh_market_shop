@@ -5,7 +5,6 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
-	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 type ProductsService interface {
@@ -48,9 +47,9 @@ type AuthService interface {
 }
 
 type UsersService interface {
-	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, *errorWrapper.Error)
-	UpdateUser(ctx context.Context, user entity.User) *errorWrapper.Error
-	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, *errorWrapper.Error)
+	CreateUser(ctx context.Context, user entity.User) (uuid.UUID, error)
+	UpdateUser(ctx context.Context, user entity.User) error
+	GetUser(ctx context.Context, uid uuid.UUID) (entity.User, bool, error)
 	DeleteUser(ctx context.Context, uid uuid.UUID) error
 
 	AddDeliveryAddress(ctx context.Context, address entity.DeliveryAddress) (uuid.UUID, error)
@@ -87,4 +86,18 @@ type DeliveryService interface {
 type AddressesService interface {
 	GetCities(ctx context.Context) ([]entity.City, error)
 	GetAddresses(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Address, error)
+}
+
+type PaymentsService interface {
+	CreatePayment(ctx context.Context, payment entity.Payment) (uuid.UUID, error)
+	GetPayment(ctx context.Context, paymentUid uuid.UUID) (entity.Payment, bool, error)
+	GetOrderPayment(ctx context.Context, orderUid uuid.UUID) (entity.Payment, bool, error)
+	GetUserPayments(ctx context.Context, userUid uuid.UUID) ([]entity.Payment, error)
+	GetCardPayments(ctx context.Context, cardUid uuid.UUID) ([]entity.Payment, error)
+
+	AddUserPaymentCard(ctx context.Context, userFullCard entity.UserFullPaymentCard) (uuid.UUID, error)
+	GetUserPaymentCardByUid(ctx context.Context, cardUid uuid.UUID) (entity.UserPaymentCard, bool, error)
+	GetUserPaymentCards(ctx context.Context, userUid uuid.UUID) ([]entity.UserPaymentCard, error)
+	DeleteUserPaymentCard(ctx context.Context, cardUid uuid.UUID) error
+	DeleteUserPaymentCards(ctx context.Context, userUid uuid.UUID) error
 }

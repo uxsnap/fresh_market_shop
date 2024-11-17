@@ -9,6 +9,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/consts"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
 func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
@@ -21,24 +22,28 @@ func (h *AuthSubrouter) UpdateAuthUser(w http.ResponseWriter, r *http.Request) {
 	accessCookie := httpUtils.GetBearerToken(r)
 	if accessCookie == "" {
 		log.Printf("failed to get access token from request")
-		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, nil)
+		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError("not authorized", "отсутствует токен"))
 		return
 	}
 
 	ctx := context.Background()
-
-	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie, req.Uid, req.Email, req.Password)
-	if err != nil {
-		log.Printf("failed to update user %s: %v", req.Uid, err)
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, nil)
-		return
-	}
 
 	if err := h.UsersService.UpdateUser(ctx, entity.User{
 		Uid:   req.Uid,
 		Email: req.Email,
 	}); err != nil {
 		log.Printf("failed to update user %s in gw: %v", req.Uid, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
+			errorWrapper.UserNameError, err.Error(),
+		))
+		return
+	}
+
+	accessJwt, refreshJwt, err := h.AuthService.UpdateAuthUser(ctx, accessCookie, req.Uid, req.Email, req.Password)
+	if err != nil {
+		log.Printf("failed to update user %s: %v", req.Uid, err)
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
+		return
 	}
 
 	http.SetCookie(w, httpUtils.NewCookie(consts.ACCESS_JWT_COOKIE_NAME, accessJwt))

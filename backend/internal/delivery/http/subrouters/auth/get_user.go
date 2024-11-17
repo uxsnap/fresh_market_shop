@@ -12,7 +12,6 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-// TODO: rename to getUserSSO or getAuthUser
 func (h *AuthSubrouter) GetAuthUser(w http.ResponseWriter, r *http.Request) {
 	var req GetUserRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
