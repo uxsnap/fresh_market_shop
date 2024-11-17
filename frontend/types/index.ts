@@ -107,3 +107,8 @@ export type ErrorWrapper = {
   type: string;
   message: string;
 };
+
+export type City = {
+  uid: string;
+  name: string;
+};

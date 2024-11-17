@@ -83,3 +83,7 @@ type DeliveryService interface {
 	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
 	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)
 }
+
+type AddressesService interface {
+	GetCities(ctx context.Context) ([]entity.City, error)
+}

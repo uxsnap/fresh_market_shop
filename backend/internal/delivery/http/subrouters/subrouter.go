@@ -1,11 +1,12 @@
 package subrouters
 
 type SubrouterDeps struct {
-	AuthService     AuthService
-	ProductsService ProductsService
-	UsersService    UsersService
-	RecipesService  RecipesService
-	OrdersService   OrdersService
-	DeliveryService DeliveryService
-	Middleware      *Middleware
+	AuthService      AuthService
+	ProductsService  ProductsService
+	UsersService     UsersService
+	RecipesService   RecipesService
+	OrdersService    OrdersService
+	DeliveryService  DeliveryService
+	AddressesService AddressesService
+	Middleware       *Middleware
 }

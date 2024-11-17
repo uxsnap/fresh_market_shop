@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	cors "github.com/go-chi/cors"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters"
+	addressesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/addresses"
 	assetsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/assets"
 	authSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/auth"
 	categoriesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/categories"
@@ -39,6 +40,7 @@ func New(
 	recipesService subrouters.RecipesService,
 	ordersService subrouters.OrdersService,
 	deliveryService subrouters.DeliveryService,
+	addressesService subrouters.AddressesService,
 ) *Handler {
 	subroutersMiddleware := subrouters.NewMiddleware(authService)
 
@@ -46,13 +48,14 @@ func New(
 		router: chi.NewRouter(),
 		config: cfg,
 		deps: subrouters.SubrouterDeps{
-			AuthService:     authService,
-			ProductsService: productsService,
-			UsersService:    usersService,
-			RecipesService:  recipesService,
-			OrdersService:   ordersService,
-			DeliveryService: deliveryService,
-			Middleware:      subroutersMiddleware,
+			AuthService:      authService,
+			ProductsService:  productsService,
+			UsersService:     usersService,
+			RecipesService:   recipesService,
+			OrdersService:    ordersService,
+			DeliveryService:  deliveryService,
+			AddressesService: addressesService,
+			Middleware:       subroutersMiddleware,
 		},
 	}
 
@@ -84,6 +87,7 @@ func New(
 	h.router.Route("/orders", ordersSubrouter.New(h.deps))
 	h.router.Route("/recipes", recipesSubrouter.New(h.deps))
 	h.router.Route("/delivery", deliverySubrouter.New(h.deps))
+	h.router.Route("/addresses", addressesSubrouter.New(h.deps))
 
 	return h
 }
