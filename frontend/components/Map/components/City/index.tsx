@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMapFormContext } from "../../context";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/api/address/getCities";
-import { Select } from "@/components/Select";
+import { Select } from "@mantine/core";
 
 export const City = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -31,6 +31,7 @@ export const City = () => {
       searchable
       key={form.key("city")}
       data={data ?? []}
+      allowDeselect={false}
       {...form.getInputProps("city")}
     />
   );
