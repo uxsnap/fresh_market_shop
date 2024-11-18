@@ -116,6 +116,7 @@ export type City = {
 export type Address = {
   uid: string;
   cityUid: string;
+  cityName?: string;
   street: string;
   houseNumber: string;
   latitude: number;

@@ -51,7 +51,7 @@ export const Map = ({ opened = false, onClose }: Props) => {
 
               <MapFields />
 
-              <BottomCards items={[]} />
+              <BottomCards />
             </form>
           </MapFormProvider>
         </Modal.Body>

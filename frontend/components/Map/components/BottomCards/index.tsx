@@ -7,7 +7,7 @@ import { PropsWithChildren } from "react";
 import { useMapStore } from "@/store/map";
 
 type Props = {
-  items: Address[];
+  items?: Address[];
 };
 
 const BottomCard = ({
@@ -16,17 +16,26 @@ const BottomCard = ({
 }: PropsWithChildren<{ city: string }>) => (
   <Box className={styles.bottomCard}>
     <Stack gap={8}>
-      <Text fz={22} fw="bold" c="accent.0">
+      <Text lh="26px" fz={22} fw="bold" c="accent.0">
         {city}
       </Text>
-      <Text fz={16} fw={500} c="accent.0">
+      <Text lh="19px" fz={16} fw={500} c="accent.1">
         {children}
       </Text>
     </Stack>
   </Box>
 );
 
-export const BottomCards = ({ items }: Props) => {
+export const BottomCards = ({
+  items = Array.from(
+    { length: 10 },
+    () =>
+      ({
+        cityName: "Санкт-Петербург",
+        street: "Улица да-да-да",
+      }) as Address
+  ),
+}: Props) => {
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
   return (
@@ -34,7 +43,7 @@ export const BottomCards = ({ items }: Props) => {
       <Carousel slideGap="sm" align="start" dragFree withControls={false}>
         {items.map((item) => (
           <Carousel.Slide key={item.uid} flex="1 0 auto">
-            <BottomCard city={item.cityUid}>{item.street}</BottomCard>
+            <BottomCard city={item.cityName ?? ""}>{item.street}</BottomCard>
           </Carousel.Slide>
         ))}
       </Carousel>
