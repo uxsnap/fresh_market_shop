@@ -8,7 +8,7 @@ import { Select } from "@mantine/core";
 export const Street = () => {
   const [searchValue, setSearchValue] = useState("");
   const [curCity, setCurCity] = useState("");
-  const [debounced] = useDebouncedValue(searchValue, 100);
+  const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
 
   form.watch("city", ({ value }) => {
@@ -17,10 +17,11 @@ export const Street = () => {
 
   const { data } = useQuery({
     queryFn: () => getAddresses(curCity, debounced),
-    queryKey: [getAddresses.queryKey, debounced, curCity],
+    queryKey: [getAddresses.queryKey, debounced],
+    enabled: !!debounced.length,
     select(data) {
       return data.data.map((s) => ({
-        label: s.street,
+        label: `${s.street} ${s.houseNumber}`,
         value: s.uid,
       }));
     },
@@ -37,6 +38,9 @@ export const Street = () => {
       onSearchChange={setSearchValue}
       searchable
       data={data ?? []}
+      nothingFoundMessage="Ничего не найдено"
+      allowDeselect={false}
+      filter={({ options }) => options}
       key={form.key("street")}
       {...form.getInputProps("street")}
     />

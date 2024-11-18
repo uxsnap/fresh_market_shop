@@ -37,7 +37,7 @@ func (r *AddressesRepository) GetAddresses(ctx context.Context, qFilters entity.
 	}
 
 	if qFilters.HouseNumber != "" {
-		cond = squirrel.And{cond, squirrel.Like{"lower(house_number)": "%" + strings.ToLower(qFilters.HouseNumber) + "%"}}
+		cond = squirrel.And{cond, squirrel.Like{"lower(house_number)": strings.ToLower(qFilters.HouseNumber) + "%"}}
 	} else {
 		cond = squirrel.And{cond, squirrel.NotEq{"house_number": "NULL"}}
 	}
