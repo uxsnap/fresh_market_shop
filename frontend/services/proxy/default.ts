@@ -1,14 +1,11 @@
 import axios from "axios";
 import {
-  deleteAuthCookies,
   getAuthCookieTokensFromServer,
   isAccessTokenAlmostExpired,
-  parseJwt,
-  parseResponseCookies,
 } from "./cookies";
 import { publicApiErrorResponse } from "@/utils";
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
+import { refresh } from "./refresh";
 
 export const proxyDefault = async (req: NextRequest, body?: any) => {
   const url = req.url?.replace(
@@ -22,42 +19,17 @@ export const proxyDefault = async (req: NextRequest, body?: any) => {
     const headers: Record<string, string>[] = [];
 
     if (tokens?.refresh_jwt && tokens.access_jwt) {
-      const { refresh_jwt, access_jwt } = tokens;
+      const { access_jwt } = tokens;
 
       if (!isAccessTokenAlmostExpired(access_jwt)) {
         headers.push({
           Authorization: `Bearer ${access_jwt}`,
         });
       } else {
-        try {
-          const refreshTokenResponse = await axios.post(
-            `${process.env.NEXT_PUBLIC_API}/auth/refresh`,
-            undefined,
-            {
-              headers: {
-                Cookie: `refresh_jwt=${refresh_jwt}`,
-              },
-            }
-          );
+        const res = await refresh(tokens);
 
-          const parsed =
-            parseResponseCookies(refreshTokenResponse)["access_jwt"];
-
-          const cookieStore = await cookies();
-
-          cookieStore.set("access_jwt", parsed);
-        } catch (e) {
-          const parsedJwt = parseJwt(access_jwt);
-
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API}/auth/logout`,
-            { uid: parsedJwt!.user_uid },
-            {
-              headers: { Authorization: `Bearer ${access_jwt}` },
-            }
-          );
-
-          return deleteAuthCookies();
+        if (res !== true) {
+          return res;
         }
       }
     }
