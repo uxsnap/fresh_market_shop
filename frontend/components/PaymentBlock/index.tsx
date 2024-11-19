@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 type Props = {
   buttonText?: string;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props) => {

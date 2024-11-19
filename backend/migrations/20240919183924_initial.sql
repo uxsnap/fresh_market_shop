@@ -12,16 +12,6 @@ CREATE TABLE users (
     updated_at TIMESTAMP NOT NULL
 );
 
--- Создание таблицы "payment_cards" для хранения карт оплаты
-CREATE TABLE payment_cards (
-    uid uuid PRIMARY KEY,
-    user_uid uuid NOT NULL REFERENCES users(uid) ON DELETE CASCADE,
-    card_number VARCHAR(16) NOT NULL,
-    card_holder_name VARCHAR(100) NOT NULL,
-    expiration_date DATE NOT NULL,
-    created_at TIMESTAMP NOT NULL
-);
-
 -- Создание таблицы "categories" для классификации товаров
 CREATE TABLE categories (
     uid uuid PRIMARY KEY,
@@ -309,6 +299,5 @@ DROP TABLE IF EXISTS product_photos;
 DROP TABLE IF EXISTS products_count;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS payment_cards;
 DROP TABLE IF EXISTS cities_handbook;
 DROP TABLE IF EXISTS users;

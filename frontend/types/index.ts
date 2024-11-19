@@ -112,3 +112,11 @@ export type City = {
   uid: string;
   name: string;
 };
+
+export type CreditCard = {
+  expired: string;
+  externalUid: string;
+  number: string;
+  uid: string;
+  userUid: string;
+};

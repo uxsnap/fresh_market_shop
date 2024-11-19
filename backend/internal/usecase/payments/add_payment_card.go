@@ -14,30 +14,30 @@ func (uc *UseCasePayments) AddUserPaymentCard(ctx context.Context, userFullCard 
 
 	if uuid.Equal(uuid.UUID{}, userFullCard.UserUid) {
 		log.Printf("failed to add user payment card: user uid is empty")
-		return uuid.UUID{}, errors.New("user uid is empty")
+		return uuid.UUID{}, errors.New("ID юзера пуст")
 	}
 	if len(userFullCard.Number) != 16 {
 		log.Printf("failed to add user payment card: invalid card number")
-		return uuid.UUID{}, errors.New("invalid card number")
+		return uuid.UUID{}, errors.New("неправильный формат номера карты")
 	}
 	if len(userFullCard.Expired) != 5 {
 		log.Printf("failed to add user payment card: invalid card expired date")
-		return uuid.UUID{}, errors.New("invalid card expired date")
+		return uuid.UUID{}, errors.New("неправильный формат даты окончания")
 	}
 	if len(userFullCard.CVV) != 3 {
 		log.Printf("failed to add user payment card: invalid card cvv")
-		return uuid.UUID{}, errors.New("invalid card cvv")
+		return uuid.UUID{}, errors.New("неправильный формат СVV")
 	}
 
 	_, isFound, err := uc.usersService.GetUser(ctx, userFullCard.UserUid)
 	if err != nil {
 		log.Printf("failed to add user (%s) payment card: %v", userFullCard.UserUid, err)
-		return uuid.UUID{}, errors.WithStack(err)
+		return uuid.UUID{}, errors.New("ошибка получения пользователя")
 	}
 
 	if !isFound {
 		log.Printf("failed to add user (%s) payment card: user not found", userFullCard.UserUid)
-		return uuid.UUID{}, errors.WithStack(errors.Errorf("user %s not found", userFullCard.UserUid))
+		return uuid.UUID{}, errors.New("пользователь с таким ID не найден")
 	}
 
 	userFullCard.Uid = uuid.NewV4()

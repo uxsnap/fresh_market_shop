@@ -1,0 +1,16 @@
+.header {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--mantine-color-bg-1);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    font-size: 22px;
+  }
+}
+
+.content {
+  min-width: 476px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}

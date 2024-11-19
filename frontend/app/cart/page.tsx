@@ -32,6 +32,10 @@ export default function CartPage() {
   }, [items]);
 
   useEffect(() => {
+    if (logged === undefined) {
+      return;
+    }
+
     if (!logged) {
       router.push("/");
     }
@@ -40,7 +44,6 @@ export default function CartPage() {
   const mutation = useMutation({
     mutationFn: makeOrder,
     onSuccess: () => {
-      
       router.push("/order");
     },
     onError: (error: AxiosError<any>) => {
