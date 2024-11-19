@@ -93,6 +93,11 @@ type DeliveryService interface {
 	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)
 }
 
+type AddressesService interface {
+	GetCities(ctx context.Context) ([]entity.City, error)
+	GetAddresses(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Address, error)
+}
+
 type PaymentsService interface {
 	CreatePayment(ctx context.Context, payment entity.Payment) (uuid.UUID, error)
 	GetPayment(ctx context.Context, paymentUid uuid.UUID) (entity.Payment, bool, error)

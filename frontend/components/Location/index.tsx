@@ -1,4 +1,4 @@
-import { Text, Flex } from "@mantine/core";
+import { Text, Group } from "@mantine/core";
 import { Location as LocationIcon } from "../icons/Location";
 
 import styles from "./Location.module.css";
@@ -10,25 +10,13 @@ export const Location = () => {
 
   return (
     <>
-      <Flex
-        bd="1px solid var(--mantine-color-accent-0)"
-        gap="sm"
-        px={12}
-        h={38}
-        // TODO: Поменять значения на не абсолютные
-        py={8}
-        align="center"
-        className={styles.root}
-        w="100%"
-        maw={320}
-        onClick={() => setIsMapOpen(true)}
-      >
+      <Group className={styles.root} onClick={() => setIsMapOpen(true)}>
         <LocationIcon />
 
-        <Text truncate="end" size="sm" fw="bold" c="accent.0">
+        <Text truncate="end" fz={14} lh="150%" fw="bold" c="accent.0">
           Адрес не выбран
         </Text>
-      </Flex>
+      </Group>
 
       <Map opened={isMapOpen} onClose={() => setIsMapOpen(false)} />
     </>

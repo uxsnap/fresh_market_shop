@@ -61,10 +61,11 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	addressParts := []string{
 		deliveryAddress.CityName,
 		deliveryAddress.StreetName,
-		strconv.Itoa(int(deliveryAddress.HouseNumber)),
-		strconv.Itoa(int(deliveryAddress.Building)),
-		strconv.Itoa(int(deliveryAddress.Floor)),
-		strconv.Itoa(int(deliveryAddress.Apartment)),
+		deliveryAddress.HouseNumber,
+		"подъезд " + strconv.Itoa(int(deliveryAddress.Entrance)),
+		"этаж " + strconv.Itoa(int(deliveryAddress.Floor)),
+		"квартира " + strconv.Itoa(int(deliveryAddress.Apartment)),
+		"код домофона " + strconv.Itoa(int(deliveryAddress.Code)),
 	}
 
 	addressStr := strings.Join(addressParts, " ")

@@ -10,14 +10,17 @@ import (
 type DeliveryAddress struct {
 	Uid         uuid.UUID `json:"uid"`
 	UserUid     uuid.UUID `json:"userUid"`
+	AddressUid  uuid.UUID `json:"addressUid"`
 	Latitude    float64   `json:"latitude"`
 	Longitude   float64   `json:"longitude"`
 	CityName    string    `json:"cityName"`
 	StreetName  string    `json:"streetName"`
-	HouseNumber int64     `json:"houseNumber"`
+	HouseNumber string    `json:"houseNumber"`
 	Building    int64     `json:"building"`
 	Floor       int64     `json:"floor"`
+	Entrance    int64     `json:"entrance"`
 	Apartment   int64     `json:"apartment"`
+	Code        int64     `json:"code"`
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 }
@@ -26,14 +29,16 @@ func DeliveryAddressFromEntity(address entity.DeliveryAddress) DeliveryAddress {
 	return DeliveryAddress{
 		Uid:         address.Uid,
 		UserUid:     address.UserUid,
+		AddressUid:  address.AddressUid,
 		Latitude:    address.Latitude,
 		Longitude:   address.Longitude,
 		CityName:    address.CityName,
 		StreetName:  address.StreetName,
 		HouseNumber: address.HouseNumber,
-		Building:    address.Building,
 		Floor:       address.Floor,
+		Entrance:    address.Entrance,
 		Apartment:   address.Apartment,
+		Code:        address.Code,
 		CreatedAt:   address.CreatedAt,
 		UpdatedAt:   address.UpdatedAt,
 	}
@@ -41,17 +46,14 @@ func DeliveryAddressFromEntity(address entity.DeliveryAddress) DeliveryAddress {
 
 func DeliveryAddressToEntity(address DeliveryAddress) entity.DeliveryAddress {
 	return entity.DeliveryAddress{
-		Uid:         address.Uid,
-		UserUid:     address.UserUid,
-		Latitude:    address.Latitude,
-		Longitude:   address.Longitude,
-		CityName:    address.CityName,
-		StreetName:  address.StreetName,
-		HouseNumber: address.HouseNumber,
-		Building:    address.Building,
-		Floor:       address.Floor,
-		Apartment:   address.Apartment,
-		CreatedAt:   address.CreatedAt,
-		UpdatedAt:   address.UpdatedAt,
+		Uid:        address.Uid,
+		UserUid:    address.UserUid,
+		AddressUid: address.AddressUid,
+		Apartment:  address.Apartment,
+		Entrance:   address.Entrance,
+		Floor:      address.Floor,
+		Code:       address.Code,
+		CreatedAt:  address.CreatedAt,
+		UpdatedAt:  address.UpdatedAt,
 	}
 }

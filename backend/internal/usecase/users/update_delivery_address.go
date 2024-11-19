@@ -11,8 +11,8 @@ import (
 
 func (uc *UseCaseUsers) UpdateDeliveryAddress(ctx context.Context, address entity.DeliveryAddress) error {
 	log.Printf(
-		"ucUsers.UpdateDeliveryAddress: user uid %s, address: %s %s %d",
-		address.UserUid, address.CityName, address.StreetName, address.Building,
+		"ucUsers.UpdateDeliveryAddress: user uid %s, address: %s %s",
+		address.UserUid, address.CityName, address.StreetName,
 	)
 
 	if err := validateDeliveryAddress(address); err != nil {

@@ -2,7 +2,9 @@ package repositoryUsers
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"strings"
 
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
@@ -57,27 +59,110 @@ func (r *UsersRepository) DeleteDeliveryAddressesByUserUid(ctx context.Context, 
 func (r *UsersRepository) GetDeliveryAddressByUid(ctx context.Context, uid uuid.UUID) (entity.DeliveryAddress, bool, error) {
 	log.Printf("usersRepository.GetDeliveryAddressByUid: uid %s", uid)
 
-	row := pgEntity.NewDeliveryAddressRow().FromEntity(entity.DeliveryAddress{Uid: uid})
-	if err := r.GetOne(ctx, row, row.ConditionUidEqual()); err != nil {
+	deliveryAddressRow := pgEntity.NewDeliveryAddressRow().FromEntity(entity.DeliveryAddress{Uid: uid})
+	addressRow := pgEntity.NewAddressRow()
+	cityRow := pgEntity.NewCityRow()
+
+	selectFields := append(
+		append(
+			withPrefix("da", deliveryAddressRow.Columns()),
+			withPrefix("ad", addressRow.Columns())...,
+		), "c.name")
+
+	selectFieldsPart := strings.Join(selectFields, ",")
+
+	fromPart := fmt.Sprintf(
+		"%s as da INNER JOIN %s as ad ON da.address_uid=ad.uid INNER JOIN %s as c ON ad.city_uid=c.uid",
+		deliveryAddressRow.Table(), addressRow.Table(), cityRow.Table(),
+	)
+
+	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE uid=$1`, selectFieldsPart, fromPart)
+
+	row := r.DB().QueryRow(ctx, stmt, deliveryAddressRow.Uid)
+
+	valuesForScan := append(
+		deliveryAddressRow.ValuesForScan(),
+		addressRow.ValuesForScan()...,
+	)
+	valuesForScan = append(valuesForScan, &cityRow.Name)
+
+	if err := row.Scan(valuesForScan...); err != nil {
 		log.Printf("failed to get delivery address %s: %v", uid, err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			return entity.DeliveryAddress{}, false, nil
 		}
 		return entity.DeliveryAddress{}, false, errors.WithStack(err)
 	}
-	return row.ToEntity(), true, nil
+
+	deliveryAddress := deliveryAddressRow.ToEntity()
+	deliveryAddress.CityName = cityRow.Name
+	deliveryAddress.StreetName = addressRow.Street
+	deliveryAddress.HouseNumber = addressRow.HouseNumber
+	deliveryAddress.Latitude = addressRow.Latitude
+	deliveryAddress.Longitude = addressRow.Longitude
+
+	return deliveryAddress, true, nil
 }
 
 func (r *UsersRepository) GetDeliveryAddressesByUserUid(ctx context.Context, userUid uuid.UUID) ([]entity.DeliveryAddress, error) {
 	log.Printf("usersRepository.GetDeliveryAddressesByUserUid: uid %s", userUid)
 
-	row := pgEntity.NewDeliveryAddressRow().FromEntity(entity.DeliveryAddress{UserUid: userUid})
-	rows := pgEntity.NewDeliveryAddressRows()
+	deliveryAddressRow := pgEntity.NewDeliveryAddressRow().FromEntity(entity.DeliveryAddress{UserUid: userUid})
+	addressRow := pgEntity.NewAddressRow()
+	cityRow := pgEntity.NewCityRow()
 
-	if err := r.GetSome(ctx, row, rows, row.ConditionUserUidEqual()); err != nil {
-		log.Printf("failed to get user %s delivery addresses: %v", userUid, err)
+	selectFields := append(
+		append(
+			withPrefix("da", deliveryAddressRow.Columns()),
+			withPrefix("ad", addressRow.Columns())...,
+		), "c.name")
+
+	selectFieldsPart := strings.Join(selectFields, ",")
+
+	fromPart := fmt.Sprintf(
+		"%s as da INNER JOIN %s as ad ON da.address_uid=ad.uid INNER JOIN %s as c ON ad.city_uid=c.uid",
+		deliveryAddressRow.Table(), addressRow.Table(), cityRow.Table(),
+	)
+
+	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE user_uid=$1`, selectFieldsPart, fromPart)
+
+	rows, err := r.DB().Query(ctx, stmt, deliveryAddressRow.UserUid)
+	if err != nil {
+		log.Printf("failed to get delivery adresses by user uid %s: %v", userUid, err)
 		return nil, errors.WithStack(err)
 	}
 
-	return rows.ToEntity(), nil
+	valuesForScan := append(
+		deliveryAddressRow.ValuesForScan(),
+		addressRow.ValuesForScan()...,
+	)
+	valuesForScan = append(valuesForScan, &cityRow.Name)
+
+	adresses := make([]entity.DeliveryAddress, 0, 10)
+
+	for rows.Next() {
+		if err := rows.Scan(valuesForScan...); err != nil {
+			log.Printf("failed to scan delivery address: %v", err)
+			return nil, errors.WithStack(err)
+		}
+
+		deliveryAddress := deliveryAddressRow.ToEntity()
+		deliveryAddress.CityName = cityRow.Name
+		deliveryAddress.StreetName = addressRow.Street
+		deliveryAddress.HouseNumber = addressRow.HouseNumber
+		deliveryAddress.Latitude = addressRow.Latitude
+		deliveryAddress.Longitude = addressRow.Longitude
+
+		adresses = append(adresses, deliveryAddress)
+	}
+
+	return adresses, nil
+}
+
+func withPrefix(prefix string, fields []string) []string {
+	res := make([]string, 0, len(fields))
+	for _, f := range fields {
+		res = append(res, prefix+"."+f)
+	}
+	return res
 }
