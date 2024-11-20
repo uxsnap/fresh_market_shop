@@ -120,3 +120,13 @@ export type CreditCard = {
   uid: string;
   userUid: string;
 };
+
+export type Address = {
+  uid: string;
+  cityUid: string;
+  cityName?: string;
+  street: string;
+  houseNumber: string;
+  latitude: number;
+  longitude: number;
+};
