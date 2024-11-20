@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Stack, Title } from "@mantine/core";
+import { Box, Stack, Title } from "@mantine/core";
 
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
@@ -25,19 +25,29 @@ export const SideMenu = () => {
 
   const renderLoader = () => <SkeletLoader l={8} />;
 
-  const renderData = () =>
-    data?.data.map(({ uid, name }) => (
+  const renderData = () => (
+    <>
       <CategoryItem
-        active={active === name}
-        onClick={() => router.push(`/products/${uid}`)}
-        key={uid}
+        active={active === "Главная"}
+        onClick={() => router.push(`/`)}
       >
-        {name}
+        Главная
       </CategoryItem>
-    ));
+      {data?.data.map(({ uid, name }) => (
+        <CategoryItem
+          active={active === name}
+          onClick={() => router.push(`/products/${uid}`)}
+          key={uid}
+        >
+          {name}
+        </CategoryItem>
+      ))}
+      ;
+    </>
+  );
 
   return (
-    <Container m={0} p={0}>
+    <Box>
       <Stack gap={20}>
         <Title c="accent.0" order={2}>
           Каталог
@@ -49,6 +59,6 @@ export const SideMenu = () => {
           {!isFetching && renderData()}
         </Stack>
       </Stack>
-    </Container>
+    </Box>
   );
 };

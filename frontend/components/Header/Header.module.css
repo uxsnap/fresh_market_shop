@@ -27,3 +27,11 @@ button.burger {
 
   border-radius: 8px;
 }
+
+img.logo {
+  cursor: pointer;
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    display: none;
+  }
+}

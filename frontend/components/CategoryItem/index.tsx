@@ -10,10 +10,12 @@ import { Oil } from "../icons/Oil";
 import { Milk } from "../icons/Milk";
 import { Grains } from "../icons/Grains";
 import { Bean } from "../icons/Bean";
+import { MainIcon } from "../icons/MainIcon";
 
 import styles from "./CategoryItem.module.css";
 
 const mapNameToIcon: Record<string, React.FC> = {
+  Главная: MainIcon,
   "Готовая еда": Salad,
   Хлеб: Bread,
   Рыба: Fish,

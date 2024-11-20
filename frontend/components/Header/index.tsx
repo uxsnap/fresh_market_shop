@@ -1,4 +1,4 @@
-import { Burger, Group, Stack } from "@mantine/core";
+import { Burger, Group, Stack, Image } from "@mantine/core";
 import { Location } from "../Location";
 import styles from "./Header.module.css";
 import { CartButton } from "./components/CartButton";
@@ -6,6 +6,7 @@ import { Search } from "./components/Search";
 import { memo } from "react";
 import { UserAuth } from "./components/UserAuth";
 import { useDisclosure } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 
 type Props = {
   onNavbar: () => void;
@@ -13,6 +14,8 @@ type Props = {
 
 export const Header = memo(({ onNavbar }: Props) => {
   const [opened, { toggle }] = useDisclosure();
+
+  const router = useRouter();
 
   const handleNavbar = () => {
     onNavbar();
@@ -31,6 +34,13 @@ export const Header = memo(({ onNavbar }: Props) => {
         maw={1520}
       >
         <Group w="100%" wrap="nowrap">
+          <Image
+            className={styles.logo}
+            onClick={() => router.push("/")}
+            src="Logo.svg"
+            alt="_Logo"
+          />
+
           <Burger
             h={38}
             w={38}
