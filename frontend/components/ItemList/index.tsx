@@ -22,9 +22,15 @@ const Wrapper = ({
 }: PropsWithChildren<{ scroll: boolean }>) => {
   if (scroll) {
     return (
-      <Carousel slideGap="sm" align="start" dragFree withControls={false}>
+      <Carousel
+        slideGap="sm"
+        align="start"
+        dragFree
+        withControls={false}
+        containScroll="trimSnaps"
+      >
         {Children.map(children, (child) => (
-          <Carousel.Slide flex="1 0 auto">{child}</Carousel.Slide>
+          <Carousel.Slide flex="0 0 auto">{child}</Carousel.Slide>
         ))}
       </Carousel>
     );

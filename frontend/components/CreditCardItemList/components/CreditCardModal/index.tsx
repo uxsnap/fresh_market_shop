@@ -3,7 +3,12 @@ import { Button, Group, Modal, Stack, TextInput, Title } from "@mantine/core";
 import styles from "./CardCardModal.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPaymentCard } from "@/api/card/addPaymentCard";
-import { showErrorNotification, showSuccessNotification } from "@/utils";
+import {
+  handleCardNumber,
+  handleExpired,
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
 import { AxiosError } from "axios";
 import { ErrorWrapper } from "@/types";
 import { matches, useForm } from "@mantine/form";
@@ -24,21 +29,11 @@ export const CreditCardModal = ({ opened, onClose }: Props) => {
       expired: "",
       cvv: "",
     },
-    onValuesChange: (values, previous) => {
-      values.number = values.number.trim().replace(/[^0-9 ]/g, "");
-
-      if ([4, 9, 14].includes(values.number.length)) {
-        values.number += " ";
-      }
-
-      values.expired = values.expired.trim().replace(/[^0-9/]/g, "");
-
-      if (values.expired.length === 2 && previous.expired.at(-1) !== "/") {
-        values.expired += "/";
-      }
-
-      return values;
-    },
+    onValuesChange: (values, previous) => ({
+      number: handleCardNumber(values.number),
+      expired: handleExpired(values.expired, previous.expired),
+      cvv: values.cvv,
+    }),
     transformValues: (values) => ({
       ...values,
       number: values.number.replace(/ /g, ""),
