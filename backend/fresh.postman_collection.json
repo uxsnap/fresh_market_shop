@@ -53,10 +53,16 @@
 							"name": "update_address",
 							"request": {
 								"method": "PUT",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbHVwYUBrb255YTUiLCJleHBpcmVkX2F0IjoxNzMyMTAzODM3LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJ1c2VyIiwic2Vzc2lvbl91aWQiOiJkZWQyMmRlMS0wNzk1LTRkMzAtOGRiMC1jZTAwYzk4ZmYzMzEiLCJ1c2VyX3VpZCI6IjU5OTVkOTQ3LWY0ZmItNGY0ZS04MWE1LWIzYzFmNTVhZjNkZSJ9.kUMDZESbdDnH5DYkiZ_I8MVYm3zQpvoK8eP_5frvJNA",
+										"type": "text"
+									}
+								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"uid\": \"bb34f0cc-0280-4917-ba8d-460471a9986d\",\n    \"userUid\": \"b0477677-ebf8-4fe9-863a-ea9cba0d190a\",\n    \"latitude\": 59.23,\n    \"longitude\": 21.23423,\n    \"cityName\": \"Кал\",\n    \"streetName\": \"Говна\",\n    \"houseNumber\": 46,\n    \"building\": 1,\n    \"floor\": 7,\n    \"apartment\": 198\n}",
+									"raw": "{\n    \"uid\": \"d3bab3a3-acb6-4b0a-a2b9-81d248a397f9\",\n    \"userUid\": \"5995d947-f4fb-4f4e-81a5-b3c1f55af3de\",\n    \"addressUid\": \"b6644179-f0c2-4236-b006-53910a165d10\",\n    \"apartment\": 123,\n    \"floor\": 5,\n    \"entrance\": 2,\n    \"code\": 123\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -64,7 +70,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_address",
+									"raw": "http://localhost:8080/users/5995d947-f4fb-4f4e-81a5-b3c1f55af3de/delivery_address",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -72,7 +78,7 @@
 									"port": "8080",
 									"path": [
 										"users",
-										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"5995d947-f4fb-4f4e-81a5-b3c1f55af3de",
 										"delivery_address"
 									]
 								}
@@ -83,9 +89,15 @@
 							"name": "get address",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbHVwYUBrb255YTUiLCJleHBpcmVkX2F0IjoxNzMyMTAzODM3LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJ1c2VyIiwic2Vzc2lvbl91aWQiOiJkZWQyMmRlMS0wNzk1LTRkMzAtOGRiMC1jZTAwYzk4ZmYzMzEiLCJ1c2VyX3VpZCI6IjU5OTVkOTQ3LWY0ZmItNGY0ZS04MWE1LWIzYzFmNTVhZjNkZSJ9.kUMDZESbdDnH5DYkiZ_I8MVYm3zQpvoK8eP_5frvJNA",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "http://localhost:8080/users/delivery_address/bb34f0cc-0280-4917-ba8d-460471a9986d",
+									"raw": "http://localhost:8080/users/delivery_address/d3bab3a3-acb6-4b0a-a2b9-81d248a397f9",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -94,7 +106,7 @@
 									"path": [
 										"users",
 										"delivery_address",
-										"bb34f0cc-0280-4917-ba8d-460471a9986d"
+										"d3bab3a3-acb6-4b0a-a2b9-81d248a397f9"
 									]
 								}
 							},
@@ -104,9 +116,15 @@
 							"name": "get user addresses",
 							"request": {
 								"method": "GET",
-								"header": [],
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InphbHVwYUBrb255YTUiLCJleHBpcmVkX2F0IjoxNzMyMTAzODM3LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJ1c2VyIiwic2Vzc2lvbl91aWQiOiJkZWQyMmRlMS0wNzk1LTRkMzAtOGRiMC1jZTAwYzk4ZmYzMzEiLCJ1c2VyX3VpZCI6IjU5OTVkOTQ3LWY0ZmItNGY0ZS04MWE1LWIzYzFmNTVhZjNkZSJ9.kUMDZESbdDnH5DYkiZ_I8MVYm3zQpvoK8eP_5frvJNA",
+										"type": "text"
+									}
+								],
 								"url": {
-									"raw": "http://localhost:8080/users/b0477677-ebf8-4fe9-863a-ea9cba0d190a/delivery_addresses",
+									"raw": "http://localhost:8080/users/5995d947-f4fb-4f4e-81a5-b3c1f55af3de/delivery_addresses",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -114,7 +132,7 @@
 									"port": "8080",
 									"path": [
 										"users",
-										"b0477677-ebf8-4fe9-863a-ea9cba0d190a",
+										"5995d947-f4fb-4f4e-81a5-b3c1f55af3de",
 										"delivery_addresses"
 									]
 								}
