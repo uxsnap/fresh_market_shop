@@ -23,6 +23,6 @@ func New(
 }
 
 const (
-	fromLongitude = 54.711712
-	fromLatitude  = 20.579137
+	fromLongitude = 59.933505
+	fromLatitude  = 30.328543
 )
