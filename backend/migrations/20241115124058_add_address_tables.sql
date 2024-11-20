@@ -38,7 +38,12 @@ NULL AS ''
 CSV HEADER;
 
 INSERT INTO addresses(city_uid, street, house_number, latitude, longitude)
-  SELECT '59c0203e-a6da-45d6-98f3-021ac86adff6', ai.street, ai.house_number, ai.latitude, ai.longitude
+  SELECT 
+    '59c0203e-a6da-45d6-98f3-021ac86adff6', 
+    trim(replace(ai.street, 'улица', '')), 
+    replace(ai.house_number, ' ', ''),
+    ai.latitude, 
+    ai.longitude
   FROM addresses_import as ai;
 
 COMMIT;

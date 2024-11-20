@@ -1,0 +1,27 @@
+.root {
+  padding: 0 8px;
+  padding-top: 22px;
+  margin: 0 auto;
+  max-width: 1520px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    padding: 0;
+    padding-bottom: 80px;
+  }
+}
+
+.paymentBlock {
+  max-width: 362px;
+
+  @media ($mantine-breakpoint-md <= width <= $mantine-breakpoint-lg) {
+    max-width: 210px;
+  }
+}
+
+.group {
+  gap: 60px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    gap: 0;
+  }
+}

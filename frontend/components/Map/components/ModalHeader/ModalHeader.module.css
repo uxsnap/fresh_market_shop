@@ -6,14 +6,3 @@
     font-size: 22px;
   }
 }
-
-section.content {
-  overflow-y: hidden;
-}
-
-.form {
-  width: auto;
-  height: calc(100vh - 70px);
-  display: flex;
-  align-items: flex-start;
-}

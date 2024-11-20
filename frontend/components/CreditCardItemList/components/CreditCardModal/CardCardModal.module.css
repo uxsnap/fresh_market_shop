@@ -7,13 +7,10 @@
   }
 }
 
-section.content {
-  overflow-y: hidden;
-}
+.content {
+  min-width: 476px;
 
-.form {
-  width: auto;
-  height: calc(100vh - 70px);
-  display: flex;
-  align-items: flex-start;
+  @media (max-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
 }

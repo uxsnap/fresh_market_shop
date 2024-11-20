@@ -1,11 +1,9 @@
 import { Text, Group, Paper, CloseButton } from "@mantine/core";
-import { LocationCursor } from "../icons/LocationCursor";
 import { Circle } from "../icons/Circle";
 import cn from "classnames";
 
 import styles from "./SelectableItem.module.css";
 import { CircleOk } from "../icons/CircleOk";
-import { Component } from "react";
 
 type SelectableItemIconProps = {
   onClick?: () => void;
@@ -58,7 +56,6 @@ export const SelectableItem = ({
             onClick={onDelete}
             c="accent.0"
             size="lg"
-            variant="transparent"
           />
         </Group>
       </Group>

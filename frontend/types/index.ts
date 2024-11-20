@@ -112,3 +112,21 @@ export type City = {
   uid: string;
   name: string;
 };
+
+export type CreditCard = {
+  expired: string;
+  externalUid: string;
+  number: string;
+  uid: string;
+  userUid: string;
+};
+
+export type Address = {
+  uid: string;
+  cityUid: string;
+  cityName?: string;
+  street: string;
+  houseNumber: string;
+  latitude: number;
+  longitude: number;
+};

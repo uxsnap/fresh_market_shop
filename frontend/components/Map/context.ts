@@ -1,11 +1,12 @@
 import { createFormContext } from "@mantine/form";
 
 type MapForm = {
-  flat?: number;
+  city: string;
+  street: string;
+  apartment?: number;
   entrance?: number;
   floor?: number;
   code?: number;
-  address: string;
 };
 
 export const [MapFormProvider, useMapFormContext, useMapForm] =

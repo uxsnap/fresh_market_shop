@@ -84,3 +84,4 @@ export const isDateNull = (date?: string) => {
 };
 
 export * from "./img";
+export * from "./card";
