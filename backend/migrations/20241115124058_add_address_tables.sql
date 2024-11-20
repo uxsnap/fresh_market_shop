@@ -66,5 +66,6 @@ DROP INDEX ix_addresses_house_number;
 
 DROP TABLE cities;
 DROP TABLE addresses;
+DROP TABLE delivery_addresses;
 
 -- +goose StatementEnd

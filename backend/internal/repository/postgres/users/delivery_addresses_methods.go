@@ -76,7 +76,7 @@ func (r *UsersRepository) GetDeliveryAddressByUid(ctx context.Context, uid uuid.
 		deliveryAddressRow.Table(), addressRow.Table(), cityRow.Table(),
 	)
 
-	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE uid=$1`, selectFieldsPart, fromPart)
+	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE da.uid=$1`, selectFieldsPart, fromPart)
 
 	row := r.DB().QueryRow(ctx, stmt, deliveryAddressRow.Uid)
 
@@ -124,7 +124,7 @@ func (r *UsersRepository) GetDeliveryAddressesByUserUid(ctx context.Context, use
 		deliveryAddressRow.Table(), addressRow.Table(), cityRow.Table(),
 	)
 
-	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE user_uid=$1`, selectFieldsPart, fromPart)
+	stmt := fmt.Sprintf(`SELECT %s FROM %s WHERE da.user_uid=$1`, selectFieldsPart, fromPart)
 
 	rows, err := r.DB().Query(ctx, stmt, deliveryAddressRow.UserUid)
 	if err != nil {

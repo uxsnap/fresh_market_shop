@@ -16,7 +16,6 @@ type DeliveryAddress struct {
 	CityName    string    `json:"cityName"`
 	StreetName  string    `json:"streetName"`
 	HouseNumber string    `json:"houseNumber"`
-	Building    int64     `json:"building"`
 	Floor       int64     `json:"floor"`
 	Entrance    int64     `json:"entrance"`
 	Apartment   int64     `json:"apartment"`
