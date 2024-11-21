@@ -40,11 +40,11 @@ export const AddressItemList = ({
         loaderProps={{ color: "primary.0", type: "bars" }}
       />
 
-      {(data?.data ?? []).map((address, ind) => (
+      {(data?.data ?? []).map((address) => (
         <AddressItem
           onSelect={() => setActiveAddress(address.addressUid)}
           active={address.addressUid === activeAddress}
-          key={ind}
+          key={address.addressUid}
         />
       ))}
     </Stack>

@@ -5,10 +5,8 @@ import { Carousel } from "@mantine/carousel";
 import { Address } from "@/types";
 import { PropsWithChildren } from "react";
 import { useMapStore } from "@/store/map";
-
-type Props = {
-  items?: Address[];
-};
+import { useQuery } from "@tanstack/react-query";
+import { getUserAddresses } from "@/api/user/getUserAdresses";
 
 const BottomCard = ({
   city,
@@ -26,24 +24,22 @@ const BottomCard = ({
   </Box>
 );
 
-export const BottomCards = ({
-  items = Array.from(
-    { length: 10 },
-    () =>
-      ({
-        cityName: "Санкт-Петербург",
-        street: "Улица да-да-да",
-      }) as Address
-  ),
-}: Props) => {
+export const BottomCards = () => {
+  const { data } = useQuery({
+    queryFn: getUserAddresses,
+    queryKey: [getUserAddresses.queryKey],
+  });
+
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
   return (
     <Stack gap={12} p={16} className={styles.root}>
       <Carousel slideGap="sm" align="start" dragFree withControls={false}>
-        {items.map((item) => (
+        {(data?.data ?? []).map((item) => (
           <Carousel.Slide key={item.uid} flex="1 0 auto">
-            <BottomCard city={item.cityName ?? ""}>{item.street}</BottomCard>
+            <BottomCard city={item.cityName ?? ""}>
+              {item.streetName}
+            </BottomCard>
           </Carousel.Slide>
         ))}
       </Carousel>

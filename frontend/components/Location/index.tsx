@@ -7,11 +7,14 @@ import styles from "./Location.module.css";
 import { useCallback, useEffect, useState } from "react";
 import { Map } from "../Map";
 import { AddressItemList } from "../AddressItemList";
+import { useClickOutside } from "@mantine/hooks";
 
 export const Location = () => {
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [opened, setOpened] = useState(false);
   const [activeAddress, setActiveAddress] = useState("");
+
+  const ref = useClickOutside(() => setOpened(false));
 
   const popupDisabled = useMatches({
     base: true,
@@ -41,10 +44,9 @@ export const Location = () => {
         position="bottom"
         withArrow
         shadow="md"
-        closeOnClickOutside
       >
         <Popover.Target>
-          <Group className={styles.group} onClick={handleOpen}>
+          <Group ref={ref} className={styles.group} onClick={handleOpen}>
             <LocationIcon />
 
             <Text truncate="end" fz={14} lh="150%" fw="bold" c="accent.0">

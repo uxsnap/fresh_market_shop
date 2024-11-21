@@ -35,7 +35,7 @@ export const proxyUserAddresses = async () => {
     const { tokens } = await getAuthCookieTokensFromServer();
 
     if (!tokens?.access_jwt) {
-      return deleteAuthCookies();
+      return deleteAuthCookies([]);
     }
 
     const parsed = parseJwt(tokens.access_jwt);
