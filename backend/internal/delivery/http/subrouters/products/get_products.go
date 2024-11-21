@@ -13,10 +13,22 @@ import (
 func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	qFilters, err := entity.NewQueryFiltersParser().WithRequired(
-		entity.QueryFieldPage,
-		entity.QueryFieldLimit,
-	).ParseQuery(r.URL.Query())
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithRequired(
+			entity.QueryFieldPage,
+			entity.QueryFieldLimit,
+		).
+		WithAllowed(
+			entity.QueryFieldWithCounts,
+			entity.QueryFieldWithPhotos,
+			entity.QueryFieldCreatedBefore,
+			entity.QueryFieldCreatedAfter,
+			entity.QueryFieldCategoryUid,
+			entity.QueryFieldCcalMin,
+			entity.QueryFieldCcalMax,
+			entity.QueryFieldCategoryUids,
+		).
+		ParseQuery(r.URL.Query())
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("parsing query params error", err.Error()))
 		return

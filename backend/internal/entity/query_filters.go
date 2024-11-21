@@ -10,7 +10,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// TODO: вынести из entity этому тут не место
+// TODO: вынести из entity, этому тут не место
 type QueryFilters struct {
 	Limit              uint64
 	LimitOnCategories  uint64
@@ -72,43 +72,83 @@ const (
 	QueryFieldHouseNumber       = "house_number"
 )
 
+var queryFiltersFields = []string{
+	QueryFieldLimit,
+	QueryFieldLimitOnCategories,
+	QueryFieldLimitOnProducts,
+	QueryFieldPage,
+	QueryFieldWithCounts,
+	QueryFieldWithPhotos,
+	QueryFieldCcalMin,
+	QueryFieldCcalMax,
+	QueryFieldCreatedBefore,
+	QueryFieldCreatedAfter,
+	QueryFieldCategoryUid,
+	QueryFieldCategoryUids,
+	QueryFieldName,
+	QueryFieldCookingTime,
+	QueryFieldWithRandom,
+	QueryFieldRecipeUid,
+	QueryFieldUserUid,
+	QueryFieldOrderUid,
+	QueryFieldCardUid,
+	QueryFieldOrdersUids,
+	QueryFieldUserUidForOrder,
+	QueryFieldCityUid,
+	QueryFieldHouseNumber,
+}
+
 type QueryFiltersParser struct {
 	RequiredFields []string
+	AllowedFields  map[string]struct{}
 	fieldsParsers  map[string]func(url.Values, *QueryFilters) error
+}
+
+var fieldsParsers = map[string]func(url.Values, *QueryFilters) error{
+	QueryFieldLimit:             parseLimit,
+	QueryFieldLimitOnCategories: parseLimitOnCategories,
+	QueryFieldLimitOnProducts:   parseLimitOnProducts,
+	QueryFieldPage:              parsePage,
+	QueryFieldWithCounts:        parseWithCounts,
+	QueryFieldWithPhotos:        parseWithPhotos,
+	QueryFieldCcalMin:           parseCcalMin,
+	QueryFieldCcalMax:           parseCcalMax,
+	QueryFieldCreatedBefore:     parseCreatedBefore,
+	QueryFieldCreatedAfter:      parseCreatedAfter,
+	QueryFieldCategoryUid:       parseCategoryUid,
+	QueryFieldName:              parseName,
+	QueryFieldCookingTime:       parseCookingTime,
+	QueryFieldRecipeUid:         parseRecipeUid,
+	QueryFieldWithRandom:        parseWithRandom,
+	QueryFieldUserUidForOrder:   parseUserUidForOrder,
+	QueryFieldCategoryUids:      parseCategoryUids,
+	QueryFieldCityUid:           parseCityUid,
+	QueryFieldHouseNumber:       parseHouseNumber,
+	QueryFieldOrderUid:          parseOrderUid,
+	QueryFieldCardUid:           parseCardUid,
+	QueryFieldOrdersUids:        parseOrdersUids,
+	QueryFieldUserUid:           parseUserUid,
 }
 
 func NewQueryFiltersParser() *QueryFiltersParser {
 	return &QueryFiltersParser{
-		fieldsParsers: map[string]func(url.Values, *QueryFilters) error{
-			QueryFieldLimit:             parseLimit,
-			QueryFieldLimitOnCategories: parseLimitOnCategories,
-			QueryFieldLimitOnProducts:   parseLimitOnProducts,
-			QueryFieldPage:              parsePage,
-			QueryFieldWithCounts:        parseWithCounts,
-			QueryFieldWithPhotos:        parseWithPhotos,
-			QueryFieldCcalMin:           parseCcalMin,
-			QueryFieldCcalMax:           parseCcalMax,
-			QueryFieldCreatedBefore:     parseCreatedBefore,
-			QueryFieldCreatedAfter:      parseCreatedAfter,
-			QueryFieldCategoryUid:       parseCategoryUid,
-			QueryFieldName:              parseName,
-			QueryFieldCookingTime:       parseCookingTime,
-			QueryFieldRecipeUid:         parseRecipeUid,
-			QueryFieldWithRandom:        parseWithRandom,
-			QueryFieldUserUidForOrder:   parseUserUidForOrder,
-			QueryFieldCategoryUids:      parseCategoryUids,
-			QueryFieldCityUid:           parseCityUid,
-			QueryFieldHouseNumber:       parseHouseNumber,
-			QueryFieldOrderUid:          parseOrderUid,
-			QueryFieldCardUid:           parseCardUid,
-			QueryFieldOrdersUids:        parseOrdersUids,
-			QueryFieldUserUid:           parseUserUid,
-		},
+		fieldsParsers: fieldsParsers,
 	}
 }
 
 func (q *QueryFiltersParser) WithRequired(fields ...string) *QueryFiltersParser {
 	q.RequiredFields = append(q.RequiredFields, fields...)
+	return q
+}
+
+func (q *QueryFiltersParser) WithAllowed(fields ...string) *QueryFiltersParser {
+	if len(q.AllowedFields) == 0 {
+		q.AllowedFields = make(map[string]struct{}, len(fields))
+	}
+
+	for _, field := range fields {
+		q.AllowedFields[field] = struct{}{}
+	}
 	return q
 }
 
@@ -128,33 +168,13 @@ func (q *QueryFiltersParser) ParseQuery(query url.Values) (QueryFilters, error) 
 		parsed[requiredField] = struct{}{}
 	}
 
-	queryFiltersFields := []string{
-		QueryFieldLimit,
-		QueryFieldLimitOnCategories,
-		QueryFieldLimitOnProducts,
-		QueryFieldPage,
-		QueryFieldWithCounts,
-		QueryFieldWithPhotos,
-		QueryFieldCcalMin,
-		QueryFieldCcalMax,
-		QueryFieldCreatedBefore,
-		QueryFieldCreatedAfter,
-		QueryFieldCategoryUid,
-		QueryFieldCategoryUids,
-		QueryFieldName,
-		QueryFieldCookingTime,
-		QueryFieldWithRandom,
-		QueryFieldRecipeUid,
-		QueryFieldUserUid,
-		QueryFieldOrderUid,
-		QueryFieldCardUid,
-		QueryFieldOrdersUids,
-		QueryFieldUserUidForOrder,
-		QueryFieldCityUid,
-		QueryFieldHouseNumber,
-	}
-
 	for _, field := range queryFiltersFields {
+		if len(q.AllowedFields) != 0 {
+			if _, ok := q.AllowedFields[field]; !ok {
+				continue
+			}
+		}
+
 		if _, ok := parsed[field]; ok {
 			continue
 		}

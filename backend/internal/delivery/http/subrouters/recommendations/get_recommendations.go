@@ -11,28 +11,6 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (h *RecommendationsSubrouter) handleUrlValues(ctx context.Context, urlValues url.Values) url.Values {
-	userInfo, err := httpEntity.AuthUserInfoFromContext(ctx)
-
-	urlValues.Set(entity.QueryFieldWithRandom, "true")
-
-	if err == nil {
-		urlValues.Set(entity.QueryFieldUserUid, userInfo.UserUid.String())
-	}
-
-	categoryUids, err := h.ProductsService.GetCategoriesByUserOrders(
-		ctx, userInfo.UserUid,
-	)
-
-	if err == nil && len(categoryUids) != 0 {
-		for _, uid := range categoryUids {
-			urlValues.Add(entity.QueryFieldCategoryUids, uid.String())
-		}
-	}
-
-	return urlValues
-}
-
 func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -45,12 +23,10 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 		return
 	}
 
-	products, err := h.ProductsService.GetProductsWithExtra(
-		ctx, qFilters,
-	)
+	products, err := h.ProductsService.GetProductsWithExtra(ctx, qFilters)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError,
-			errorWrapper.NewError(errorWrapper.RecommendationsError, "не удалось получить продукты юзера"),
+			errorWrapper.NewError(errorWrapper.RecommendationsError, "не удалось получить продукты рекомендаций"),
 		)
 		return
 	}
@@ -64,4 +40,24 @@ func (h *RecommendationsSubrouter) getRecommendations(w http.ResponseWriter, r *
 	}
 
 	httpUtils.WriteResponseJson(w, resp)
+}
+
+func (h *RecommendationsSubrouter) handleUrlValues(ctx context.Context, urlValues url.Values) url.Values {
+	userInfo, err := httpEntity.AuthUserInfoFromContext(ctx)
+	if err == nil {
+		urlValues.Set(entity.QueryFieldUserUid, userInfo.UserUid.String())
+	}
+
+	urlValues.Set(entity.QueryFieldWithRandom, "true")
+
+	categoryUids, err := h.ProductsService.GetCategoriesByUserOrders(
+		ctx, userInfo.UserUid,
+	)
+	if err == nil && len(categoryUids) != 0 {
+		for _, uid := range categoryUids {
+			urlValues.Add(entity.QueryFieldCategoryUids, uid.String())
+		}
+	}
+
+	return urlValues
 }

@@ -13,7 +13,20 @@ import (
 func (h *ProductsSubrouter) getNewProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(r.URL.Query())
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithAllowed(
+			entity.QueryFieldPage,
+			entity.QueryFieldLimit,
+			entity.QueryFieldWithCounts,
+			entity.QueryFieldWithPhotos,
+			entity.QueryFieldCreatedBefore,
+			entity.QueryFieldCreatedAfter,
+			entity.QueryFieldCategoryUid,
+			entity.QueryFieldCcalMin,
+			entity.QueryFieldCcalMax,
+			entity.QueryFieldCategoryUids,
+		).
+		ParseQuery(r.URL.Query())
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return

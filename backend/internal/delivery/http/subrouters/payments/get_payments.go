@@ -15,9 +15,6 @@ import (
 func (h *PaymentsSubrouter) GetPayments(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	// user_uid OR
-	// card_uid OR
-
 	paramUidName, uid, err := getUidParamFromPaymentsRequest(r)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("bad request", err.Error()))
@@ -47,7 +44,12 @@ func (h *PaymentsSubrouter) GetPayments(w http.ResponseWriter, r *http.Request) 
 }
 
 func getUidParamFromPaymentsRequest(r *http.Request) (string, uuid.UUID, error) {
-	qFilters, err := entity.NewQueryFiltersParser().ParseQuery(r.URL.Query())
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithAllowed(
+			entity.QueryFieldUserUid,
+			entity.QueryFieldCardUid,
+		).
+		ParseQuery(r.URL.Query())
 	if err != nil {
 		return "", uuid.UUID{}, err
 	}

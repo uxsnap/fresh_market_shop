@@ -2,9 +2,7 @@ package ordersSubrouter
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"net/url"
 
 	"github.com/uxsnap/fresh_market_shop/backend/internal/consts"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
@@ -13,41 +11,21 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (h *OrdersSubrouter) handelOrderedProductsURLParams(r *http.Request) (entity.QueryFilters, error) {
-	userInfo, err := httpEntity.AuthUserInfoFromContext(r.Context())
-
-	if err != nil {
-		return entity.QueryFilters{}, err
-	}
-
-	// Не из объекта реквеста, чтобы нельзя было прокинуть необязательные параметры
-	urlValues := url.Values{}
-
-	fmt.Println(userInfo)
-
-	urlValues.Set(entity.QueryFieldUserUidForOrder, userInfo.UserUid.String())
-	urlValues.Set(entity.QueryFieldLimit, fmt.Sprint(consts.DEFAULT_LIMIT))
-
-	qFilters, err := entity.NewQueryFiltersParser().
-		ParseQuery(urlValues)
-
-	return qFilters, err
-}
-
 func (h *OrdersSubrouter) GetOrderedProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	qFilters, err := h.handelOrderedProductsURLParams(r)
-
+	userInfo, err := httpEntity.AuthUserInfoFromContext(r.Context())
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "ошибка парсинга параметров",
+			errorWrapper.JwtAuthMiddleware, err.Error(),
 		))
 		return
 	}
 
-	products, err := h.OrdersService.GetOrderedProducts(ctx, qFilters)
-
+	products, err := h.OrdersService.GetOrderedProducts(ctx, entity.QueryFilters{
+		UserUidForOrder: userInfo.UserUid,
+		Limit:           consts.DEFAULT_LIMIT,
+	})
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return

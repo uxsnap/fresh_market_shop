@@ -12,9 +12,17 @@ import (
 func (h *SearchSubrouter) searchProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	qFilters, err := entity.NewQueryFiltersParser().WithRequired(
-		entity.QueryFieldName,
-	).ParseQuery(r.URL.Query())
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithRequired(
+			entity.QueryFieldName,
+		).
+		WithAllowed(
+			entity.QueryFieldWithCounts,
+			entity.QueryFieldWithPhotos,
+			entity.QueryFieldPage,
+			entity.QueryFieldLimit,
+		).
+		ParseQuery(r.URL.Query())
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, nil)
 		return

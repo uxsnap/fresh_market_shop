@@ -13,12 +13,20 @@ import (
 func (h *CategoriesSubrouter) getCategoryProducts(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 	urlValues := r.URL.Query()
-
-	categoryUid := chi.URLParam(r, "category_uid")
-	urlValues.Set(entity.QueryFieldCategoryUid, categoryUid)
+	urlValues.Set(entity.QueryFieldCategoryUid, chi.URLParam(r, "category_uid"))
 
 	qFilters, err := entity.NewQueryFiltersParser().
 		WithRequired(entity.QueryFieldCategoryUid).
+		WithAllowed(
+			entity.QueryFieldWithCounts,
+			entity.QueryFieldWithPhotos,
+			entity.QueryFieldPage,
+			entity.QueryFieldLimit,
+			entity.QueryFieldCcalMin,
+			entity.QueryFieldCcalMax,
+			entity.QueryFieldCreatedBefore,
+			entity.QueryFieldCreatedAfter,
+		).
 		ParseQuery(urlValues)
 
 	if err != nil {
