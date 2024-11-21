@@ -1,52 +1,47 @@
 "use client";
 
-import { Button, LoadingOverlay, Stack } from "@mantine/core";
+import { Button, ScrollArea, Stack } from "@mantine/core";
 import { AddressItem } from "../AddressItem";
 import { Plus } from "../icons/Plus";
-import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { getAddress } from "@/utils";
+import { UserAddress } from "@/types";
 
 type Props = {
-  activeAddress: string;
-  setActiveAddress: (v: string) => void;
+  activeAddress?: UserAddress;
+  setActiveAddress: (v: UserAddress) => void;
   onAdd: () => void;
+  items?: UserAddress[];
 };
 
 export const AddressItemList = ({
+  items,
   activeAddress,
   setActiveAddress,
   onAdd,
-}: Props) => {
-  const { data, isFetching } = useQuery({
-    queryFn: getUserAddresses,
-    queryKey: [getUserAddresses.queryKey],
-  });
+}: Props) => (
+  <Stack gap={12}>
+    <Button
+      mr={12}
+      onClick={onAdd}
+      mih={48}
+      variant="dashed"
+      leftSection={<Plus fill="var(--mantine-color-accent-0)" />}
+    >
+      Добавить
+    </Button>
 
-  return (
-    <Stack gap={12}>
-      <Button
-        onClick={onAdd}
-        mih={48}
-        variant="dashed"
-        leftSection={<Plus fill="var(--mantine-color-accent-0)" />}
-      >
-        Добавить
-      </Button>
-
-      <LoadingOverlay
-        visible={isFetching}
-        zIndex={1}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "primary.0", type: "bars" }}
-      />
-
-      {(data?.data ?? []).map((address) => (
-        <AddressItem
-          onSelect={() => setActiveAddress(address.addressUid)}
-          active={address.addressUid === activeAddress}
-          key={address.addressUid}
-        />
-      ))}
-    </Stack>
-  );
-};
+    <ScrollArea h={250} offsetScrollbars>
+      <Stack gap={12}>
+        {items?.map((address) => (
+          <AddressItem
+            onSelect={() => setActiveAddress(address)}
+            active={address.addressUid === activeAddress?.addressUid}
+            key={address.addressUid}
+          >
+            {getAddress(address)}
+          </AddressItem>
+        ))}
+      </Stack>
+    </ScrollArea>
+  </Stack>
+);

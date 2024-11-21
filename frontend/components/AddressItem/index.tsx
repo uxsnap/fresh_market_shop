@@ -6,5 +6,12 @@ import { SelectableItem } from "../SelectableItem";
 type Props = Omit<ComponentProps<typeof SelectableItem>, "Icon">;
 
 export const AddressItem = (props: Props) => (
-  <SelectableItem {...props} Icon={LocationCursor} />
+  <SelectableItem
+    {...props}
+    Icon={() => (
+      <LocationCursor
+        fill={`var(--mantine-color-${props.active ? "primary" : "accent"}-0)`}
+      />
+    )}
+  />
 );

@@ -1,15 +1,11 @@
 import client from "../client";
 
 type Body = {
-  latitude: number;
-  longitude: number;
-  cityName: string;
-  streetName: string;
-  houseNumber: string;
-  building: number;
-  floor: number;
-  apartment: number;
-  code: number;
+  addressUid: string;
+  apartment?: number;
+  floor?: number;
+  entrance?: number;
+  code?: number;
 };
 
 export const addUserAddress = (body: Body) => {

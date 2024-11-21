@@ -21,10 +21,10 @@ export const YmapsWrapper = () => {
   const handleAddress = async (coords: number[]) => {
     const geo = await map?.geocode(coords);
 
-    form.setFieldValue(
-      "address",
-      (geo?.geoObjects.get(0) as ExtendedGeoObject).getAddressLine()
-    );
+    // form.setFieldValue(
+    //   "address",
+    //   (geo?.geoObjects.get(0) as ExtendedGeoObject).getAddressLine()
+    // );
   };
 
   useEffect(() => {

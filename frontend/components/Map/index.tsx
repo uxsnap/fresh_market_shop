@@ -1,4 +1,4 @@
-import { Modal } from "@mantine/core";
+import { Box, LoadingOverlay, Modal, Stack } from "@mantine/core";
 
 import styles from "./Map.module.css";
 
@@ -8,6 +8,12 @@ import { MapFormProvider, useMapForm } from "./context";
 import { BottomCards } from "./components/BottomCards";
 import { ModalHeader } from "./components/ModalHeader";
 import { isNotEmpty } from "@mantine/form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addUserAddress } from "@/api/user/addUserAddress";
+import { showErrorNotification, showSuccessNotification } from "@/utils";
+import { AxiosError } from "axios";
+import { ErrorWrapper } from "@/types";
+import { getUserAddresses } from "@/api/user/getUserAdresses";
 
 type Props = {
   opened?: boolean;
@@ -15,6 +21,8 @@ type Props = {
 };
 
 export const Map = ({ opened = false, onClose }: Props) => {
+  const queryClient = useQueryClient();
+
   const handleClose = () => {
     close();
     onClose();
@@ -24,16 +32,31 @@ export const Map = ({ opened = false, onClose }: Props) => {
     mode: "uncontrolled",
     initialValues: {
       city: "",
-      street: "",
+      addressUid: "",
     },
     validate: {
       city: isNotEmpty("Необходимо выбрать город!"),
-      street: isNotEmpty("Необходимо выбрать улицу!"),
+      addressUid: isNotEmpty("Необходимо выбрать улицу!"),
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: addUserAddress,
+    mutationKey: [addUserAddress.queryKey],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [getUserAddresses.queryKey],
+      });
+      showSuccessNotification("Адрес успешно добавлен!");
+      onClose();
+    },
+    onError: (error: AxiosError<{ error: ErrorWrapper }, any>) => {
+      showErrorNotification(error);
     },
   });
 
   const handleSubmit = form.onSubmit((values) => {
-    console.log(values);
+    mutate(values);
   });
 
   return (
@@ -54,9 +77,17 @@ export const Map = ({ opened = false, onClose }: Props) => {
             <form className={styles.form} onSubmit={handleSubmit}>
               <YmapsWrapper />
 
-              <MapFields />
+              <Box h="100%" pos="relative">
+                <LoadingOverlay
+                  visible={isPending}
+                  zIndex={1}
+                  overlayProps={{ radius: "sm", blur: 2 }}
+                  loaderProps={{ color: "primary.0", type: "bars" }}
+                />
+                <MapFields />
 
-              <BottomCards />
+                <BottomCards />
+              </Box>
             </form>
           </MapFormProvider>
         </Modal.Body>

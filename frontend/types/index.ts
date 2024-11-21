@@ -114,7 +114,7 @@ export type UserAddress = {
   houseNumber: string;
   floors: number;
   entrances: number;
-  apartments: number;
+  apartment: number;
   codes: number;
   createdAt: Date;
   updatedAt: Date;

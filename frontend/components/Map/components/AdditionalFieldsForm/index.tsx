@@ -35,8 +35,8 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Подъезд"
           placeholder="Введите подъезд"
-          key={form.key("building")}
-          {...form.getInputProps("building")}
+          key={form.key("entrance")}
+          {...form.getInputProps("entrance")}
         />
       </Stack>
 

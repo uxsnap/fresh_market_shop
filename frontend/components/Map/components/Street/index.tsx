@@ -41,9 +41,9 @@ export const Street = () => {
       nothingFoundMessage="Ничего не найдено"
       allowDeselect={false}
       filter={({ options }) => options}
-      key={form.key("street")}
+      key={form.key("addressUid")}
       withAsterisk
-      {...form.getInputProps("street")}
+      {...form.getInputProps("addressUid")}
     />
   );
 };

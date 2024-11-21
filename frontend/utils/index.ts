@@ -1,8 +1,10 @@
 import {
+  Address,
   ErrorWrapper,
   ProductItem,
   ProductWithPhotos,
   RecipeStep,
+  UserAddress,
 } from "@/types";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
@@ -81,6 +83,10 @@ export const isDateNull = (date?: string) => {
   const d = dayJs(date);
 
   return !date || !d.isValid() || d.year() <= 1;
+};
+
+export const getAddress = (address: UserAddress) => {
+  return `${address.cityName}, ${address.streetName} ${address.houseNumber} ${address.apartment !== 0 ? `кв. ${address.apartment}` : ""}`;
 };
 
 export * from "./img";
