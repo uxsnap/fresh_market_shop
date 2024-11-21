@@ -4,6 +4,7 @@ import { CreditCardItemList } from "@/components/CreditCardItemList";
 import { Box, Stack, Title } from "@mantine/core";
 
 import styles from "./OrderMain.module.css";
+import { Addresses } from "../../profile/Addresses";
 
 export const OrderMain = () => {
   return (
@@ -19,6 +20,8 @@ export const OrderMain = () => {
           </Title>
 
           <CreditCardItemList />
+
+          <Addresses />
         </Stack>
       </Stack>
     </Box>

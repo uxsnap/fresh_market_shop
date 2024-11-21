@@ -10,16 +10,14 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   onNavbar: () => void;
+  opened: boolean;
 };
 
-export const Header = memo(({ onNavbar }: Props) => {
-  const [opened, { toggle }] = useDisclosure();
-
+export const Header = memo(({ opened, onNavbar }: Props) => {
   const router = useRouter();
 
   const handleNavbar = () => {
     onNavbar();
-    toggle();
   };
 
   return (

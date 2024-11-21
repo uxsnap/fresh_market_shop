@@ -13,3 +13,7 @@
     background-color: var(--mantine-color-bg-0);
   }
 }
+
+.addressButton {
+  margin-right: 12px;
+}

@@ -4,6 +4,7 @@ import { UserInfo } from "@/components/pages/profile/UserInfo";
 import { Box, Group, Stack } from "@mantine/core";
 
 import styles from "./profile.module.css";
+import { ShadowBox } from "@/components/ShadowBox";
 
 export default function Profile() {
   return (
@@ -12,7 +13,9 @@ export default function Profile() {
         <UserInfo />
 
         <Stack gap={16} w="100%">
-          <Addresses />
+          <ShadowBox w="100%" mah={312} style={{ overflowY: "auto" }}>
+            <Addresses />
+          </ShadowBox>
 
           <Orders />
         </Stack>

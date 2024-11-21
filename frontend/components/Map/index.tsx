@@ -14,18 +14,17 @@ import { showErrorNotification, showSuccessNotification } from "@/utils";
 import { AxiosError } from "axios";
 import { ErrorWrapper } from "@/types";
 import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { useMapStore } from "@/store/map";
 
-type Props = {
-  opened?: boolean;
-  onClose: () => void;
-};
-
-export const Map = ({ opened = false, onClose }: Props) => {
+export const Map = () => {
   const queryClient = useQueryClient();
+
+  const isMapOpen = useMapStore((s) => s.isMapOpen);
+  const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
 
   const handleClose = () => {
     close();
-    onClose();
+    setIsMapOpen(false);
   };
 
   const form = useMapForm({
@@ -48,7 +47,7 @@ export const Map = ({ opened = false, onClose }: Props) => {
         queryKey: [getUserAddresses.queryKey],
       });
       showSuccessNotification("Адрес успешно добавлен!");
-      onClose();
+      setIsMapOpen(false);
     },
     onError: (error: AxiosError<{ error: ErrorWrapper }, any>) => {
       showErrorNotification(error);
@@ -66,7 +65,7 @@ export const Map = ({ opened = false, onClose }: Props) => {
       }}
       radius={0}
       fullScreen
-      opened={opened}
+      opened={isMapOpen}
       onClose={handleClose}
     >
       <Modal.Content className={styles.content}>

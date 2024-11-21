@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShell } from "@mantine/core";
+import { AppShell, useMatches } from "@mantine/core";
 import { Header } from "../Header";
 import { SideMenu } from "../SideMenu";
 import { PropsWithChildren, useEffect } from "react";
@@ -21,6 +21,11 @@ const MainApp = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
   const router = useRouter();
   const setLogged = useAuthStore((s) => s.setLogged);
+
+  const isDesktop = useMatches({
+    base: false,
+    md: true,
+  });
 
   const [mobileOpened, { toggle: toggleMobile, close: closeMobile }] =
     useDisclosure();
@@ -65,7 +70,10 @@ const MainApp = ({ children }: PropsWithChildren) => {
       padding="md"
     >
       <AppShell.Header zIndex={3}>
-        <Header onNavbar={handleToggle} />
+        <Header
+          opened={isDesktop ? desktopOpened : mobileOpened}
+          onNavbar={handleToggle}
+        />
       </AppShell.Header>
 
       <AppShell.Navbar zIndex={1} px={12} py={20}>
