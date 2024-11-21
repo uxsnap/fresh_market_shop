@@ -103,6 +103,23 @@ export type User = {
   updatedAt: string;
 };
 
+export type UserAddress = {
+  uid: string;
+  userUid: string;
+  addressUid: string;
+  latitude: number;
+  longitude: number;
+  cityName: string;
+  streetName: string;
+  houseNumber: string;
+  floors: number;
+  entrances: number;
+  apartments: number;
+  codes: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type ErrorWrapper = {
   type: string;
   message: string;

@@ -7,6 +7,7 @@ import { YmapsWrapper } from "./components/YmapsWrapper";
 import { MapFormProvider, useMapForm } from "./context";
 import { BottomCards } from "./components/BottomCards";
 import { ModalHeader } from "./components/ModalHeader";
+import { isNotEmpty } from "@mantine/form";
 
 type Props = {
   opened?: boolean;
@@ -24,6 +25,10 @@ export const Map = ({ opened = false, onClose }: Props) => {
     initialValues: {
       city: "",
       street: "",
+    },
+    validate: {
+      city: isNotEmpty("Необходимо выбрать город!"),
+      street: isNotEmpty("Необходимо выбрать улицу!"),
     },
   });
 

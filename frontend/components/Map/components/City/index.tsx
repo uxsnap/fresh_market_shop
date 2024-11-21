@@ -32,6 +32,7 @@ export const City = () => {
       key={form.key("city")}
       data={data ?? []}
       allowDeselect={false}
+      withAsterisk
       {...form.getInputProps("city")}
     />
   );

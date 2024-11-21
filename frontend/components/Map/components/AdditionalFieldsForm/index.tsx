@@ -20,8 +20,8 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Квартира"
           placeholder="Введите квартиру"
-          key={form.key("flat")}
-          {...form.getInputProps("flat")}
+          key={form.key("apartment")}
+          {...form.getInputProps("apartment")}
         />
 
         <NumberInput
@@ -35,8 +35,8 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Подъезд"
           placeholder="Введите подъезд"
-          key={form.key("entrance")}
-          {...form.getInputProps("entrance")}
+          key={form.key("building")}
+          {...form.getInputProps("building")}
         />
       </Stack>
 
