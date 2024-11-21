@@ -12,6 +12,8 @@ import (
 const productPhotosTableName = "product_photos"
 
 type ProductPhotoRow struct {
+	NewMaker[ProductPhotoRow]
+
 	Uid        pgtype.UUID `json:"id"`
 	ProductUid pgtype.UUID `json:"product_uid"`
 	ImgPath    string      `json:"img_path"`
@@ -75,25 +77,13 @@ func (pp *ProductPhotoRow) ConditionProductUidEqual() sq.Eq {
 }
 
 type ProductPhotoRows struct {
-	rows []*ProductPhotoRow
+	*Rows[*ProductPhotoRow, entity.ProductPhoto]
 }
 
 func NewProductPhotoRows() *ProductPhotoRows {
-	return &ProductPhotoRows{}
-}
-
-func (ppr *ProductPhotoRows) ScanAll(rows pgx.Rows) error {
-	ppr.rows = []*ProductPhotoRow{}
-	for rows.Next() {
-		newRow := &ProductPhotoRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		ppr.rows = append(ppr.rows, newRow)
+	return &ProductPhotoRows{
+		&Rows[*ProductPhotoRow, entity.ProductPhoto]{},
 	}
-
-	return nil
 }
 
 func (ppr *ProductPhotoRows) FromJson(bts []byte) error {
@@ -104,16 +94,4 @@ func (ppr *ProductPhotoRows) FromJson(bts []byte) error {
 		return err
 	}
 	return nil
-}
-
-func (ppr *ProductPhotoRows) ToEntity() []entity.ProductPhoto {
-	if len(ppr.rows) == 0 {
-		return nil
-	}
-
-	res := make([]entity.ProductPhoto, len(ppr.rows))
-	for i := 0; i < len(ppr.rows); i++ {
-		res[i] = ppr.rows[i].ToEntity()
-	}
-	return res
 }

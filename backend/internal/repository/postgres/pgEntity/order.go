@@ -16,6 +16,7 @@ var ordersTableFields = []string{
 }
 
 type OrderRow struct {
+	NewMaker[OrderRow]
 	Uid       pgtype.UUID
 	UserUid   pgtype.UUID
 	Num       int64
@@ -118,40 +119,10 @@ func (p *OrderRow) ValuesForUpdate() []interface{} {
 	}
 }
 
-type OrderRows struct {
-	rows []*OrderRow
-}
-
-func NewOrderRows() *OrderRows {
-	return &OrderRows{}
-}
-
-func (pr *OrderRows) ScanAll(rows pgx.Rows) error {
-	pr.rows = []*OrderRow{}
-	for rows.Next() {
-		newRow := &OrderRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		pr.rows = append(pr.rows, newRow)
-	}
-
-	return nil
-}
-
-func (pr *OrderRows) ToEntity() []entity.Order {
-	if len(pr.rows) == 0 {
-		return nil
-	}
-
-	res := make([]entity.Order, len(pr.rows))
-	for i := 0; i < len(pr.rows); i++ {
-		res[i] = pr.rows[i].ToEntity()
-	}
-	return res
-}
-
 func (pr *OrderRow) ConditionUidEqual() sq.Eq {
 	return sq.Eq{"uid": pr.Uid}
+}
+
+func NewOrderRows() *Rows[*OrderRow, entity.Order] {
+	return &Rows[*OrderRow, entity.Order]{}
 }

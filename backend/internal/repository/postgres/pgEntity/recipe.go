@@ -12,6 +12,8 @@ import (
 const recipesTableName = "recipes"
 
 type RecipeRow struct {
+	NewMaker[RecipeRow]
+
 	Uid         pgtype.UUID
 	Name        string
 	CookingTime pgtype.Interval
@@ -43,16 +45,14 @@ func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 	return rr, nil
 }
 
-func (rr *RecipeRow) ToEntity() (entity.Recipe, error) {
-	r := entity.Recipe{
+func (rr *RecipeRow) ToEntity() entity.Recipe {
+	return entity.Recipe{
 		Uid:         rr.Uid.Bytes,
 		Name:        rr.Name,
 		CookingTime: rr.CookingTime.Microseconds,
 		CreatedAt:   rr.CreatedAt.Time,
 		UpdatedAt:   rr.UpdatedAt.Time,
 	}
-
-	return r, nil
 }
 
 var recipesTableColumns = []string{"uid", "name", "created_at", "updated_at", "cooking_time"}
@@ -101,41 +101,6 @@ func (rr *RecipeRow) ConditionNameLike() sq.Like {
 	}
 }
 
-type RecipesRows struct {
-	Rows []*RecipeRow
-}
-
-func NewRecipesRows() *RecipesRows {
-	return &RecipesRows{}
-}
-
-func (rr *RecipesRows) ScanAll(rows pgx.Rows) error {
-	rr.Rows = []*RecipeRow{}
-
-	for rows.Next() {
-		newRow := &RecipeRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		rr.Rows = append(rr.Rows, newRow)
-	}
-
-	return nil
-}
-
-func (rr *RecipesRows) ToEntity() ([]entity.Recipe, error) {
-	if len(rr.Rows) == 0 {
-		return nil, nil
-	}
-
-	res := make([]entity.Recipe, len(rr.Rows))
-	for i := 0; i < len(rr.Rows); i++ {
-		val, err := rr.Rows[i].ToEntity()
-		if err != nil {
-			return nil, err
-		}
-		res[i] = val
-	}
-	return res, nil
+func NewRecipesRows() *Rows[*RecipeRow, entity.Recipe] {
+	return &Rows[*RecipeRow, entity.Recipe]{}
 }

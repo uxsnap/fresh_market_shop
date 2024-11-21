@@ -9,6 +9,8 @@ import (
 const addressTable = "addresses"
 
 type AddressRow struct {
+	NewMaker[AddressRow]
+
 	Uid         pgtype.UUID
 	CityUid     pgtype.UUID
 	Street      string
@@ -73,39 +75,6 @@ func (a *AddressRow) ValuesForScan() []interface{} {
 	}
 }
 
-type AddressesRows struct {
-	rows []*AddressRow
-}
-
-func NewAddressesRows() *AddressesRows {
-	return &AddressesRows{}
-}
-
-func (cr *AddressesRows) ScanAll(rows pgx.Rows) error {
-	for rows.Next() {
-		newRow := &AddressRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		cr.rows = append(cr.rows, newRow)
-	}
-
-	return nil
-}
-
-func (cr *AddressesRows) ToEntity() []entity.Address {
-	if len(cr.rows) == 0 {
-		return []entity.Address{}
-	}
-
-	res := make([]entity.Address, len(cr.rows))
-	for i := 0; i < len(cr.rows); i++ {
-		res[i] = cr.rows[i].ToEntity()
-	}
-	return res
-}
-
 func (a *AddressRow) ColumnsForUpdate() []string {
 	return []string{
 		"street", "house_number", "latitude", "longitude",
@@ -114,4 +83,8 @@ func (a *AddressRow) ColumnsForUpdate() []string {
 
 func (a *AddressRow) ValuesForUpdate() []interface{} {
 	return []interface{}{a.Street, a.HouseNumber, a.Latitude, a.Longitude}
+}
+
+func NewAddressesRows() *Rows[*AddressRow, entity.Address] {
+	return &Rows[*AddressRow, entity.Address]{}
 }

@@ -4,6 +4,12 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+type NewMaker[T any] struct{}
+
+func (m NewMaker[T]) New() *T {
+	return new(T)
+}
+
 type ToEntityConverter[K any] interface {
 	ToEntity() K
 }
@@ -48,4 +54,8 @@ func (rs *Rows[T, K]) ToEntity() []K {
 		res[i] = rs.rows[i].ToEntity()
 	}
 	return res
+}
+
+func (rs *Rows[T, K]) Rows() []T {
+	return rs.rows
 }

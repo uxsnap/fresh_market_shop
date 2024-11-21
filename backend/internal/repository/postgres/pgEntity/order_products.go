@@ -22,12 +22,8 @@ func NewOrderProductsRow() *OrderProductsRow {
 	return &OrderProductsRow{}
 }
 
-type OrderProductsRows struct {
-	rows []*OrderProductsRow
-}
-
-func NewOrderProductsRows() *OrderProductsRows {
-	return &OrderProductsRows{}
+func (p *OrderProductsRow) Columns() []string {
+	return ordersProductsTableFields
 }
 
 func (p *OrderProductsRow) Table() string {

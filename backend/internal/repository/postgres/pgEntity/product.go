@@ -16,6 +16,8 @@ var productsTableFields = []string{
 }
 
 type ProductRow struct {
+	NewMaker[ProductRow]
+
 	Uid         pgtype.UUID
 	CategoryUid pgtype.UUID
 	Name        string
@@ -123,40 +125,6 @@ func (p *ProductRow) ValuesForUpdate() []interface{} {
 	}
 }
 
-type ProductRows struct {
-	rows []*ProductRow
-}
-
-func NewProductRows() *ProductRows {
-	return &ProductRows{}
-}
-
-func (pr *ProductRows) ScanAll(rows pgx.Rows) error {
-	pr.rows = []*ProductRow{}
-	for rows.Next() {
-		newRow := &ProductRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		pr.rows = append(pr.rows, newRow)
-	}
-
-	return nil
-}
-
-func (pr *ProductRows) ToEntity() []entity.Product {
-	if len(pr.rows) == 0 {
-		return nil
-	}
-
-	res := make([]entity.Product, len(pr.rows))
-	for i := 0; i < len(pr.rows); i++ {
-		res[i] = pr.rows[i].ToEntity()
-	}
-	return res
-}
-
 func (pr *ProductRow) ConditionUidEqual() sq.Eq {
 	return sq.Eq{"uid": pr.Uid}
 }
@@ -169,4 +137,8 @@ func (pr *ProductRow) ConditionNameLike() sq.Like {
 	return sq.Like{
 		"LOWER(name)": "%" + strings.ToLower(pr.Name) + "%",
 	}
+}
+
+func NewProductRows() *Rows[*ProductRow, entity.Product] {
+	return &Rows[*ProductRow, entity.Product]{}
 }

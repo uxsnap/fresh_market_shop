@@ -10,6 +10,8 @@ import (
 const userPaymentCardsTable = "payment_cards"
 
 type UserPaymentCardRow struct {
+	NewMaker[UserPaymentCardRow]
+
 	Uid         pgtype.UUID
 	UserUid     pgtype.UUID
 	ExternalUid pgtype.UUID
@@ -18,10 +20,6 @@ type UserPaymentCardRow struct {
 }
 
 func NewUserPaymentCardRow() *UserPaymentCardRow {
-	return &UserPaymentCardRow{}
-}
-
-func (ur *UserPaymentCardRow) New() *UserPaymentCardRow {
 	return &UserPaymentCardRow{}
 }
 

@@ -40,13 +40,7 @@ func (r *RecipesRepository) GetRecipeByUid(ctx context.Context, uid uuid.UUID) (
 		return entity.Recipe{}, false, errors.WithStack(err)
 	}
 
-	res, err := row.ToEntity()
-	if err != nil {
-		log.Printf("failed to convert recipe %s to entity: %v", uid, err)
-		return entity.Recipe{}, true, errors.WithStack(err)
-	}
-
-	return res, true, nil
+	return row.ToEntity(), true, nil
 }
 
 func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Recipe, error) {
@@ -69,12 +63,7 @@ func (r *RecipesRepository) GetRecipesByNameLike(ctx context.Context, name strin
 		}
 	}
 
-	res, err := rows.ToEntity()
-	if err != nil {
-		log.Printf("failed to convert recipes to entity: %v", err)
-		return nil, errors.WithStack(err)
-	}
-	return res, nil
+	return rows.ToEntity(), nil
 }
 
 func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Recipe, error) {
@@ -122,11 +111,11 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 
 	recipeRows := pgEntity.NewRecipesRows()
 	if err := recipeRows.ScanAll(rows); err != nil {
-		log.Printf("failed to get recipes: %v", err)
+		log.Printf("failed to scan recipes: %v", err)
 		return nil, errors.WithStack(err)
 	}
 
-	return recipeRows.ToEntity()
+	return recipeRows.ToEntity(), nil
 }
 
 func (r *RecipesRepository) UpdateRecipe(ctx context.Context, recipe entity.Recipe) error {
@@ -185,5 +174,5 @@ func (r *RecipesRepository) GetRecipeSteps(ctx context.Context, uid uuid.UUID) (
 		return nil, errors.WithStack(err)
 	}
 
-	return recipeRows.ToEntity()
+	return recipeRows.ToEntity(), nil
 }

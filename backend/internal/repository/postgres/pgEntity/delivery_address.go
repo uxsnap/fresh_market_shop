@@ -10,6 +10,8 @@ import (
 const deliveryAddressesTable = "delivery_addresses"
 
 type DeliveryAddressRow struct {
+	NewMaker[DeliveryAddressRow]
+
 	Uid        pgtype.UUID
 	UserUid    pgtype.UUID
 	AddressUid pgtype.UUID
@@ -22,10 +24,6 @@ type DeliveryAddressRow struct {
 }
 
 func NewDeliveryAddressRow() *DeliveryAddressRow {
-	return &DeliveryAddressRow{}
-}
-
-func (dr *DeliveryAddressRow) New() *DeliveryAddressRow {
 	return &DeliveryAddressRow{}
 }
 

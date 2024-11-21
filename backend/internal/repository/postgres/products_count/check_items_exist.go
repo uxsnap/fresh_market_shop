@@ -33,12 +33,12 @@ func (r *ProductsCountRepository) CheckIfAllItemsExist(ctx context.Context, prod
 
 	fmt.Println(productCountRows, productsCounts.Products)
 
-	if len(productCountRows.GetRows()) != len(productsCounts.Products) {
+	if len(productCountRows.Rows()) != len(productsCounts.Products) {
 		log.Printf("items does not match")
 		return errorWrapper.NewError(errorWrapper.OrderCreateValidation, "продукты не существуют, либо их количество не совпадает")
 	}
 
-	for _, row := range productCountRows.GetRows() {
+	for _, row := range productCountRows.Rows() {
 		if productsUidToCountMap[row.ProductUid.Bytes] > row.StockQuantity {
 			log.Printf("items does not match")
 			return errorWrapper.NewError(errorWrapper.OrderCreateValidation, "продукт не существует, либо количество не совпадает")

@@ -9,6 +9,8 @@ import (
 const cityTable = "cities"
 
 type CityRow struct {
+	NewMaker[CityRow]
+
 	Uid  pgtype.UUID
 	Name string
 }
@@ -55,39 +57,6 @@ func (dr *CityRow) Scan(row pgx.Row) error {
 	)
 }
 
-type CitiesRows struct {
-	rows []*CityRow
-}
-
-func NewCitiesRows() *CitiesRows {
-	return &CitiesRows{}
-}
-
-func (cr *CitiesRows) ScanAll(rows pgx.Rows) error {
-	for rows.Next() {
-		newRow := &CityRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		cr.rows = append(cr.rows, newRow)
-	}
-
-	return nil
-}
-
-func (cr *CitiesRows) ToEntity() []entity.City {
-	if len(cr.rows) == 0 {
-		return nil
-	}
-
-	res := make([]entity.City, len(cr.rows))
-	for i := 0; i < len(cr.rows); i++ {
-		res[i] = cr.rows[i].ToEntity()
-	}
-	return res
-}
-
 func (c *CityRow) ColumnsForUpdate() []string {
 	return []string{
 		"name",
@@ -96,4 +65,8 @@ func (c *CityRow) ColumnsForUpdate() []string {
 
 func (c *CityRow) ValuesForUpdate() []interface{} {
 	return []interface{}{c.Name}
+}
+
+func NewCitiesRows() *Rows[*CityRow, entity.City] {
+	return &Rows[*CityRow, entity.City]{}
 }

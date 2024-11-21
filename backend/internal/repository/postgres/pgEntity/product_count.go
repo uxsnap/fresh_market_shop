@@ -11,12 +11,10 @@ import (
 const productsCountTableName = "products_count"
 
 type ProductCountRow struct {
+	NewMaker[ProductCountRow]
+
 	ProductUid    pgtype.UUID
 	StockQuantity int64
-}
-
-type ProductCountRows struct {
-	rows []*ProductCountRow
 }
 
 func NewProductCountRow(productUid uuid.UUID, count int64) *ProductCountRow {
@@ -27,10 +25,6 @@ func NewProductCountRow(productUid uuid.UUID, count int64) *ProductCountRow {
 		},
 		StockQuantity: count,
 	}
-}
-
-func NewProductCountRows() *ProductCountRows {
-	return &ProductCountRows{}
 }
 
 func (pc *ProductCountRow) Count() int64 {
@@ -81,21 +75,13 @@ func (op *ProductCountRow) FromEntity(productCount entity.ProductCount) *Product
 	}
 }
 
-func (pr *ProductCountRows) ScanAll(rows pgx.Rows) error {
-	pr.rows = []*ProductCountRow{}
-
-	for rows.Next() {
-		newRow := &ProductCountRow{}
-
-		if err := newRow.Scan(rows); err != nil {
-			return err
-		}
-		pr.rows = append(pr.rows, newRow)
+func (op *ProductCountRow) ToEntity() entity.ProductCount {
+	return entity.ProductCount{
+		ProductUid: op.ProductUid.Bytes,
+		Count:      op.StockQuantity,
 	}
-
-	return nil
 }
 
-func (pr *ProductCountRows) GetRows() []*ProductCountRow {
-	return pr.rows
+func NewProductCountRows() *Rows[*ProductCountRow, entity.ProductCount] {
+	return &Rows[*ProductCountRow, entity.ProductCount]{}
 }
