@@ -4,10 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getAddresses } from "@/api/address/getAddresses";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Select } from "@mantine/core";
+import { useMapStore } from "@/store/map";
 
 export const Street = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [curCity, setCurCity] = useState("");
+
+  const searchValue = useMapStore((s) => s.searchValue);
+  const setSearchValue = useMapStore((s) => s.setSearchValue);
+
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
 

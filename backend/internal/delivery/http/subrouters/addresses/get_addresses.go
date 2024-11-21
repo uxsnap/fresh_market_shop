@@ -31,7 +31,7 @@ func (h *AddressesSubrouter) handleUrlValues(r *http.Request) url.Values {
 		return urlValues
 	}
 
-	urlValues.Set(entity.QueryFieldName, splittedName[0])
+	urlValues.Set(entity.QueryFieldName, strings.Join(splittedName[:len(splittedName)-1], " "))
 
 	if len(splittedName) > 1 && splittedName[0] != splittedName[len(splittedName)-1] {
 		urlValues.Set(entity.QueryFieldHouseNumber, splittedName[len(splittedName)-1])

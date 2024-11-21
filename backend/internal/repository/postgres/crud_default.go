@@ -2,6 +2,7 @@ package repositoryPostgres
 
 import (
 	"context"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v4"
@@ -53,6 +54,8 @@ func (r *BasePgRepository) GetWithLimit(ctx context.Context, row Row, dest Rows,
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(stmt)
 
 	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {

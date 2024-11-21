@@ -6,25 +6,29 @@ import {
   MAP_OPTIONS,
   PLACEMARK_OPTIONS,
 } from "./constants";
-import { useEffect, useState } from "react";
-import { useMapFormContext } from "../../context";
+import { useEffect, useRef, useState } from "react";
 import { YMapsApi } from "@pbe/react-yandex-maps/typings/util/typing";
 import { useMapStore } from "@/store/map";
+import ymaps from "yandex-maps";
 
 export const YmapsWrapper = () => {
   const [coordinates, setCoordinates] = useState<number[][]>([[]]);
-  const setMap = useMapStore((s) => s.setMap);
-  const map = useMapStore((s) => s.map);
 
-  const form = useMapFormContext();
+  const mapRef = useRef<ymaps.Map>();
+  const map = useMapStore((s) => s.map);
+  const setMap = useMapStore((s) => s.setMap);
+
+  const setSearchValue = useMapStore((s) => s.setSearchValue);
 
   const handleAddress = async (coords: number[]) => {
     const geo = await map?.geocode(coords);
+    const geoObject = geo?.geoObjects.get(0) as ExtendedGeoObject;
 
-    // form.setFieldValue(
-    //   "address",
-    //   (geo?.geoObjects.get(0) as ExtendedGeoObject).getAddressLine()
-    // );
+    // @ts-ignore
+    console.log(geoObject.getLocalities(), geoObject.getThoroughfare());
+
+    setSearchValue(geoObject.getThoroughfare());
+    setCoordinates(coords as unknown as number[][]);
   };
 
   useEffect(() => {
@@ -43,6 +47,14 @@ export const YmapsWrapper = () => {
     setCoordinates(coords);
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      mapRef.current?.setCenter(DEFAULT_COORDS.center, DEFAULT_COORDS.zoom, {
+        duration: 15,
+      });
+    }, 2000);
+  }, [map]);
+
   return (
     <YMaps
       query={{
@@ -57,6 +69,7 @@ export const YmapsWrapper = () => {
         onClick={handleCoords}
         onLoad={(ymaps: YMapsApi) => setMap(ymaps)}
         options={MAP_OPTIONS}
+        instanceRef={mapRef}
       >
         {coordinates.length && (
           <Placemark geometry={coordinates} options={PLACEMARK_OPTIONS} />
