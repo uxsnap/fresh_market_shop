@@ -10,7 +10,11 @@ import {
 } from "@/services/proxy/paymentCards";
 import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
-import { proxyUser } from "@/services/proxy/user";
+import {
+  proxyAddUserAddress,
+  proxyUser,
+  proxyUserAddresses,
+} from "@/services/proxy/user";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
@@ -30,6 +34,8 @@ export async function GET(req: NextRequest) {
       return proxyUser();
     case "/payments/cards/by_user":
       return proxyGetPaymentCardsByUser();
+    case "/user/addresses":
+      return proxyUserAddresses();
   }
 
   return proxyDefault(req);
@@ -52,6 +58,8 @@ export async function POST(req: NextRequest) {
       return proxyUpdatePhoto(req);
     case "/payments/cards":
       return proxyAddPaymentCard(req);
+    case "/user/addresses":
+      return proxyAddUserAddress(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

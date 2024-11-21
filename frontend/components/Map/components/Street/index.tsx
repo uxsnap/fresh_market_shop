@@ -42,6 +42,7 @@ export const Street = () => {
       allowDeselect={false}
       filter={({ options }) => options}
       key={form.key("street")}
+      withAsterisk
       {...form.getInputProps("street")}
     />
   );
