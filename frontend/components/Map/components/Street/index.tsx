@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMapFormContext } from "../../context";
 import { useQuery } from "@tanstack/react-query";
 import { getAddresses } from "@/api/address/getAddresses";
@@ -12,6 +12,8 @@ export const Street = () => {
   const searchValue = useMapStore((s) => s.searchValue);
   const setSearchValue = useMapStore((s) => s.setSearchValue);
 
+  const setMapActiveAddress = useMapStore((s) => s.setMapActiveAddress);
+
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
 
@@ -23,13 +25,20 @@ export const Street = () => {
     queryFn: () => getAddresses(curCity, debounced),
     queryKey: [getAddresses.queryKey, debounced],
     enabled: !!debounced.length,
-    select(data) {
-      return data.data.map((s) => ({
-        label: `${s.street} ${s.houseNumber}`,
-        value: s.uid,
-      }));
-    },
   });
+
+  form.watch("addressUid", ({ value }) => {
+    const curMapActiveAddress = data?.data.find((a) => a.uid === value);
+
+    setMapActiveAddress(curMapActiveAddress);
+  });
+
+  const preparedData = useMemo(() => {
+    return data?.data.map((a) => ({
+      label: `${a.street} ${a.houseNumber}`,
+      value: a.uid,
+    }));
+  }, [data]);
 
   return (
     <Select
@@ -41,7 +50,7 @@ export const Street = () => {
       searchValue={searchValue}
       onSearchChange={setSearchValue}
       searchable
-      data={data ?? []}
+      data={preparedData ?? []}
       nothingFoundMessage="Ничего не найдено"
       allowDeselect={false}
       filter={({ options }) => options}

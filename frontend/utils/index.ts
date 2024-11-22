@@ -1,3 +1,4 @@
+import { ExtendedGeoObject } from "@/components/Map/components/YmapsWrapper/constants";
 import {
   Address,
   ErrorWrapper,
@@ -87,6 +88,15 @@ export const isDateNull = (date?: string) => {
 
 export const getAddress = (address: UserAddress) => {
   return `${address.cityName}, ${address.streetName} ${address.houseNumber} ${address.apartment !== 0 ? `кв. ${address.apartment}` : ""}`;
+};
+
+export const getStreetInfoFromGeo = (geoObject: ExtendedGeoObject) => {
+  const splittedAddressLine = geoObject.getAddressLine().split(", ");
+
+  return {
+    street: splittedAddressLine[1].replace("улица", "").trim(),
+    houseNumber: splittedAddressLine[2].split(" ")[0],
+  };
 };
 
 export * from "./img";
