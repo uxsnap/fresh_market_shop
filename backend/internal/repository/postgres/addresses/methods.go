@@ -49,28 +49,30 @@ func (r *AddressesRepository) GetAddresses(ctx context.Context, qFilters entity.
 		cond = squirrel.And{cond, squirrel.NotEq{"house_number": "NULL"}}
 	}
 
-	if qFilters.Limit != 0 {
-		cond = squirrel.And{cond, squirrel.Eq{"limit": qFilters.Limit}}
-	}
-	if qFilters.Offset != 0 {
-		cond = squirrel.And{cond, squirrel.Eq{"offset": qFilters.Offset}}
-	}
-
-	sql, args, err := squirrel.Select(
+	sql := squirrel.Select(
 		withPrefix("a", addressRow.Columns())...,
-	).From(
+	).PlaceholderFormat(squirrel.Dollar).From(
 		addressRow.Table() + " a",
 	).LeftJoin(
 		"addresses_streets_vectors av on a.uid=av.address_uid",
 	).Where(
 		fmt.Sprintf("av.street_vector @@ plainto_tsquery('russian','%s')", qFilters.Name),
-	).Where(cond).ToSql()
+	).Where(cond)
+
+	if qFilters.Limit != 0 {
+		sql = sql.Limit(qFilters.Limit)
+	}
+	if qFilters.Offset != 0 {
+		sql = sql.Offset(qFilters.Offset)
+	}
+
+	stmt, args, err := sql.ToSql()
 	if err != nil {
 		log.Printf("failed to build sql query: %v", err)
 		return nil, errors.WithStack(err)
 	}
 
-	rows, err := r.DB().Query(ctx, sql, args...)
+	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {
 		log.Printf("failed to get addresses: %v", err)
 		return nil, errors.WithStack(err)
