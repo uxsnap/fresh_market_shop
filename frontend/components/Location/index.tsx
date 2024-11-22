@@ -10,10 +10,12 @@ import { AddressItemList } from "../AddressItemList";
 import { useClickOutside } from "@mantine/hooks";
 import { getAddress } from "@/utils";
 import { useMapStore } from "@/store/map";
+import { useAuthStore } from "@/store/auth";
 
 export const Location = () => {
   const [opened, setOpened] = useState(false);
 
+  const logged = useAuthStore((s) => s.logged);
   const activeAddress = useMapStore((s) => s.activeAddress);
 
   const isMapOpen = useMapStore((s) => s.isMapOpen);
@@ -41,6 +43,10 @@ export const Location = () => {
     setOpened(false);
     setIsMapOpen(false);
   }, [popupDisabled]);
+
+  if (!logged) {
+    return null;
+  }
 
   return (
     <>

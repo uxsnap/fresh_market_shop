@@ -1,4 +1,4 @@
-import { Box, LoadingOverlay, Modal, Stack } from "@mantine/core";
+import { Box, LoadingOverlay, Modal } from "@mantine/core";
 
 import styles from "./Map.module.css";
 
@@ -76,7 +76,7 @@ export const Map = () => {
             <form className={styles.form} onSubmit={handleSubmit}>
               <YmapsWrapper />
 
-              <Box h="100%" pos="relative">
+              <Box className={styles.mainBox}>
                 <LoadingOverlay
                   visible={isPending}
                   zIndex={1}

@@ -1,10 +1,9 @@
 .root {
   background: rgba(var(--mantine-color-primary-0), 0.3);
 
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
+  z-index: 10;
+  height: 100%;
 
   @media (min-width: $mantine-breakpoint-md) {
     display: none !important;

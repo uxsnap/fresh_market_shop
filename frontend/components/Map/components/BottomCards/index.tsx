@@ -33,7 +33,7 @@ export const BottomCards = () => {
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
   return (
-    <Stack gap={12} p={16} className={styles.root}>
+    <Stack justify="flex-end" gap={12} p={16} className={styles.root}>
       <Carousel slideGap="sm" align="start" dragFree withControls={false}>
         {(data?.data ?? []).map((item) => (
           <Carousel.Slide key={item.uid} flex="1 0 auto">
