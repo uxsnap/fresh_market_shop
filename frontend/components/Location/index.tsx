@@ -60,7 +60,7 @@ export const Location = () => {
     <>
       <Popover
         opened={opened}
-        width={540}
+        width={600}
         position="bottom"
         withArrow
         shadow="md"
