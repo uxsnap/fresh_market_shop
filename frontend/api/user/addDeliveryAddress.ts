@@ -8,8 +8,8 @@ type Body = {
   code?: number;
 };
 
-export const addUserAddress = (body: Body) => {
+export const addDeliveryAddress = (body: Body) => {
   return client.post("/user/addresses", body);
 };
 
-addUserAddress.queryKey = "addUserAddress";
+addDeliveryAddress.queryKey = "addDeliveryAddress";

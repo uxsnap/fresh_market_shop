@@ -3,11 +3,17 @@
 import { Button, ScrollArea, Stack } from "@mantine/core";
 import { AddressItem } from "../AddressItem";
 import { Plus } from "../icons/Plus";
-import { getAddress } from "@/utils";
+import {
+  getAddress,
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
 import { useMapStore } from "@/store/map";
 import { useCallback, useEffect } from "react";
 import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { deleteDeliveryAddress } from "@/api/user/deleteDeliveryAddress";
 
 type Props = {
   classNames?: {
@@ -16,6 +22,8 @@ type Props = {
 };
 
 export const AddressItemList = ({ classNames }: Props) => {
+  const queryClient = useQueryClient();
+
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
   const setDeliveryAddress = useMapStore((s) => s.setDeliveryAddress);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
@@ -25,12 +33,34 @@ export const AddressItemList = ({ classNames }: Props) => {
     queryKey: [getDeliveryAddresses.queryKey],
   });
 
+  const {
+    mutate,
+    isPending,
+    variables: deletionUid,
+  } = useMutation({
+    mutationFn: deleteDeliveryAddress,
+    mutationKey: [deleteDeliveryAddress.queryKey],
+    onSuccess: (_, uid) => {
+      if (uid === deliveryAddress?.uid) {
+        setDeliveryAddress();
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: [getDeliveryAddresses.queryKey],
+      });
+      showSuccessNotification("Адрес успешно удален!");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
+
   const handleOpenMap = useCallback(() => {
     setIsMapOpen(true);
   }, []);
 
   useEffect(() => {
-    if (data && data.data.length) {
+    if (data && data.data.length && !deliveryAddress) {
       setDeliveryAddress(data.data[0]);
     }
   }, [isFetched]);
@@ -47,10 +77,12 @@ export const AddressItemList = ({ classNames }: Props) => {
         Добавить
       </Button>
 
-      <ScrollArea h={250} offsetScrollbars>
+      <ScrollArea h={250} offsetScrollbars scrollbars="y">
         <Stack gap={12}>
           {data?.data?.map((address) => (
             <AddressItem
+              disabled={isPending && address.uid === deletionUid}
+              onDelete={() => mutate(address.uid)}
               onSelect={() => setDeliveryAddress(address)}
               active={address.addressUid === deliveryAddress?.addressUid}
               key={address.addressUid}

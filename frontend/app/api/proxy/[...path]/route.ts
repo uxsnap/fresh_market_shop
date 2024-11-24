@@ -11,7 +11,8 @@ import {
 import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import {
-  proxyAddUserAddress,
+  proxyAddDeliveryAddress,
+  proxyDeleteDeliveryAddress,
   proxyUser,
   proxyUserAddresses,
 } from "@/services/proxy/user";
@@ -59,7 +60,9 @@ export async function POST(req: NextRequest) {
     case "/payments/cards":
       return proxyAddPaymentCard(req);
     case "/user/addresses":
-      return proxyAddUserAddress(req);
+      return proxyAddDeliveryAddress(req);
+    case "/user/addresses/delete":
+      return proxyDeleteDeliveryAddress(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

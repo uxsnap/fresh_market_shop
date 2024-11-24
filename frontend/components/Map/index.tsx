@@ -9,7 +9,7 @@ import { BottomCards } from "./components/BottomCards";
 import { ModalHeader } from "./components/ModalHeader";
 import { isNotEmpty } from "@mantine/form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUserAddress } from "@/api/user/addUserAddress";
+import { addDeliveryAddress } from "@/api/user/addDeliveryAddress";
 import { showErrorNotification, showSuccessNotification } from "@/utils";
 import { AxiosError } from "axios";
 import { ErrorWrapper } from "@/types";
@@ -40,8 +40,8 @@ export const Map = () => {
   });
 
   const { mutate, isPending } = useMutation({
-    mutationFn: addUserAddress,
-    mutationKey: [addUserAddress.queryKey],
+    mutationFn: addDeliveryAddress,
+    mutationKey: [addDeliveryAddress.queryKey],
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [getDeliveryAddresses.queryKey],

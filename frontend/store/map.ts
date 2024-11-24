@@ -19,7 +19,7 @@ type MapState = {
   setMapAddress: (v?: MapAddress) => void;
 
   deliveryAddress?: DeliveryAddress;
-  setDeliveryAddress: (v: DeliveryAddress) => void;
+  setDeliveryAddress: (v?: DeliveryAddress) => void;
 };
 
 export const useMapStore = create<MapState>((set) => ({

@@ -17,6 +17,7 @@ type Props = {
   onMapOpen?: () => void;
   onSelect?: () => void;
   active?: boolean;
+  disabled?: boolean;
 };
 
 export const SelectableItem = ({
@@ -24,26 +25,37 @@ export const SelectableItem = ({
   onDelete,
   onMapOpen,
   active = false,
+  disabled = false,
   onSelect,
   Icon,
 }: Props) => {
   return (
     <Paper
       onClick={onSelect}
-      className={cn(styles.root, active && styles.active)}
+      className={cn(
+        styles.root,
+        active && styles.active,
+        disabled && styles.disabled
+      )}
       radius={8}
       withBorder
     >
-      <Group align="center" justify="space-between" py={8} px={12}>
-        <Group gap={16}>
+      <Group
+        wrap="nowrap"
+        align="center"
+        justify="space-between"
+        py={8}
+        px={12}
+      >
+        <Group wrap="nowrap" gap={16}>
           <Icon onClick={onMapOpen} fill="var(--mantine-color-accent-0)" />
 
-          <Text c="accent.0" fz={16} fw={500}>
+          <Text maw="70%" truncate="end" c="accent.0" fz={16} fw={500}>
             {children}
           </Text>
         </Group>
 
-        <Group gap={8}>
+        <Group w={62} wrap="nowrap" gap={8}>
           {active ? (
             <CircleOk size={20} />
           ) : (
