@@ -13,7 +13,7 @@ import { addUserAddress } from "@/api/user/addUserAddress";
 import { showErrorNotification, showSuccessNotification } from "@/utils";
 import { AxiosError } from "axios";
 import { ErrorWrapper } from "@/types";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 import { useMapStore } from "@/store/map";
 
 export const Map = () => {
@@ -44,7 +44,7 @@ export const Map = () => {
     mutationKey: [addUserAddress.queryKey],
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [getUserAddresses.queryKey],
+        queryKey: [getDeliveryAddresses.queryKey],
       });
       showSuccessNotification("Адрес успешно добавлен!");
       setIsMapOpen(false);

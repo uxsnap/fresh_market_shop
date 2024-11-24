@@ -76,7 +76,7 @@ export const Search = ({ className, maw = 400 }: Props) => {
         w="100%"
         maw={maw}
         size="md"
-        className={styles.input}
+        classNames={{ root: styles.input, wrapper: styles.inputWrapper }}
         leftSection={<Glass size={16} />}
         placeholder="Поиск товаров и категорий"
         value={name}

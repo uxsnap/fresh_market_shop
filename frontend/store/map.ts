@@ -1,4 +1,4 @@
-import { Address, User, UserAddress } from "@/types";
+import { Address, DeliveryAddress, MapAddress } from "@/types";
 import { YMapsApi } from "@pbe/react-yandex-maps/typings/util/typing";
 import { create } from "zustand";
 
@@ -15,22 +15,26 @@ type MapState = {
   isFieldsModalOpen: boolean;
   setIsFieldsModalOpen: (v: boolean) => void;
 
-  mapActiveAddress?: Address;
-  setMapActiveAddress: (v?: Address) => void;
+  mapAddress?: MapAddress;
+  setMapAddress: (v?: MapAddress) => void;
 
-  activeAddress?: UserAddress;
-  setActiveAddress: (v: UserAddress) => void;
+  deliveryAddress?: DeliveryAddress;
+  setDeliveryAddress: (v: DeliveryAddress) => void;
 };
 
 export const useMapStore = create<MapState>((set) => ({
   map: null,
   setMap: (m: YMapsApi) => set({ map: m }),
+
   isFieldsModalOpen: false,
   setIsFieldsModalOpen: (v: boolean) => set({ isFieldsModalOpen: v }),
+
   searchValue: "",
   setSearchValue: (v: string) => set({ searchValue: v }),
-  setActiveAddress: (v: UserAddress) => set({ activeAddress: v }),
-  setMapActiveAddress: (v?: Address) => set({ mapActiveAddress: v }),
+
+  setMapAddress: (v?: MapAddress) => set({ mapAddress: v }),
+  setDeliveryAddress: (v?: DeliveryAddress) => set({ deliveryAddress: v }),
+
   isMapOpen: false,
   setIsMapOpen: (v: boolean) => set({ isMapOpen: v }),
 }));

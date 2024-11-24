@@ -11,12 +11,20 @@ import { useClickOutside } from "@mantine/hooks";
 import { getAddress } from "@/utils";
 import { useMapStore } from "@/store/map";
 import { useAuthStore } from "@/store/auth";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Location = () => {
+  const queryClient = useQueryClient();
+
   const [opened, setOpened] = useState(false);
 
   const logged = useAuthStore((s) => s.logged);
-  const activeAddress = useMapStore((s) => s.activeAddress);
+  const deliveryAddress = useMapStore((s) => s.deliveryAddress);
+
+  const deliveryAddressesState = queryClient.getQueryState([
+    getDeliveryAddresses.queryKey,
+  ]);
 
   const isMapOpen = useMapStore((s) => s.isMapOpen);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
@@ -52,25 +60,30 @@ export const Location = () => {
     <>
       <Popover
         opened={opened}
-        width={500}
+        width={540}
         position="bottom"
         withArrow
         shadow="md"
+        keepMounted
       >
         <Popover.Target>
           <Box w="100%">
-            <Group
-              wrap="nowrap"
-              ref={ref}
-              className={styles.group}
-              onClick={handleOpen}
-            >
-              <LocationIcon />
+            {logged && deliveryAddressesState?.status === "success" && (
+              <Group
+                wrap="nowrap"
+                ref={ref}
+                className={styles.group}
+                onClick={handleOpen}
+              >
+                <LocationIcon />
 
-              <Text truncate="end" fz={14} lh="150%" fw="bold" c="accent.0">
-                {!activeAddress ? "Адрес не выбран" : getAddress(activeAddress)}
-              </Text>
-            </Group>
+                <Text truncate="end" fz={14} lh="150%" fw="bold" c="accent.0">
+                  {!deliveryAddress
+                    ? "Адрес не выбран"
+                    : getAddress(deliveryAddress)}
+                </Text>
+              </Group>
+            )}
           </Box>
         </Popover.Target>
 

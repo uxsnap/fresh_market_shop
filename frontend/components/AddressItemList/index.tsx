@@ -6,7 +6,7 @@ import { Plus } from "../icons/Plus";
 import { getAddress } from "@/utils";
 import { useMapStore } from "@/store/map";
 import { useCallback, useEffect } from "react";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 import { useQuery } from "@tanstack/react-query";
 
 type Props = {
@@ -16,13 +16,13 @@ type Props = {
 };
 
 export const AddressItemList = ({ classNames }: Props) => {
-  const activeAddress = useMapStore((s) => s.activeAddress);
-  const setActiveAddress = useMapStore((s) => s.setActiveAddress);
+  const deliveryAddress = useMapStore((s) => s.deliveryAddress);
+  const setDeliveryAddress = useMapStore((s) => s.setDeliveryAddress);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
 
   const { data, isFetched } = useQuery({
-    queryFn: getUserAddresses,
-    queryKey: [getUserAddresses.queryKey],
+    queryFn: getDeliveryAddresses,
+    queryKey: [getDeliveryAddresses.queryKey],
   });
 
   const handleOpenMap = useCallback(() => {
@@ -31,7 +31,7 @@ export const AddressItemList = ({ classNames }: Props) => {
 
   useEffect(() => {
     if (data && data.data.length) {
-      setActiveAddress(data.data[0]);
+      setDeliveryAddress(data.data[0]);
     }
   }, [isFetched]);
 
@@ -51,8 +51,8 @@ export const AddressItemList = ({ classNames }: Props) => {
         <Stack gap={12}>
           {data?.data?.map((address) => (
             <AddressItem
-              onSelect={() => setActiveAddress(address)}
-              active={address.addressUid === activeAddress?.addressUid}
+              onSelect={() => setDeliveryAddress(address)}
+              active={address.addressUid === deliveryAddress?.addressUid}
               key={address.addressUid}
             >
               {getAddress(address)}

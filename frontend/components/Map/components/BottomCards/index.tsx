@@ -6,7 +6,7 @@ import { Address } from "@/types";
 import { PropsWithChildren } from "react";
 import { useMapStore } from "@/store/map";
 import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 
 const BottomCard = ({
   city,
@@ -26,8 +26,8 @@ const BottomCard = ({
 
 export const BottomCards = () => {
   const { data } = useQuery({
-    queryFn: getUserAddresses,
-    queryKey: [getUserAddresses.queryKey],
+    queryFn: getDeliveryAddresses,
+    queryKey: [getDeliveryAddresses.queryKey],
   });
 
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
