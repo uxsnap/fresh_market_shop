@@ -28,8 +28,7 @@ CREATE TABLE addresses_streets_vectors (
 
 CREATE INDEX idx_gin_addr_street
 ON addresses_streets_vectors
-USING gin (to_tsvector('russian', street_vector));
-
+USING gin (to_tsvector('russian', 'street_vector'));
 
 BEGIN;
 
@@ -56,10 +55,10 @@ INSERT INTO addresses(city_uid, street, house_number, latitude, longitude)
     ai.longitude
   FROM addresses_import as ai;
 
- INSERT INTO addresses_streets_vectors (address_uid, street_vector) 
- SELECT a.uid, to_tsvector('russian', a.street) from addresses a;
-
 COMMIT;
+
+INSERT INTO addresses_streets_vectors (address_uid, street_vector) 
+SELECT a.uid, to_tsvector('russian', a.street) from addresses a;
 
 CREATE TABLE delivery_addresses (
   uid uuid PRIMARY KEY,
