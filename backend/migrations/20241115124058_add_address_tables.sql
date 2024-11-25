@@ -28,7 +28,7 @@ CREATE TABLE addresses_streets_vectors (
 
 CREATE INDEX idx_gin_addr_street
 ON addresses_streets_vectors
-USING gin (to_tsvector('russian', 'street_vector'));
+USING gin (street_vector);
 
 BEGIN;
 
