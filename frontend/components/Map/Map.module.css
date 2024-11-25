@@ -16,6 +16,10 @@ section.content {
   height: calc(100vh - 70px);
   display: flex;
   align-items: flex-start;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    position: relative;
+  }
 }
 
 .mainBox {
@@ -24,7 +28,8 @@ section.content {
 
   @media (max-width: $mantine-breakpoint-md) {
     position: absolute;
+    bottom: 0;
     width: 100%;
-    height: calc(100vh - 70px);
+    height: auto;
   }
 }

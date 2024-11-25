@@ -106,7 +106,16 @@ export const getAddress = (address: DeliveryAddress) => {
 };
 
 export const getStreetInfoFromGeo = (geoObject: ExtendedGeoObject) => {
-  const splittedAddressLine = geoObject.getAddressLine().split(", ");
+  const addressLine = geoObject.getAddressLine();
+
+  if (!addressLine) {
+    return {
+      street: "",
+      houseNumber: "",
+    };
+  }
+
+  const splittedAddressLine = addressLine.split(", ");
 
   return {
     street: splittedAddressLine[1].replace("улица", "").trim(),
