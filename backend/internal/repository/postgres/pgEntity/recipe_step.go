@@ -7,8 +7,6 @@ import (
 )
 
 type RecipeStepRow struct {
-	NewMaker[RecipeStepRow]
-
 	RecipeUid   pgtype.UUID
 	Step        int64
 	Description string
@@ -19,6 +17,10 @@ const recipeStepTableName = "recipes_steps"
 var recipeStepTableColumns = []string{"recipe_uid", "step", "description"}
 
 func NewRecipeStepRow() *RecipeStepRow {
+	return &RecipeStepRow{}
+}
+
+func (rs *RecipeStepRow) New() *RecipeStepRow {
 	return &RecipeStepRow{}
 }
 

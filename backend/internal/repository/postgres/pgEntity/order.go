@@ -16,7 +16,6 @@ var ordersTableFields = []string{
 }
 
 type OrderRow struct {
-	NewMaker[OrderRow]
 	Uid       pgtype.UUID
 	UserUid   pgtype.UUID
 	Num       int64
@@ -27,6 +26,10 @@ type OrderRow struct {
 }
 
 func NewOrderRow() *OrderRow {
+	return &OrderRow{}
+}
+
+func (p *OrderRow) New() *OrderRow {
 	return &OrderRow{}
 }
 

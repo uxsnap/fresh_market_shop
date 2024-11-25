@@ -20,8 +20,6 @@ var categoriesTableColumns = []string{
 }
 
 type CategoryRow struct {
-	NewMaker[CategoryRow]
-
 	Uid         pgtype.UUID
 	Name        string
 	Description string
@@ -30,6 +28,10 @@ type CategoryRow struct {
 }
 
 func NewCategoryRow() *CategoryRow {
+	return &CategoryRow{}
+}
+
+func (c *CategoryRow) New() *CategoryRow {
 	return &CategoryRow{}
 }
 

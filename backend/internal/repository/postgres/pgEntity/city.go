@@ -9,13 +9,15 @@ import (
 const cityTable = "cities"
 
 type CityRow struct {
-	NewMaker[CityRow]
-
 	Uid  pgtype.UUID
 	Name string
 }
 
 func NewCityRow() *CityRow {
+	return &CityRow{}
+}
+
+func (c *CityRow) New() *CityRow {
 	return &CityRow{}
 }
 

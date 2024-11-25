@@ -12,14 +12,16 @@ import (
 const productPhotosTableName = "product_photos"
 
 type ProductPhotoRow struct {
-	NewMaker[ProductPhotoRow]
-
 	Uid        pgtype.UUID `json:"id"`
 	ProductUid pgtype.UUID `json:"product_uid"`
 	ImgPath    string      `json:"img_path"`
 }
 
 func NewProductPhotoRow() *ProductPhotoRow {
+	return &ProductPhotoRow{}
+}
+
+func (pp *ProductPhotoRow) New() *ProductPhotoRow {
 	return &ProductPhotoRow{}
 }
 

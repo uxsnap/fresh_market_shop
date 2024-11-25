@@ -16,8 +16,6 @@ var productsTableFields = []string{
 }
 
 type ProductRow struct {
-	NewMaker[ProductRow]
-
 	Uid         pgtype.UUID
 	CategoryUid pgtype.UUID
 	Name        string
@@ -30,6 +28,10 @@ type ProductRow struct {
 }
 
 func NewProductRow() *ProductRow {
+	return &ProductRow{}
+}
+
+func (p *ProductRow) New() *ProductRow {
 	return &ProductRow{}
 }
 

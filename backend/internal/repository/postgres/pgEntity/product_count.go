@@ -11,8 +11,6 @@ import (
 const productsCountTableName = "products_count"
 
 type ProductCountRow struct {
-	NewMaker[ProductCountRow]
-
 	ProductUid    pgtype.UUID
 	StockQuantity int64
 }
@@ -25,6 +23,10 @@ func NewProductCountRow(productUid uuid.UUID, count int64) *ProductCountRow {
 		},
 		StockQuantity: count,
 	}
+}
+
+func (pc *ProductCountRow) New() *ProductCountRow {
+	return &ProductCountRow{}
 }
 
 func (pc *ProductCountRow) Count() int64 {

@@ -9,8 +9,6 @@ import (
 const addressTable = "addresses"
 
 type AddressRow struct {
-	NewMaker[AddressRow]
-
 	Uid         pgtype.UUID
 	CityUid     pgtype.UUID
 	Street      string
@@ -20,6 +18,10 @@ type AddressRow struct {
 }
 
 func NewAddressRow() *AddressRow {
+	return &AddressRow{}
+}
+
+func (a *AddressRow) New() *AddressRow {
 	return &AddressRow{}
 }
 

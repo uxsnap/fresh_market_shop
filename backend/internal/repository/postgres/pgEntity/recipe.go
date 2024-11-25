@@ -12,8 +12,6 @@ import (
 const recipesTableName = "recipes"
 
 type RecipeRow struct {
-	NewMaker[RecipeRow]
-
 	Uid         pgtype.UUID
 	Name        string
 	CookingTime pgtype.Interval
@@ -22,6 +20,10 @@ type RecipeRow struct {
 }
 
 func NewRecipeRow() *RecipeRow {
+	return &RecipeRow{}
+}
+
+func (rr *RecipeRow) New() *RecipeRow {
 	return &RecipeRow{}
 }
 
