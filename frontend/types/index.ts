@@ -103,23 +103,6 @@ export type User = {
   updatedAt: string;
 };
 
-export type UserAddress = {
-  uid: string;
-  userUid: string;
-  addressUid: string;
-  latitude: number;
-  longitude: number;
-  cityName: string;
-  streetName: string;
-  houseNumber: string;
-  floors: number;
-  entrances: number;
-  apartments: number;
-  codes: number;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
 export type ErrorWrapper = {
   type: string;
   message: string;
@@ -139,11 +122,27 @@ export type CreditCard = {
 };
 
 export type Address = {
-  uid: string;
-  cityUid: string;
-  cityName?: string;
-  street: string;
   houseNumber: string;
   latitude: number;
   longitude: number;
+  cityName?: string;
+};
+
+export type MapAddress = Address & {
+  uid: string;
+  cityUid: string;
+  street: string;
+};
+
+export type DeliveryAddress = Address & {
+  uid: string;
+  userUid: string;
+  addressUid: string;
+  streetName: string;
+  floors: number;
+  entrances: number;
+  apartment: number;
+  codes: number;
+  createdAt: Date;
+  updatedAt: Date;
 };

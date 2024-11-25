@@ -14,13 +14,16 @@ export const MAP_OPTIONS: ymaps.IMapOptions = {
   copyrightUaVisible: false,
 };
 
-export const DEFAULT_COORDS = {
-  center: [59.934878873507, 30.318067359924303],
-  zoom: 15,
+export const DEFAULT_ZOOM = 15;
+
+export const DEFAULT_COORDS_BY_CITY: Record<string, number[]> = {
+  "59c0203e-a6da-45d6-98f3-021ac86adff6": [59.934878873507, 30.318067359924303],
+  _: [55.753544, 37.621202],
 };
 
 export const MAP_MODULES = ["geolocation", "geocode"];
 
 export interface ExtendedGeoObject extends ymaps.IGeoObject {
   getAddressLine(): string;
+  getThoroughfare(): string;
 }

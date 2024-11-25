@@ -29,10 +29,10 @@ export const City = () => {
       searchValue={searchValue}
       onSearchChange={setSearchValue}
       searchable
-      key={form.key("city")}
       data={data ?? []}
       allowDeselect={false}
       withAsterisk
+      key={form.key("city")}
       {...form.getInputProps("city")}
     />
   );

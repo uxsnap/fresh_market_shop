@@ -1,8 +1,10 @@
+import { ExtendedGeoObject } from "@/components/Map/components/YmapsWrapper/constants";
 import {
   ErrorWrapper,
   ProductItem,
   ProductWithPhotos,
   RecipeStep,
+  DeliveryAddress,
 } from "@/types";
 import { notifications } from "@mantine/notifications";
 import { AxiosError } from "axios";
@@ -81,6 +83,35 @@ export const isDateNull = (date?: string) => {
   const d = dayJs(date);
 
   return !date || !d.isValid() || d.year() <= 1;
+};
+
+export const getStreetAndHouseNumber = (street: string) => {
+  const splittedStreet = street.split(" ");
+
+  if (splittedStreet.length < 2) {
+    return [street, ""];
+  }
+
+  const lastToken = splittedStreet.at(-1);
+
+  if (lastToken === undefined || isNaN(parseInt(lastToken))) {
+    return [street, ""];
+  }
+
+  return [splittedStreet.slice(0, -1).join(" "), lastToken];
+};
+
+export const getAddress = (address: DeliveryAddress) => {
+  return `${address.cityName}, ${address.streetName} ${address.houseNumber} ${address.apartment !== 0 ? `кв. ${address.apartment}` : ""}`;
+};
+
+export const getStreetInfoFromGeo = (geoObject: ExtendedGeoObject) => {
+  const splittedAddressLine = geoObject.getAddressLine().split(", ");
+
+  return {
+    street: splittedAddressLine[1].replace("улица", "").trim(),
+    houseNumber: splittedAddressLine[2].split(" ")[0],
+  };
 };
 
 export * from "./img";

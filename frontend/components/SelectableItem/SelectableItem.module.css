@@ -2,8 +2,14 @@
   cursor: pointer;
   border-color: var(--mantine-color-accent-0);
   border-width: 0.5px;
+  width: 100%;
 
   &.active {
     border-color: var(--mantine-color-primary-0);
+  }
+
+  &.disabled {
+    opacity: 0.8;
+    pointer-events: none;
   }
 }

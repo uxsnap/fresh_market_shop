@@ -6,7 +6,7 @@ import { Address } from "@/types";
 import { PropsWithChildren } from "react";
 import { useMapStore } from "@/store/map";
 import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 
 const BottomCard = ({
   city,
@@ -26,14 +26,14 @@ const BottomCard = ({
 
 export const BottomCards = () => {
   const { data } = useQuery({
-    queryFn: getUserAddresses,
-    queryKey: [getUserAddresses.queryKey],
+    queryFn: getDeliveryAddresses,
+    queryKey: [getDeliveryAddresses.queryKey],
   });
 
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
   return (
-    <Stack gap={12} p={16} className={styles.root}>
+    <Stack justify="flex-end" gap={12} p={16} className={styles.root}>
       <Carousel slideGap="sm" align="start" dragFree withControls={false}>
         {(data?.data ?? []).map((item) => (
           <Carousel.Slide key={item.uid} flex="1 0 auto">

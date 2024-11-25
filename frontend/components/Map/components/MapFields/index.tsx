@@ -8,8 +8,6 @@ import { memo, PropsWithChildren, useEffect } from "react";
 import { Street } from "../Street";
 import { useMapStore } from "@/store/map";
 import { ModalHeader } from "../ModalHeader";
-import { useMutation } from "@tanstack/react-query";
-import { addUserAddress } from "@/api/user/addUserAddress";
 
 export const MapFields = memo(() => {
   const isFieldsModalOpen = useMapStore((s) => s.isFieldsModalOpen);
@@ -23,11 +21,6 @@ export const MapFields = memo(() => {
   useEffect(() => {
     setIsFieldsModalOpen(false);
   }, [modalWrapper]);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: addUserAddress,
-    mutationKey: [addUserAddress.queryKey],
-  });
 
   const Wrapper = ({ children }: PropsWithChildren) => {
     if (modalWrapper) {

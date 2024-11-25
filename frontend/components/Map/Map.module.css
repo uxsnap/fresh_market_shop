@@ -17,3 +17,14 @@ section.content {
   display: flex;
   align-items: flex-start;
 }
+
+.mainBox {
+  height: 100%;
+  position: relative;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 70px);
+  }
+}

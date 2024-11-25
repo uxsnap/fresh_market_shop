@@ -1,40 +1,70 @@
 import { YMaps, Map as YandexMap, Placemark } from "@pbe/react-yandex-maps";
 import {
-  DEFAULT_COORDS,
+  DEFAULT_COORDS_BY_CITY,
+  DEFAULT_ZOOM,
   ExtendedGeoObject,
   MAP_MODULES,
   MAP_OPTIONS,
   PLACEMARK_OPTIONS,
 } from "./constants";
-import { useEffect, useState } from "react";
-import { useMapFormContext } from "../../context";
+import { useEffect, useRef, useState } from "react";
 import { YMapsApi } from "@pbe/react-yandex-maps/typings/util/typing";
 import { useMapStore } from "@/store/map";
+import ymaps from "yandex-maps";
+import { getStreetInfoFromGeo } from "@/utils";
+import { useMapForm, useMapFormContext } from "../../context";
 
 export const YmapsWrapper = () => {
+  const [curCity, setCurCity] = useState("_");
   const [coordinates, setCoordinates] = useState<number[][]>([[]]);
-  const setMap = useMapStore((s) => s.setMap);
-  const map = useMapStore((s) => s.map);
 
   const form = useMapFormContext();
 
+  form.watch("city", ({ value }) => {
+    setCurCity(value);
+  });
+
+  const mapRef = useRef<ymaps.Map>();
+  const map = useMapStore((s) => s.map);
+  const setMap = useMapStore((s) => s.setMap);
+
+  const setSearchValue = useMapStore((s) => s.setSearchValue);
+  const mapAddress = useMapStore((s) => s.mapAddress);
+
   const handleAddress = async (coords: number[]) => {
     const geo = await map?.geocode(coords);
+    const geoObject = geo?.geoObjects.get(0) as ExtendedGeoObject;
 
-    form.setFieldValue(
-      "address",
-      (geo?.geoObjects.get(0) as ExtendedGeoObject).getAddressLine()
-    );
+    const { houseNumber, street } = getStreetInfoFromGeo(geoObject);
+
+    setSearchValue(`${street} ${houseNumber}`);
+    setCoordinates(coords as unknown as number[][]);
+  };
+
+  const handleCenterMove = (coords: number[]) => {
+    mapRef.current?.setCenter(coords, DEFAULT_ZOOM, {
+      duration: 80,
+    });
   };
 
   useEffect(() => {
-    if (!map) {
+    if (!map || !curCity) {
       return;
     }
 
-    handleAddress(DEFAULT_COORDS.center);
-    setCoordinates(DEFAULT_COORDS.center as unknown as number[][]);
-  }, [map]);
+    const coords = DEFAULT_COORDS_BY_CITY[curCity];
+
+    setCoordinates(coords as unknown as number[][]);
+    handleCenterMove(coords);
+  }, [map, curCity]);
+
+  useEffect(() => {
+    if (!mapAddress) {
+      return;
+    }
+
+    handleCenterMove([mapAddress.latitude, mapAddress.longitude]);
+  }, [mapAddress]);
 
   const handleCoords = (e: any) => {
     const coords = e.get("coords");
@@ -42,6 +72,8 @@ export const YmapsWrapper = () => {
     handleAddress(coords);
     setCoordinates(coords);
   };
+
+  console.log(curCity);
 
   return (
     <YMaps
@@ -53,12 +85,16 @@ export const YmapsWrapper = () => {
         width="100%"
         height="100%"
         modules={MAP_MODULES}
-        defaultState={DEFAULT_COORDS}
+        state={{
+          center: DEFAULT_COORDS_BY_CITY[curCity],
+          zoom: DEFAULT_ZOOM,
+        }}
         onClick={handleCoords}
         onLoad={(ymaps: YMapsApi) => setMap(ymaps)}
         options={MAP_OPTIONS}
+        instanceRef={mapRef}
       >
-        {coordinates.length && (
+        {coordinates?.length && (
           <Placemark geometry={coordinates} options={PLACEMARK_OPTIONS} />
         )}
       </YandexMap>

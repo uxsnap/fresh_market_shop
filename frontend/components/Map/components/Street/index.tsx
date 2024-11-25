@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useMapFormContext } from "../../context";
 import { useQuery } from "@tanstack/react-query";
 import { getAddresses } from "@/api/address/getAddresses";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Select } from "@mantine/core";
+import { useMapStore } from "@/store/map";
+import { getStreetAndHouseNumber } from "@/utils";
 
 export const Street = () => {
-  const [searchValue, setSearchValue] = useState("");
   const [curCity, setCurCity] = useState("");
+
+  const searchValue = useMapStore((s) => s.searchValue);
+  const setSearchValue = useMapStore((s) => s.setSearchValue);
+
+  // const setMapActiveAddress = useMapStore((s) => s.setMapActiveAddress);
+
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
 
@@ -16,16 +23,26 @@ export const Street = () => {
   });
 
   const { data } = useQuery({
-    queryFn: () => getAddresses(curCity, debounced),
+    queryFn: () => {
+      const [name, houseNumber] = getStreetAndHouseNumber(debounced);
+      return getAddresses(curCity, name, houseNumber);
+    },
     queryKey: [getAddresses.queryKey, debounced],
     enabled: !!debounced.length,
-    select(data) {
-      return data.data.map((s) => ({
-        label: `${s.street} ${s.houseNumber}`,
-        value: s.uid,
-      }));
-    },
   });
+
+  // form.watch("addressUid", ({ value }) => {
+  //   const curMapActiveAddress = data?.data.find((a) => a.uid === value);
+
+  //   setMapActiveAddress(curMapActiveAddress);
+  // });
+
+  const preparedData = useMemo(() => {
+    return data?.data.map((a) => ({
+      label: `${a.street} ${a.houseNumber}`,
+      value: a.uid,
+    }));
+  }, [data]);
 
   return (
     <Select
@@ -37,13 +54,13 @@ export const Street = () => {
       searchValue={searchValue}
       onSearchChange={setSearchValue}
       searchable
-      data={data ?? []}
+      data={preparedData ?? []}
       nothingFoundMessage="Ничего не найдено"
       allowDeselect={false}
       filter={({ options }) => options}
-      key={form.key("street")}
+      key={form.key("addressUid")}
       withAsterisk
-      {...form.getInputProps("street")}
+      {...form.getInputProps("addressUid")}
     />
   );
 };

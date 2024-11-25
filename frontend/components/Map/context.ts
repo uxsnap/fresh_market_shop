@@ -2,7 +2,7 @@ import { createFormContext } from "@mantine/form";
 
 type MapForm = {
   city: string;
-  street: string;
+  addressUid: string;
   apartment?: number;
   entrance?: number;
   floor?: number;

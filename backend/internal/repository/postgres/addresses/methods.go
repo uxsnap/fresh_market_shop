@@ -2,11 +2,13 @@ package repositoryAddresses
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strings"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
@@ -28,24 +30,67 @@ func (r *AddressesRepository) GetCities(ctx context.Context) ([]entity.City, err
 func (r *AddressesRepository) GetAddresses(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Address, error) {
 	log.Printf("addressesRepository.GetAddresses; city: %v, name: %v", qFilters.CityUid, qFilters.Name)
 
+	if uuid.Equal(qFilters.CityUid, uuid.UUID{}) {
+		return nil, errors.New("empty city uid")
+	}
+	if len(qFilters.Name) == 0 {
+		return nil, errors.New("empty street name")
+	}
+
 	addressRow := pgEntity.NewAddressRow().FromEntity(entity.Address{})
-	addressRows := pgEntity.NewAddressesRows()
 
 	cond := squirrel.And{
 		squirrel.Eq{"city_uid": qFilters.CityUid},
-		squirrel.Like{"lower(street)": "%" + strings.ToLower(qFilters.Name) + "%"},
 	}
 
-	if qFilters.HouseNumber != "" {
+	if len(qFilters.HouseNumber) != 0 {
 		cond = squirrel.And{cond, squirrel.Like{"lower(house_number)": strings.ToLower(qFilters.HouseNumber) + "%"}}
 	} else {
 		cond = squirrel.And{cond, squirrel.NotEq{"house_number": "NULL"}}
 	}
 
-	if err := r.GetWithLimit(ctx, addressRow, addressRows, cond, qFilters.Limit, 0); err != nil {
-		log.Printf("failed to get addresses, %v", err)
-		return []entity.Address{}, errors.WithStack(err)
+	sql := squirrel.Select(
+		withPrefix("a", addressRow.Columns())...,
+	).PlaceholderFormat(squirrel.Dollar).From(
+		addressRow.Table() + " a",
+	).LeftJoin(
+		"addresses_streets_vectors av on a.uid=av.address_uid",
+	).Where(
+		fmt.Sprintf("av.street_vector @@ plainto_tsquery('russian','%s')", qFilters.Name),
+	).Where(cond)
+
+	if qFilters.Limit != 0 {
+		sql = sql.Limit(qFilters.Limit)
+	}
+	if qFilters.Offset != 0 {
+		sql = sql.Offset(qFilters.Offset)
+	}
+
+	stmt, args, err := sql.ToSql()
+	if err != nil {
+		log.Printf("failed to build sql query: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	rows, err := r.DB().Query(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to get addresses: %v", err)
+		return nil, errors.WithStack(err)
+	}
+
+	addressRows := pgEntity.NewAddressesRows()
+	if err := addressRows.ScanAll(rows); err != nil {
+		log.Printf("failed to scan addresses rows: %v", err)
+		return nil, errors.WithStack(err)
 	}
 
 	return addressRows.ToEntity(), nil
+}
+
+func withPrefix(prefix string, fields []string) []string {
+	res := make([]string, 0, len(fields))
+	for _, f := range fields {
+		res = append(res, prefix+"."+f)
+	}
+	return res
 }

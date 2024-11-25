@@ -1,31 +1,75 @@
 "use client";
 
-import { Button, LoadingOverlay, Stack } from "@mantine/core";
+import { Button, ScrollArea, Stack } from "@mantine/core";
 import { AddressItem } from "../AddressItem";
 import { Plus } from "../icons/Plus";
-import { useQuery } from "@tanstack/react-query";
-import { getUserAddresses } from "@/api/user/getUserAdresses";
+import {
+  getAddress,
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
+import { useMapStore } from "@/store/map";
+import { useCallback, useEffect } from "react";
+import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { deleteDeliveryAddress } from "@/api/user/deleteDeliveryAddress";
 
 type Props = {
-  activeAddress: string;
-  setActiveAddress: (v: string) => void;
-  onAdd: () => void;
+  classNames?: {
+    button?: string;
+  };
 };
 
-export const AddressItemList = ({
-  activeAddress,
-  setActiveAddress,
-  onAdd,
-}: Props) => {
-  const { data, isFetching } = useQuery({
-    queryFn: getUserAddresses,
-    queryKey: [getUserAddresses.queryKey],
+export const AddressItemList = ({ classNames }: Props) => {
+  const queryClient = useQueryClient();
+
+  const deliveryAddress = useMapStore((s) => s.deliveryAddress);
+  const setDeliveryAddress = useMapStore((s) => s.setDeliveryAddress);
+  const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
+
+  const { data, isFetched } = useQuery({
+    queryFn: getDeliveryAddresses,
+    queryKey: [getDeliveryAddresses.queryKey],
   });
+
+  const {
+    mutate,
+    isPending,
+    variables: deletionUid,
+  } = useMutation({
+    mutationFn: deleteDeliveryAddress,
+    mutationKey: [deleteDeliveryAddress.queryKey],
+    onSuccess: (_, uid) => {
+      if (uid === deliveryAddress?.uid) {
+        setDeliveryAddress();
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: [getDeliveryAddresses.queryKey],
+      });
+      showSuccessNotification("Адрес успешно удален!");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
+
+  const handleOpenMap = useCallback(() => {
+    setIsMapOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (data && data.data.length && !deliveryAddress) {
+      setDeliveryAddress(data.data[0]);
+    }
+  }, [isFetched]);
 
   return (
     <Stack gap={12}>
       <Button
-        onClick={onAdd}
+        className={classNames?.button}
+        onClick={handleOpenMap}
         mih={48}
         variant="dashed"
         leftSection={<Plus fill="var(--mantine-color-accent-0)" />}
@@ -33,20 +77,21 @@ export const AddressItemList = ({
         Добавить
       </Button>
 
-      <LoadingOverlay
-        visible={isFetching}
-        zIndex={1}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "primary.0", type: "bars" }}
-      />
-
-      {(data?.data ?? []).map((address) => (
-        <AddressItem
-          onSelect={() => setActiveAddress(address.addressUid)}
-          active={address.addressUid === activeAddress}
-          key={address.addressUid}
-        />
-      ))}
+      <ScrollArea h={250} offsetScrollbars scrollbars="y">
+        <Stack gap={12}>
+          {data?.data?.map((address) => (
+            <AddressItem
+              disabled={isPending && address.uid === deletionUid}
+              onDelete={() => mutate(address.uid)}
+              onSelect={() => setDeliveryAddress(address)}
+              active={address.addressUid === deliveryAddress?.addressUid}
+              key={address.addressUid}
+            >
+              {getAddress(address)}
+            </AddressItem>
+          ))}
+        </Stack>
+      </ScrollArea>
     </Stack>
   );
 };
