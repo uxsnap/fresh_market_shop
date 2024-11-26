@@ -30,3 +30,8 @@ type OrderProducts struct {
 	ProductUid uuid.UUID
 	Count      int64
 }
+
+type OrderWithProducts struct {
+	Order
+	Products []OrderProducts
+}

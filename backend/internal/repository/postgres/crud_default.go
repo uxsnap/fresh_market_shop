@@ -111,3 +111,11 @@ func (r *BasePgRepository) GetSome(ctx context.Context, row Row, dest Rows, cond
 
 	return dest.ScanAll(rows)
 }
+
+func (r *BasePgRepository) WithPrefix(prefix string, fields []string) []string {
+	res := make([]string, 0, len(fields))
+	for _, f := range fields {
+		res = append(res, prefix+"."+f)
+	}
+	return res
+}

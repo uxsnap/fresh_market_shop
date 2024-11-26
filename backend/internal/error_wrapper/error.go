@@ -18,6 +18,7 @@ const (
 	UserNotFoundError     = "user_not_found_error"
 	UserPhotoError        = "user_photo_error"
 	AddressesError        = "addresses_error"
+	OrderHistoryError     = "order_history_error"
 )
 
 type Error struct {

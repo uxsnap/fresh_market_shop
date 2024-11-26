@@ -77,6 +77,7 @@ type OrdersService interface {
 	GetOrder(ctx context.Context, orderUid uuid.UUID) (entity.Order, bool, error)
 	PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID) (uuid.UUID, error)
 	GetOrderedProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+	GetOrderHistory(ctx context.Context, userUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.OrderWithProducts, error)
 }
 
 type DeliveryService interface {
