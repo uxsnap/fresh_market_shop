@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4030f8ee-147f-4e41-87a1-9e2ca13d5cd7",
-		"name": "fresh",
+		"_postman_id": "99c4fe82-b38f-45a9-9175-ff4253df2e7d",
+		"name": "fresh Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "17443477",
-		"_collection_link": "https://orange-comet-294040.postman.co/workspace/s~e64ff750-e2ed-4184-9cec-62efcab26471/collection/17443477-4030f8ee-147f-4e41-87a1-9e2ca13d5cd7?action=share&source=collection_link&creator=17443477"
+		"_exporter_id": "12232823"
 	},
 	"item": [
 		{
@@ -26,7 +25,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"userUid\": \"209d0cae-3960-4750-8ce8-b91033207ce8\",\n    \"latitude\": 20.23423,\n    \"longitude\": 54.23,\n    \"cityName\": \"Калининград\",\n    \"streetName\": \"Черняховского\",\n    \"houseNumber\": 32,\n    \"building\": 2,\n    \"floor\": 5,\n    \"apartment\": 146\n}",
+									"raw": "{\n    \"userUid\": \"209d0cae-3960-4750-8ce8-b91033207ce8\",\n    \"latitude\": 20.23423,\n    \"longitude\": 54.23,\n    \"cityName\": \"Калининград\",\n    \"streetName\": \"Черняховского\",\n    \"houseNumber\": 32,\n    \"building\": 2,\n    \"floor\": 5,\n    \"apartment\": 146,\n    \"code\": 12312\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -124,7 +123,7 @@
 									}
 								],
 								"url": {
-									"raw": "http://localhost:8080/users/5995d947-f4fb-4f4e-81a5-b3c1f55af3de/delivery_addresses",
+									"raw": "http://localhost:8080/users/5995d947-f4fb-4f4e-81a5-b3c1f55af3de/delivery_address",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -133,7 +132,7 @@
 									"path": [
 										"users",
 										"5995d947-f4fb-4f4e-81a5-b3c1f55af3de",
-										"delivery_addresses"
+										"delivery_address"
 									]
 								}
 							},
@@ -167,7 +166,10 @@
 					"name": "get user",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -485,6 +487,9 @@
 									"language": "json"
 								}
 							}
+						},
+						"url": {
+							"raw": ""
 						}
 					},
 					"response": []
@@ -522,7 +527,10 @@
 					"name": "get all categories",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -646,7 +654,41 @@
 					"name": "pay order",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzI2NTU1NjIsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6ImZkMzQ1OGRiLWQ4N2QtNDcwYy1iYjE1LTRkYjA0ZDQzM2U0ZSIsInVzZXJfdWlkIjoiNTdhOGEzMjYtMjJjOC00NWIyLTg0YjMtYzk1YTRiOThmZjQ5In0.uH0s0L6Yc0rtOFU6UmbDK4JBKEwYQ3LEZob-rJue8oE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders/57a8a326-22c8-45b2-84b3-c95a4b98ff49/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders",
+								"57a8a326-22c8-45b2-84b3-c95a4b98ff49",
+								"history"
+							]
+						}
 					},
 					"response": []
 				}
@@ -983,7 +1025,10 @@
 					"name": "get recipe by uid",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -991,7 +1036,10 @@
 					"name": "get recipes",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				}
@@ -1038,7 +1086,10 @@
 					"name": "get by order uid",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1046,7 +1097,10 @@
 					"name": "update delivery",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1283,7 +1337,10 @@
 					"name": "get payment",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1291,7 +1348,10 @@
 					"name": "get order payment",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -1320,6 +1380,77 @@
 								{
 									"key": "user_uid",
 									"value": "2785abd7-aa95-439b-b01d-310c9ca19fc2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "addresses",
+			"item": [
+				{
+					"name": "cities",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE4NDY1MzAsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjAyNGJiMDdjLTFiOWEtNGRlZi04NTU2LWRlM2UzMmQwOGEwOCIsInVzZXJfdWlkIjoiYTQ1MjA3YjEtNDVmZi00ZDhhLTlkYmItMTg1NWQyOTFkNjY3In0.RYtFluvkatv4WRC1az9f6xajFyu1SoKM94hLIPiIIX8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/addresses/cities",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"addresses",
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "addresses",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAdGVzdCIsImV4cGlyZWRfYXQiOjE3MzE4NDY1MzAsInBlcm1pc3Npb25zIjoibm90X3ZlcmlmaWVkIiwicm9sZSI6InVzZXIiLCJzZXNzaW9uX3VpZCI6IjAyNGJiMDdjLTFiOWEtNGRlZi04NTU2LWRlM2UzMmQwOGEwOCIsInVzZXJfdWlkIjoiYTQ1MjA3YjEtNDVmZi00ZDhhLTlkYmItMTg1NWQyOTFkNjY3In0.RYtFluvkatv4WRC1az9f6xajFyu1SoKM94hLIPiIIX8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/addresses/59c0203e-a6da-45d6-98f3-021ac86adff6?name=пятилеток",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"addresses",
+								"59c0203e-a6da-45d6-98f3-021ac86adff6"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "пятилеток"
 								}
 							]
 						}

@@ -82,7 +82,6 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 
 	sql := squirrel.
 		Select(sqlSelectPart...).From(sqlFromPart).
-		// Join(orderProductsRow.Table() + " owp on owp.order_uid = o.uid").
 		PlaceholderFormat(squirrel.Dollar)
 
 	if userUid != uuid.Nil {
