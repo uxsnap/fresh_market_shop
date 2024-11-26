@@ -68,13 +68,7 @@ export const Avatar = ({ size = "default", upload = false }: Props) => {
         <Box className={cn(styles.root, upload && styles.upload)}>
           <Group className={styles.uploadInfo}>
             <Plus size={20} fill="var(--mantine-color-accent-0)" />
-            <Text
-              w="100%"
-              span
-              c="var(--mantine-color-accent-0)"
-              fz={22}
-              fw="bold"
-            >
+            <Text span c="var(--mantine-color-accent-0)" fz={22} fw="bold">
               Изменить фото
             </Text>
           </Group>

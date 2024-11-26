@@ -12,6 +12,7 @@ import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import {
   proxyAddDeliveryAddress,
+  proxyDeleteAccount,
   proxyDeleteDeliveryAddress,
   proxyUser,
   proxyUserAddresses,
@@ -19,6 +20,16 @@ import {
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
+  const url = req.url?.replace(
+    process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
+    ""
+  );
+
+  switch (url) {
+    case "/user/delete":
+      return proxyDeleteAccount();
+  }
+
   return proxyDefault(req);
 }
 

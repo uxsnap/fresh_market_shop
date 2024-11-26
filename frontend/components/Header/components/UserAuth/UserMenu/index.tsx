@@ -36,7 +36,7 @@ export const UserMenu = () => {
         radius="md"
       >
         <Popover.Target>
-          <Box onClick={() => setOpened(true)} style={{ cursor: "pointer" }}>
+          <Box onClick={() => setOpened(!opened)} style={{ cursor: "pointer" }}>
             <Avatar size="small" />
           </Box>
         </Popover.Target>

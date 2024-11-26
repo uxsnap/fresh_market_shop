@@ -103,3 +103,26 @@ export const proxyDeleteDeliveryAddress = async (req: NextRequest) => {
     return publicApiErrorResponse(error);
   }
 };
+
+export const proxyDeleteAccount = async () => {
+  try {
+    const { tokens } = await getAuthCookieTokensFromServer();
+
+    if (!tokens?.access_jwt) {
+      return deleteAuthCookies();
+    }
+
+    const parsed = parseJwt(tokens.access_jwt);
+
+    await axios.delete(`${process.env.NEXT_PUBLIC_API}/auth/user`, {
+      headers: { Authorization: `Bearer ${tokens.access_jwt}` },
+      data: {
+        uid: parsed?.user_uid,
+      },
+    });
+
+    return deleteAuthCookies();
+  } catch (error) {
+    return publicApiErrorResponse(error);
+  }
+};

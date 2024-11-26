@@ -16,12 +16,16 @@ import { AxiosError } from "axios";
 import { deleteDeliveryAddress } from "@/api/user/deleteDeliveryAddress";
 
 type Props = {
+  offsetScrollbars?: boolean;
   classNames?: {
     button?: string;
   };
 };
 
-export const AddressItemList = ({ classNames }: Props) => {
+export const AddressItemList = ({
+  classNames,
+  offsetScrollbars = true,
+}: Props) => {
   const queryClient = useQueryClient();
 
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
@@ -77,7 +81,7 @@ export const AddressItemList = ({ classNames }: Props) => {
         Добавить
       </Button>
 
-      <ScrollArea h={250} offsetScrollbars scrollbars="y">
+      <ScrollArea h={250} offsetScrollbars={offsetScrollbars} scrollbars="y">
         <Stack gap={12}>
           {data?.data?.map((address) => (
             <AddressItem
