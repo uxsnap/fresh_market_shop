@@ -42,6 +42,11 @@ type QueryFilters struct {
 	CategoryUids       []uuid.UUID
 	CardUid            uuid.UUID
 	OrdersUids         []uuid.UUID
+	// support
+	TopicUid  uuid.UUID
+	SolverUid uuid.UUID
+	FromEmail string
+	Status    string
 }
 
 const defaultLimit = 10
@@ -70,6 +75,11 @@ const (
 	QueryFieldOrdersUids        = "orders_uids"
 	QueryFieldUserUidForOrder   = "user_uid_for_order"
 	QueryFieldHouseNumber       = "house_number"
+	// support
+	QueryFieldTopicUid  = "topic_uid"
+	QueryFieldSolverUid = "solver_uid"
+	QueryFieldFromEmail = "from_email"
+	QueryFieldStatus    = "status"
 )
 
 var queryFiltersFields = []string{
@@ -96,6 +106,10 @@ var queryFiltersFields = []string{
 	QueryFieldUserUidForOrder,
 	QueryFieldCityUid,
 	QueryFieldHouseNumber,
+	QueryFieldTopicUid,
+	QueryFieldSolverUid,
+	QueryFieldFromEmail,
+	QueryFieldStatus,
 }
 
 type QueryFiltersParser struct {
@@ -128,6 +142,10 @@ var fieldsParsers = map[string]func(url.Values, *QueryFilters) error{
 	QueryFieldCardUid:           parseCardUid,
 	QueryFieldOrdersUids:        parseOrdersUids,
 	QueryFieldUserUid:           parseUserUid,
+	QueryFieldTopicUid:          parseTopicUid,
+	QueryFieldSolverUid:         parseSolverUid,
+	QueryFieldFromEmail:         parseFromEmail,
+	QueryFieldStatus:            parseStatus,
 }
 
 func NewQueryFiltersParser() *QueryFiltersParser {
@@ -311,33 +329,21 @@ func parseWithRandom(query url.Values, qFilters *QueryFilters) error {
 }
 
 func parseUserUidForOrder(query url.Values, qFilters *QueryFilters) error {
-	var err error
-	qFilters.UserUidForOrder, err = uuid.FromString(query.Get(QueryFieldUserUidForOrder))
-	if err != nil {
-		return err
-	}
-	return nil
+	return parseUid(&qFilters.UserUidForOrder, query.Get(QueryFieldUserUidForOrder))
 }
 
 func parseUserUid(query url.Values, qFilters *QueryFilters) error {
-	var err error
-	qFilters.UserUid, err = uuid.FromString(query.Get(QueryFieldUserUid))
-	if err != nil {
-		return err
-	}
-	return nil
+	return parseUid(&qFilters.UserUid, query.Get(QueryFieldUserUid))
 }
 
 func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
 	uuidsStrings, ok := query[QueryFieldCategoryUids]
-
 	if !ok {
 		return errors.Errorf("field %s not found in query", QueryFieldCategoryUids)
 	}
 
 	for _, uuidString := range uuidsStrings {
 		categoryUid, err := uuid.FromString(uuidString)
-
 		if err != nil {
 			return err
 		}
@@ -349,12 +355,7 @@ func parseCategoryUids(query url.Values, qFilters *QueryFilters) error {
 }
 
 func parseOrderUid(query url.Values, qFilters *QueryFilters) error {
-	var err error
-	qFilters.OrderUid, err = uuid.FromString(query.Get(QueryFieldOrderUid))
-	if err != nil {
-		return err
-	}
-	return nil
+	return parseUid(&qFilters.OrderUid, query.Get(QueryFieldOrderUid))
 }
 
 func parseOrdersUids(query url.Values, qFilters *QueryFilters) error {
@@ -374,11 +375,24 @@ func parseOrdersUids(query url.Values, qFilters *QueryFilters) error {
 }
 
 func parseCardUid(query url.Values, qFilters *QueryFilters) error {
-	var err error
-	qFilters.CardUid, err = uuid.FromString(query.Get(QueryFieldCardUid))
-	if err != nil {
-		return err
-	}
+	return parseUid(&qFilters.CardUid, query.Get(QueryFieldCardUid))
+}
+
+func parseTopicUid(query url.Values, qFilters *QueryFilters) error {
+	return parseUid(&qFilters.TopicUid, query.Get(QueryFieldTopicUid))
+}
+
+func parseSolverUid(query url.Values, qFilters *QueryFilters) error {
+	return parseUid(&qFilters.SolverUid, query.Get(QueryFieldSolverUid))
+}
+
+func parseFromEmail(query url.Values, qFilters *QueryFilters) error {
+	qFilters.FromEmail = query.Get(QueryFieldFromEmail)
+	return nil
+}
+
+func parseStatus(query url.Values, qFilters *QueryFilters) error {
+	qFilters.Status = query.Get(QueryFieldStatus)
 	return nil
 }
 
@@ -430,6 +444,15 @@ func parseDate(query url.Values, fieldName string, dest *time.Time) error {
 	}
 	var err error
 	*dest, err = time.Parse("2006-01-02T15:04:05", reqField)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func parseUid(dest *uuid.UUID, val string) error {
+	var err error
+	*dest, err = uuid.FromString(val)
 	if err != nil {
 		return err
 	}

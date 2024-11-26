@@ -28,18 +28,28 @@ CREATE TYPE support_ticket_status AS ENUM('created', 'in_process', 'solved', 'ca
 CREATE TABLE support_tickets (
     uid uuid PRIMARY KEY,
     user_uid uuid,
+    topic_uid uuid default '99c0203e-a6da-45d6-98f3-021ac86adff9',
+    solver_uid uuid,
     from_email varchar,
     from_phone varchar,
     title varchar,
     description varchar,
-    topic_uid uuid default '99c0203e-a6da-45d6-98f3-021ac86adff9',
     status support_ticket_status,
-    solver_uid uuid,
     created_at timestamp,
     updated_at timestamp
 );
 
 CREATE INDEX idx_support_tickets_topic ON support_tickets(topic_uid);
+
+CREATE TABLE support_tickets_comment_messages (
+    uid uuid PRIMARY KEY,
+    ticket_uid uuid,
+    sender_uid uuid,
+    content varchar,
+    is_imported_from_email boolean,
+    created_at timestamp,
+    updated_at timestamp
+);
 
 CREATE TABLE support_tickets_solutions (
     ticket_uid uuid REFERENCES support_tickets(uid) ON DELETE CASCADE,
@@ -53,6 +63,7 @@ CREATE TABLE support_tickets_solutions (
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE support_tickets_solutions;
+DROP TABLE support_tickets_comment_messages;
 DROP INDEX idx_support_tickets_topic;
 DROP TABLE support_tickets;
 DROP TYPE support_ticket_status;
