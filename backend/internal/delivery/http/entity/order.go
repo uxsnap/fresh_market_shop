@@ -42,9 +42,10 @@ func OrderToEntity(order Order) entity.Order {
 }
 
 type OrderProducts struct {
-	OrderUid   uuid.UUID `json:"orderUid"`
-	ProductUid uuid.UUID `json:"productUid"`
-	Count      int64     `json:"count"`
+	OrderUid   uuid.UUID      `json:"orderUid"`
+	ProductUid uuid.UUID      `json:"productUid"`
+	Count      int64          `json:"count"`
+	Photos     []ProductPhoto `json:"photos"`
 }
 
 func OrderProductsFromEntity(op entity.OrderProducts) OrderProducts {
@@ -52,6 +53,7 @@ func OrderProductsFromEntity(op entity.OrderProducts) OrderProducts {
 		OrderUid:   op.OrderUid,
 		ProductUid: op.ProductUid,
 		Count:      op.Count,
+		Photos:     ProductPhotosFromEntity(op.Photos),
 	}
 }
 

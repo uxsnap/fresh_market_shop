@@ -14,7 +14,7 @@ func (uc *UseCaseOrders) GetOrderHistory(ctx context.Context, userUid uuid.UUID,
 	orderWithProducts, err := uc.ordersRepository.GetOrderWithProducts(ctx, userUid, qFilters)
 
 	if err != nil {
-		log.Printf("failed to get order history %s: %v", qFilters.UserUid, err)
+		log.Printf("failed to get order history %s: %v", userUid, err)
 		return []entity.OrderWithProducts{}, err
 	}
 

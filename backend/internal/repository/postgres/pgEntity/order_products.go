@@ -20,6 +20,7 @@ type OrderProductsRow struct {
 	OrderUid   pgtype.UUID
 	ProductUid pgtype.UUID
 	Count      int64
+	Photos     []ProductPhotoRow
 }
 
 func (o *OrderProductsRow) FromEntity(op entity.OrderProducts) *OrderProductsRow {
@@ -32,17 +33,28 @@ func (o *OrderProductsRow) FromEntity(op entity.OrderProducts) *OrderProductsRow
 		Status: pgtype.Present,
 	}
 
+	for _, v := range op.Photos {
+		o.Photos = append(o.Photos, *NewProductPhotoRow().FromEntity(v))
+	}
+
 	o.Count = op.Count
 
 	return o
 }
 
 func (o *OrderProductsRow) ToEntity() entity.OrderProducts {
-	return entity.OrderProducts{
+	op := entity.OrderProducts{
 		OrderUid:   o.OrderUid.Bytes,
 		ProductUid: o.ProductUid.Bytes,
 		Count:      o.Count,
+		Photos:     []entity.ProductPhoto{},
 	}
+
+	for _, v := range o.Photos {
+		op.Photos = append(op.Photos, v.ToEntity())
+	}
+
+	return op
 }
 
 func NewOrderProductsRow() *OrderProductsRow {

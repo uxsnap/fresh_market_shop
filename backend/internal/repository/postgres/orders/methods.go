@@ -72,12 +72,18 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 	orderProductsRow := pgEntity.NewOrderProductsRow()
 	orderProductsRows := pgEntity.NewOrderProductsRows()
 
+	productPhotoRow := pgEntity.NewProductPhotoRow()
+
 	sqlSelectPart := r.WithPrefix("o", orderRow.Columns())
 	sqlFromPart := fmt.Sprintf("%s as o", orderRow.Table())
 
 	sqlSelectPart = append(
 		sqlSelectPart,
-		fmt.Sprintf(" (select jsonb_agg(jsonb_build_object('orderUid', op.order_uid, 'productUid', op.product_uid, 'count', op.count)) from %v op where op.order_uid = o.uid)", orderProductsRow.Table()),
+		fmt.Sprintf(` 
+			(select jsonb_agg(jsonb_build_object('orderUid', op.order_uid, 'productUid', op.product_uid, 'count', op.count, 'photos', (select jsonb_agg(jsonb_build_object('id',pp.id,'product_uid',pp.product_uid,'img_path',pp.img_path)) from %v pp where pp.product_uid = op.product_uid)))                  
+				from %v op where o.uid = op.order_uid)`,
+			productPhotoRow.Table(), orderProductsRow.Table(),
+		),
 	)
 
 	sql := squirrel.
@@ -110,9 +116,9 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 	}
 
 	res := []entity.OrderWithProducts{}
-	jsonPhotosBuf := []byte{}
+	jsonProductsBuf := []byte{}
 
-	valsForScan := append(orderRow.ValuesForScan(), &jsonPhotosBuf)
+	valsForScan := append(orderRow.ValuesForScan(), &jsonProductsBuf)
 
 	for rows.Next() {
 		if err := rows.Scan(valsForScan...); err != nil {
@@ -123,7 +129,7 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 			Order: orderRow.ToEntity(),
 		}
 
-		if err := orderProductsRows.FromJson(jsonPhotosBuf); err != nil {
+		if err := orderProductsRows.FromJson(jsonProductsBuf); err != nil {
 			owp.Products = nil
 		} else {
 			owp.Products = orderProductsRows.ToEntity()
