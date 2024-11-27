@@ -4,6 +4,7 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
+import { proxyOrderHistory } from "@/services/proxy/order";
 import {
   proxyAddPaymentCard,
   proxyGetPaymentCardsByUser,
@@ -48,6 +49,8 @@ export async function GET(req: NextRequest) {
       return proxyGetPaymentCardsByUser();
     case "/user/addresses":
       return proxyUserAddresses();
+    case "/orders/history":
+      return proxyOrderHistory();
   }
 
   return proxyDefault(req);
