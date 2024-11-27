@@ -46,13 +46,13 @@ func (r *SupportRepository) GetSupportTicketCommentMessage(ctx context.Context, 
 	return row.ToEntity(), true, nil
 }
 
-func (r *SupportRepository) GetSupportTicketCommentMessages(ctx context.Context, qFilters entity.QueryFilters) ([]entity.SupportTicketCommentMessage, error) {
-	log.Printf("repositorySupport.GetSupportTicketCommentMessages")
+func (r *SupportRepository) GetSupportTicketCommentMessages(ctx context.Context, ticketUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.SupportTicketCommentMessage, error) {
+	log.Printf("repositorySupport.GetSupportTicketCommentMessages: ticketUid %s", ticketUid)
 
-	row := pgEntity.NewSupportTicketCommentMessageRow()
+	row := pgEntity.NewSupportTicketCommentMessageRow().FromEntity(entity.SupportTicketCommentMessage{TicketUid: ticketUid})
 	rows := pgEntity.NewSupportTicketCommentMessageRows()
-	if err := r.GetSome(ctx, row, rows, nil); err != nil {
-		log.Printf("failed to get support ticket comment messages: %v", err)
+	if err := r.GetSome(ctx, row, rows, row.ConditionTicketUidEqual()); err != nil {
+		log.Printf("failed to get support ticket (%s) comment messages: %v", ticketUid, err)
 		return nil, errors.WithStack(err)
 	}
 	return rows.ToEntity(), nil

@@ -48,14 +48,14 @@ func (r *SupportRepository) GetSupportTicketSolution(ctx context.Context, ticket
 	return row.ToEntity(), true, nil
 }
 
-func (r *SupportRepository) GetSupportTicketSolutionsByTopic(ctx context.Context, qFilters entity.QueryFilters) ([]entity.SupportTicketSolution, error) {
-	log.Printf("repositorySupport.GetSupportTicketSolutionsByTopic: topic uid %s", qFilters.TopicUid)
+func (r *SupportRepository) GetSupportTicketSolutionsByTopic(ctx context.Context, topicUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.SupportTicketSolution, error) {
+	log.Printf("repositorySupport.GetSupportTicketSolutionsByTopic: topic uid %s", topicUid)
 
-	if uuid.Equal(qFilters.TopicUid, uuid.UUID{}) {
+	if uuid.Equal(topicUid, uuid.UUID{}) {
 		return nil, errors.New("empty topic_uid")
 	}
 
-	row := pgEntity.NewSupportTicketSolutionRow().FromEntity(entity.SupportTicketSolution{TicketUid: qFilters.TopicUid})
+	row := pgEntity.NewSupportTicketSolutionRow().FromEntity(entity.SupportTicketSolution{TicketUid: topicUid})
 
 	sql := sq.Select(
 		withPrefix("s", row.Columns())...,
@@ -65,7 +65,7 @@ func (r *SupportRepository) GetSupportTicketSolutionsByTopic(ctx context.Context
 		pgEntity.NewSupportTicketRow().Table() + " t on s.ticket_uid=t.uid",
 	).Where(
 		sq.Eq{
-			"t.topic_uid": pgtype.UUID{Bytes: qFilters.TopicUid, Status: pgtype.Present},
+			"t.topic_uid": pgtype.UUID{Bytes: topicUid, Status: pgtype.Present},
 		},
 	)
 	if qFilters.Limit != 0 {

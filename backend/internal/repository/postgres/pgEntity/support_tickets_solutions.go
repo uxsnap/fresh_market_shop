@@ -13,6 +13,7 @@ type SupportTicketSolutionRow struct {
 	TicketUid   pgtype.UUID
 	Description string
 	EmailText   string
+	IsSuccess   bool
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 }
@@ -29,6 +30,7 @@ func (sts *SupportTicketSolutionRow) FromEntity(solution entity.SupportTicketSol
 	sts.TicketUid = pgUidFromUUID(solution.TicketUid)
 	sts.Description = solution.Description
 	sts.EmailText = solution.EmailText
+	sts.IsSuccess = solution.IsSuccess
 	sts.CreatedAt = pgtype.Timestamp{
 		Time:   solution.CreatedAt,
 		Status: pgStatusFromTime(solution.CreatedAt),
@@ -45,18 +47,19 @@ func (sts *SupportTicketSolutionRow) ToEntity() entity.SupportTicketSolution {
 		TicketUid:   sts.TicketUid.Bytes,
 		Description: sts.Description,
 		EmailText:   sts.EmailText,
+		IsSuccess:   sts.IsSuccess,
 		CreatedAt:   sts.CreatedAt.Time,
 		UpdatedAt:   sts.UpdatedAt.Time,
 	}
 }
 
 var supportTicketsSolutionsTableColumns = []string{
-	"ticket_uid", "description", "email_text", "created_at", "updated_at",
+	"ticket_uid", "description", "email_text", "is_success", "created_at", "updated_at",
 }
 
 func (sts *SupportTicketSolutionRow) Values() []interface{} {
 	return []interface{}{
-		sts.TicketUid, sts.Description, sts.EmailText, sts.CreatedAt, sts.UpdatedAt,
+		sts.TicketUid, sts.Description, sts.EmailText, sts.IsSuccess, sts.CreatedAt, sts.UpdatedAt,
 	}
 }
 
@@ -69,16 +72,16 @@ func (sts *SupportTicketSolutionRow) Table() string {
 }
 
 func (sts *SupportTicketSolutionRow) Scan(row pgx.Row) error {
-	return row.Scan(&sts.TicketUid, &sts.Description, &sts.EmailText, &sts.CreatedAt, &sts.UpdatedAt)
+	return row.Scan(&sts.TicketUid, &sts.Description, &sts.EmailText, &sts.IsSuccess, &sts.CreatedAt, &sts.UpdatedAt)
 }
 
 func (sts *SupportTicketSolutionRow) ColumnsForUpdate() []string {
-	return []string{"description", "email_text", "updated_at"}
+	return []string{"description", "email_text", "is_success", "updated_at"}
 }
 
 func (sts *SupportTicketSolutionRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
-		sts.Description, sts.EmailText, sts.CreatedAt, sts.UpdatedAt,
+		sts.Description, sts.EmailText, sts.IsSuccess, sts.CreatedAt, sts.UpdatedAt,
 	}
 }
 

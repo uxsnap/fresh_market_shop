@@ -14,6 +14,13 @@ type SupportTicketsTopic struct {
 
 type SupportTicketStatus string
 
+const (
+	SupportTicketStatusCreated   SupportTicketStatus = "created"
+	SupportTicketStatusInProcess SupportTicketStatus = "in_process"
+	SupportTicketStatusSolved    SupportTicketStatus = "solved"
+	SupportTicketStatusCantSolve SupportTicketStatus = "cant_solve"
+)
+
 type SupportTicket struct {
 	Uid         uuid.UUID
 	UserUid     uuid.UUID
@@ -32,6 +39,7 @@ type SupportTicketSolution struct {
 	TicketUid   uuid.UUID
 	Description string
 	EmailText   string
+	IsSuccess   bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

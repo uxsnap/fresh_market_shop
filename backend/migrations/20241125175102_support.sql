@@ -55,6 +55,7 @@ CREATE TABLE support_tickets_solutions (
     ticket_uid uuid REFERENCES support_tickets(uid) ON DELETE CASCADE,
     description varchar,
     email_text varchar,
+    is_success boolean,
     created_at timestamp,
     updated_at timestamp,
 );
