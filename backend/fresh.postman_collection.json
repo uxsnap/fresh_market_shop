@@ -662,7 +662,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "get order history",
 					"request": {
 						"auth": {
 							"type": "bearer",
