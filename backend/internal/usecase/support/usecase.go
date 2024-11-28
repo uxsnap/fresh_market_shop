@@ -6,12 +6,12 @@ import (
 
 type UseCaseSupport struct {
 	repository RepositorySupport
-	txManager  transaction.Manager
+	txManager  *transaction.Manager
 }
 
 func New(
 	repository RepositorySupport,
-	txManager transaction.Manager,
+	txManager *transaction.Manager,
 ) *UseCaseSupport {
 	return &UseCaseSupport{
 		repository: repository,

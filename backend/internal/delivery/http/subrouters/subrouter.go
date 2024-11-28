@@ -9,5 +9,6 @@ type SubrouterDeps struct {
 	DeliveryService  DeliveryService
 	AddressesService AddressesService
 	PaymentsService  PaymentsService
+	SupportService   SupportService
 	Middleware       *Middleware
 }

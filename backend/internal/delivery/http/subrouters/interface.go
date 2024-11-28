@@ -111,3 +111,25 @@ type PaymentsService interface {
 	DeleteUserPaymentCard(ctx context.Context, cardUid uuid.UUID) error
 	DeleteUserPaymentCards(ctx context.Context, userUid uuid.UUID) error
 }
+
+type SupportService interface {
+	CreateTicketsTopic(ctx context.Context, topic entity.SupportTicketsTopic) (uuid.UUID, error)
+	UpdateTicketsTopic(ctx context.Context, topic entity.SupportTicketsTopic) error
+	DeleteTicketsTopic(ctx context.Context, uid uuid.UUID) error
+	GetTicketsTopicByUid(ctx context.Context, uid uuid.UUID) (entity.SupportTicketsTopic, bool, error)
+	GetAllTicketsTopics(ctx context.Context) ([]entity.SupportTicketsTopic, error)
+
+	CreateTicket(ctx context.Context, ticket entity.SupportTicket) (uuid.UUID, error)
+	EditTicket(ctx context.Context, ticket entity.SupportTicket) error
+	GetTicketByUid(ctx context.Context, uid uuid.UUID) (entity.SupportTicket, bool, error)
+	GetTickets(ctx context.Context, qFilters entity.QueryFilters) ([]entity.SupportTicket, error)
+	TakeTicket(ctx context.Context, ticketUid, solverUid uuid.UUID) error
+
+	AddTicketMessage(ctx context.Context, message entity.SupportTicketCommentMessage) (uuid.UUID, error)
+	EditTicketMessage(ctx context.Context, message entity.SupportTicketCommentMessage) error
+	GetTicketMessages(ctx context.Context, ticketUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.SupportTicketCommentMessage, error)
+
+	CreateTicketSolution(ctx context.Context, solution entity.SupportTicketSolution) error
+	GetTicketSolution(ctx context.Context, ticketUid uuid.UUID) (entity.SupportTicketSolution, bool, error)
+	GetTicketsSolutionsByTopic(ctx context.Context, topicUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.SupportTicketSolution, error)
+}

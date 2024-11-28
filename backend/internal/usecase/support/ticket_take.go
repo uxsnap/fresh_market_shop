@@ -10,25 +10,32 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseSupport) TakeTicket(ctx context.Context, ticket entity.SupportTicket) error {
-	log.Printf("usecaseSupport.TakeTicket: uid %s, solver_uid %s", ticket.Uid, ticket.SolverUid)
+func (uc *UseCaseSupport) TakeTicket(ctx context.Context, ticketUid, solverUid uuid.UUID) error {
+	log.Printf("usecaseSupport.TakeTicket: uid %s, solver_uid %s", ticketUid, solverUid)
 
-	if uuid.Equal(ticket.Uid, uuid.UUID{}) {
+	if uuid.Equal(ticketUid, uuid.UUID{}) {
 		return errors.New("пустой uid обращения")
 	}
-	if uuid.Equal(ticket.SolverUid, uuid.UUID{}) {
+	if uuid.Equal(solverUid, uuid.UUID{}) {
 		return errors.New("пустой uid менеджера поддержки")
 	}
 
 	if err := uc.txManager.NewPgTransaction().Execute(ctx, func(ctx context.Context) error {
-		savedTicket, isFound, err := uc.repository.GetSupportTicketByUid(ctx, ticket.Uid)
+		savedTicket, isFound, err := uc.repository.GetSupportTicketByUid(ctx, ticketUid)
 		if err != nil {
 			return err
 		}
 		if !isFound {
 			return errors.New("обращение не найдено")
 		}
-		savedTicket.SolverUid = ticket.SolverUid
+		switch savedTicket.Status {
+		case entity.SupportTicketStatusSolved, entity.SupportTicketStatusCantSolve:
+			log.Printf("failed to take support ticket (%s) message: cant take ticket in status '%s'", savedTicket.Uid, savedTicket.Status)
+			return errors.Errorf("нельзя взять в работу тикет в статусе '%s'", savedTicket.Status)
+		default:
+		}
+
+		savedTicket.SolverUid = solverUid
 		savedTicket.Status = entity.SupportTicketStatusInProcess
 		savedTicket.UpdatedAt = time.Now().UTC()
 
@@ -37,7 +44,7 @@ func (uc *UseCaseSupport) TakeTicket(ctx context.Context, ticket entity.SupportT
 		}
 		return nil
 	}); err != nil {
-		log.Printf("failed to take ticket %s by support manager %s: %v", ticket.Uid, ticket.SolverUid, err)
+		log.Printf("failed to take ticket %s by support manager %s: %v", ticketUid, solverUid, err)
 		return errors.WithStack(err)
 	}
 	return nil

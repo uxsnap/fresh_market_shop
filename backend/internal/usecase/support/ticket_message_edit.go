@@ -42,6 +42,11 @@ func (uc *UseCaseSupport) EditTicketMessage(ctx context.Context, message entity.
 		return errors.New("обращение не найдено")
 	}
 
+	if !uuid.Equal(ticket.UserUid, message.SenderUid) && !uuid.Equal(ticket.SolverUid, message.SenderUid) {
+		log.Printf("failed to edit support ticket (%s) message: sender is not creator or solver of ticket", message.TicketUid)
+		return errors.New("нельзя добавить сообщение по данному обращению")
+	}
+
 	switch ticket.Status {
 	case entity.SupportTicketStatusSolved, entity.SupportTicketStatusCantSolve:
 		log.Printf("failed to add support ticket (%s) message: cant add message for ticket in status '%s'", message.TicketUid, ticket.Status)

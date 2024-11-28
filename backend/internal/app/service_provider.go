@@ -19,6 +19,7 @@ import (
 	repositoryProducts "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products"
 	repositoryProductsCount "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/products_count"
 	repositoryRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/recipes"
+	repositorySupport "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/support"
 	repositoryUsers "github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/users"
 	ucAddresses "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/addresses"
 	ucDelivery "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/delivery"
@@ -26,6 +27,7 @@ import (
 	ucPayments "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/payments"
 	ucProducts "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/products"
 	ucRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/recipes"
+	ucSupport "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/support"
 	ucUsers "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/users"
 )
 
@@ -47,6 +49,7 @@ type serviceProvider struct {
 	deliveryRepository      *repositoryDelivery.DeliveryRepository
 	addressesRepository     *repositoryAddresses.AddressesRepository
 	paymentsRepository      *repositoryPayments.PaymentsRepository
+	supportRepository       *repositorySupport.SupportRepository
 
 	ucProducts  *ucProducts.UseCaseProducts
 	ucUsers     *ucUsers.UseCaseUsers
@@ -55,6 +58,7 @@ type serviceProvider struct {
 	ucDelivery  *ucDelivery.UseCaseDelivery
 	ucAddresses *ucAddresses.UseCaseAddresses
 	ucPayments  *ucPayments.UseCasePayments
+	ucSupport   *ucSupport.UseCaseSupport
 
 	txManager *transaction.Manager
 
@@ -185,6 +189,13 @@ func (sp *serviceProvider) PaymentsRepository(ctx context.Context) *repositoryPa
 	return sp.paymentsRepository
 }
 
+func (sp *serviceProvider) SupportRepository(ctx context.Context) *repositorySupport.SupportRepository {
+	if sp.supportRepository == nil {
+		sp.supportRepository = repositorySupport.New(sp.PgClient(ctx))
+	}
+	return sp.supportRepository
+}
+
 func (sp *serviceProvider) ProductsService(ctx context.Context) *ucProducts.UseCaseProducts {
 	if sp.ucProducts == nil {
 		sp.ucProducts = ucProducts.New(
@@ -257,6 +268,16 @@ func (sp *serviceProvider) PaymentsService(ctx context.Context) *ucPayments.UseC
 	return sp.ucPayments
 }
 
+func (sp *serviceProvider) SupportService(ctx context.Context) *ucSupport.UseCaseSupport {
+	if sp.ucSupport == nil {
+		sp.ucSupport = ucSupport.New(
+			sp.SupportRepository(ctx),
+			sp.TxManager(ctx),
+		)
+	}
+	return sp.ucSupport
+}
+
 func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handler {
 	if sp.handlerHTTP == nil {
 		sp.handlerHTTP = deliveryHttp.New(
@@ -269,6 +290,7 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 			sp.DeliveryService(ctx),
 			sp.AddressesService(ctx),
 			sp.PaymentsService(ctx),
+			sp.SupportService(ctx),
 		)
 	}
 	return sp.handlerHTTP

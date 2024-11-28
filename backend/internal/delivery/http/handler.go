@@ -20,6 +20,7 @@ import (
 	recipesSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/recipes"
 	recommendationsSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/recommendations"
 	searchSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/search"
+	supportSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/support"
 	usersSubrouter "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/subrouters/users"
 )
 
@@ -43,6 +44,7 @@ func New(
 	deliveryService subrouters.DeliveryService,
 	addressesService subrouters.AddressesService,
 	paymentsService subrouters.PaymentsService,
+	supportService subrouters.SupportService,
 ) *Handler {
 	subroutersMiddleware := subrouters.NewMiddleware(authService)
 
@@ -58,6 +60,7 @@ func New(
 			DeliveryService:  deliveryService,
 			AddressesService: addressesService,
 			PaymentsService:  paymentsService,
+			SupportService:   supportService,
 			Middleware:       subroutersMiddleware,
 		},
 	}
@@ -92,6 +95,7 @@ func New(
 	h.router.Route("/delivery", deliverySubrouter.New(h.deps))
 	h.router.Route("/addresses", addressesSubrouter.New(h.deps))
 	h.router.Route("/payments", paymentsSubrouter.New(h.deps))
+	h.router.Route("/support", supportSubrouter.New(h.deps))
 
 	return h
 }
