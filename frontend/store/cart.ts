@@ -90,7 +90,7 @@ export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
     {
       version: 1,
       name: `${process.env.NEXT_PUBLIC_APP_NAME}_cart-storage`,
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );

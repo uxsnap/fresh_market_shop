@@ -57,7 +57,7 @@ const MainApp = ({ children }: PropsWithChildren) => {
 
   useEffect(() => {
     mutate();
-  }, [children]);
+  }, []);
 
   return (
     <AppShell
