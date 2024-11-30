@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -51,17 +50,35 @@ func (r *OrdersRepository) UpdateOrder(ctx context.Context, order entity.Order) 
 	return nil
 }
 
-func (r *OrdersRepository) GetOrderByUid(ctx context.Context, uid uuid.UUID) (entity.Order, bool, error) {
-	log.Printf("ordersRepository.GetOrderByUid: %s", uid)
+func (r *OrdersRepository) GetOrder(ctx context.Context, qFilters entity.QueryFilters) (entity.Order, bool, error) {
+	log.Printf("ordersRepository.GetOrderByUid: %s", qFilters.OrderUid)
 
-	orderRow := pgEntity.NewOrderRow().FromEntity(entity.Order{Uid: uid})
-	if err := r.GetOne(ctx, orderRow, orderRow.ConditionUidEqual()); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return entity.Order{}, false, nil
-		}
-		log.Printf("failed to get order by uid %s: %v", uid, err)
+	if qFilters.OrderUid == uuid.Nil {
+		return entity.Order{}, false, errors.New("failed to get order")
+	}
+
+	orderRow := pgEntity.NewOrderRow()
+
+	sql := squirrel.Select(orderRow.Columns()...).From(orderRow.Table()).PlaceholderFormat(squirrel.Dollar).Where(
+		squirrel.Eq{"uid": qFilters.OrderUid},
+	)
+
+	if !uuid.Equal(qFilters.UserUid, uuid.UUID{}) {
+		sql = sql.Where(squirrel.Eq{"user_uid": qFilters.UserUid})
+	}
+
+	stmt, args, err := sql.ToSql()
+	if err != nil {
+		log.Printf("failed to build sql query: %v", err)
 		return entity.Order{}, false, errors.WithStack(err)
 	}
+
+	err = orderRow.Scan(r.DB().QueryRow(ctx, stmt, args...))
+	if err != nil {
+		log.Printf("failed to get order: %v", err)
+		return entity.Order{}, false, errors.WithStack(err)
+	}
+
 	return orderRow.ToEntity(), true, nil
 }
 
@@ -106,8 +123,6 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 		log.Printf("failed to build sql query: %v", err)
 		return nil, err
 	}
-
-	fmt.Println(stmt)
 
 	rows, err := r.DB().Query(ctx, stmt, args...)
 	if err != nil {

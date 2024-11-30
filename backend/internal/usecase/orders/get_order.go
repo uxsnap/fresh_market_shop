@@ -5,16 +5,15 @@ import (
 	"log"
 
 	"github.com/pkg/errors"
-	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseOrders) GetOrder(ctx context.Context, orderUid uuid.UUID) (entity.Order, bool, error) {
-	log.Printf("usecaseOrders.GetOrder: %s", orderUid)
+func (uc *UseCaseOrders) GetOrder(ctx context.Context, qFilters entity.QueryFilters) (entity.Order, bool, error) {
+	log.Printf("usecaseOrders.GetOrder: %s", qFilters.OrderUid)
 
-	order, isFound, err := uc.ordersRepository.GetOrderByUid(ctx, orderUid)
+	order, isFound, err := uc.ordersRepository.GetOrder(ctx, qFilters)
 	if err != nil {
-		log.Printf("failed to get order %s: %v", orderUid, err)
+		log.Printf("failed to get order %s: %v", qFilters.OrderUid, err)
 		return entity.Order{}, false, errors.WithStack(err)
 	}
 

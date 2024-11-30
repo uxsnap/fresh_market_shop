@@ -6,6 +6,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
@@ -19,7 +20,9 @@ func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	order, isFound, err := h.OrdersService.GetOrder(ctx, req.OrderUid)
+	order, isFound, err := h.OrdersService.GetOrder(ctx, entity.QueryFilters{
+		OrderUid: req.OrderUid,
+	})
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return
