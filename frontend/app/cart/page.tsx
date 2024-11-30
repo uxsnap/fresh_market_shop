@@ -44,9 +44,9 @@ export default function CartPage() {
 
   const mutation = useMutation({
     mutationFn: makeOrder,
+    mutationKey: [makeOrder.queryKey],
     onSuccess: (data) => {
-      router.push(`/order/${data.uid}`);
-      removeAllItems();
+      router.push(`/order/${data.data.uid}`);
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);

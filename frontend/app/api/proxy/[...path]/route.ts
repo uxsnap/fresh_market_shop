@@ -4,7 +4,7 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
-import { proxyOrderHistory } from "@/services/proxy/order";
+import { proxyGetOrder, proxyOrderHistory } from "@/services/proxy/order";
 import {
   proxyAddPaymentCard,
   proxyGetPaymentCardsByUser,
@@ -35,10 +35,10 @@ export async function DELETE(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const url = req.url?.replace(
-    process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
-    ""
-  );
+  const params = req.nextUrl.searchParams;
+  const url = req.url
+    ?.replace(process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "", "")
+    .replace(req.nextUrl.search, "");
 
   switch (url) {
     case "/user/photo":
@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
       return proxyUserAddresses();
     case "/orders/history":
       return proxyOrderHistory();
+    case "/orders":
+      return proxyGetOrder(req, params);
   }
 
   return proxyDefault(req);

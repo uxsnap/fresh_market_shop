@@ -23,8 +23,7 @@ export const PayButton = () => {
   const mutation = useMutation({
     mutationFn: makeOrder,
     onSuccess: (data) => {
-      router.push(`/order/${data.uid}`);
-      removeAllItems();
+      router.push(`/order/${data.data.uid}`);
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);

@@ -60,5 +60,5 @@ func (h *OrdersSubrouter) GetOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httpUtils.WriteResponseJson(w, order)
+	httpUtils.WriteResponseJson(w, httpEntity.OrderFromEntity(order))
 }

@@ -9,14 +9,18 @@ import { useEffect, useState } from "react";
 
 import styles from "./order.module.css";
 import { PayButton } from "@/components/pages/cart/PayButton";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { OrderMain } from "@/components/pages/order/OrderMain";
+import { useQuery } from "@tanstack/react-query";
+import { getOrder } from "@/api/order/getOrder";
 
 export default function OrderPage() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
   const logged = useAuthStore((s) => s.logged);
+
+  const { id } = useParams();
 
   const [empty, setEmpty] = useState(false);
 
@@ -33,6 +37,13 @@ export default function OrderPage() {
       router.push("/");
     }
   }, [logged, empty]);
+
+  const { data, isFetching } = useQuery({
+    queryFn: () => getOrder(id + ""),
+    queryKey: [getOrder.queryKey],
+  });
+
+  console.log(data);
 
   return (
     <>
