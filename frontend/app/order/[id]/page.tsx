@@ -17,26 +17,19 @@ import { getOrder } from "@/api/order/getOrder";
 
 export default function OrderPage() {
   const router = useRouter();
-  const items = useCartStore((s) => s.items);
   const logged = useAuthStore((s) => s.logged);
 
   const { id } = useParams();
-
-  const [empty, setEmpty] = useState(false);
-
-  useEffect(() => {
-    setEmpty(!Object.keys(items).length);
-  }, [items]);
 
   useEffect(() => {
     if (logged === undefined) {
       return;
     }
 
-    if (!logged || empty) {
+    if (!logged) {
       router.push("/");
     }
-  }, [logged, empty]);
+  }, [logged]);
 
   const { data, isFetching } = useQuery({
     queryFn: () => getOrder(id + ""),
@@ -48,7 +41,7 @@ export default function OrderPage() {
   return (
     <>
       <Box className={styles.root}>
-        <BackToCatalog empty={empty} />
+        <BackToCatalog />
 
         <Box mih={CART_MAIN_HEIGHT} pos="relative">
           <Group

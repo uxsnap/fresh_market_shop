@@ -1,0 +1,7 @@
+h4.title {
+  cursor: pointer;
+
+  &:hover {
+    color: var(--mantine-color-primary-0) !important;
+  }
+}
