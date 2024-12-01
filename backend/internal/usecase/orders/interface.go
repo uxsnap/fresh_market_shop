@@ -25,6 +25,7 @@ type OrderProductsRepository interface {
 
 type ProductsRepository interface {
 	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+	GetOrderedProductsSum(ctx context.Context, orderProducts []entity.OrderProducts) (int64, error)
 }
 
 type DeliveryService interface {

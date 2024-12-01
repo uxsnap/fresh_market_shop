@@ -19,6 +19,7 @@ import { useCallback, useEffect } from "react";
 import styles from "./UserInfo.module.css";
 import { useRouter } from "next/navigation";
 import { deleteAccount } from "@/api/auth/deleteAccount";
+import { useCartStore } from "@/store";
 
 type Form = {
   email: string;
@@ -38,6 +39,7 @@ export const UserInfo = () => {
   const router = useRouter();
   const logged = useAuthStore((s) => s.logged);
   const setLogged = useAuthStore((s) => s.setLogged);
+  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const { data, error } = useQuery({
     queryFn: getUser,
@@ -56,6 +58,7 @@ export const UserInfo = () => {
 
     if (errorBody?.type === jwtError) {
       logoutUser();
+      removeAllItems();
     }
   }, [error]);
 
