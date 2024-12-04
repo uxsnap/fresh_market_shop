@@ -5,7 +5,7 @@ type Body = {
   products: MakeOrderItem[];
 };
 
-export const makeOrder = (body: Body) => {
+export const makeOrder = (body: Body): Promise<{ data: { uid: string } }> => {
   return client.post("/orders", body);
 };
 

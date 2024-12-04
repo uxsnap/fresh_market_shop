@@ -8,6 +8,7 @@ const (
 	OrderCreateValidation = "order_create_validation"
 	OrderCreateError      = "order_create_error"
 	OrderUpdateError      = "order_update_error"
+	OrderGetError         = "order_get_error"
 	ProductCountError     = "product_count_error"
 	JwtAuthMiddleware     = "jwt_auth_middleware"
 	RecommendationsError  = "recommendations_error"
@@ -18,6 +19,7 @@ const (
 	UserNotFoundError     = "user_not_found_error"
 	UserPhotoError        = "user_photo_error"
 	AddressesError        = "addresses_error"
+	OrderHistoryError     = "order_history_error"
 )
 
 type Error struct {

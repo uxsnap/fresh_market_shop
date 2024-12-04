@@ -58,7 +58,7 @@ func (r *SupportRepository) GetSupportTicketSolutionsByTopic(ctx context.Context
 	row := pgEntity.NewSupportTicketSolutionRow().FromEntity(entity.SupportTicketSolution{TicketUid: topicUid})
 
 	sql := sq.Select(
-		withPrefix("s", row.Columns())...,
+		r.WithPrefix("s", row.Columns())...,
 	).From(
 		row.Table() + " s",
 	).Join(
@@ -104,10 +104,3 @@ func (r *SupportRepository) DeleteSupportTicketSolution(ctx context.Context, tic
 	return nil
 }
 
-func withPrefix(prefix string, fields []string) []string {
-	res := make([]string, 0, len(fields))
-	for _, f := range fields {
-		res = append(res, prefix+"."+f)
-	}
-	return res
-}

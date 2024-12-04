@@ -46,11 +46,3 @@ func (r *ProductsRepository) GetProductCount(ctx context.Context, productUid uui
 
 	return productCountRow.Count(), true, nil
 }
-
-func withPrefix(prefix string, fields []string) []string {
-	res := make([]string, 0, len(fields))
-	for _, f := range fields {
-		res = append(res, prefix+"."+f)
-	}
-	return res
-}

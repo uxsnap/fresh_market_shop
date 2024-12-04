@@ -13,7 +13,9 @@ import (
 func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID) (uuid.UUID, error) {
 	log.Printf("usecasePayments.PayOrder: order uid %s, card uid %s", orderUid, cardUid)
 
-	order, isFound, err := uc.ordersRepository.GetOrderByUid(ctx, orderUid)
+	order, isFound, err := uc.ordersRepository.GetOrder(ctx, entity.QueryFilters{
+		OrderUid: orderUid,
+	})
 	if err != nil {
 		log.Printf("failed to get order by uid %s: %v", orderUid, err)
 		return uuid.UUID{}, errors.WithStack(err)

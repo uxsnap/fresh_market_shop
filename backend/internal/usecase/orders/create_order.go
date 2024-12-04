@@ -39,15 +39,27 @@ func (uc *UseCaseOrders) CreateOrder(ctx context.Context, userUid uuid.UUID, pro
 			return err
 		}
 
+		if err := uc.orderProductsRepository.AddOrderProducts(ctx, orderProducts); err != nil {
+			log.Printf("failed to create order: %v", err)
+			return err
+		}
+
+		sum, err := uc.productsRepository.GetOrderedProductsSum(ctx, orderProducts)
+		if err != nil {
+			log.Printf("failed to get order sum: %v", err)
+			return err
+		}
+		if sum < 0 {
+			log.Printf("failed to get order sum: sum < 0")
+			return errors.New("sum < 0")
+		}
+		order.Sum = sum
+
 		if err := uc.ordersRepository.CreateOrder(ctx, order); err != nil {
 			log.Printf("failed to create order: %v", err)
 			return err
 		}
 
-		if err := uc.orderProductsRepository.AddOrderProducts(ctx, orderProducts); err != nil {
-			log.Printf("failed to create order: %v", err)
-			return err
-		}
 		return nil
 	}); err != nil {
 		return uuid.UUID{}, errors.WithStack(err)

@@ -4,6 +4,7 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
+import { proxyGetOrder, proxyOrderHistory } from "@/services/proxy/order";
 import {
   proxyAddPaymentCard,
   proxyGetPaymentCardsByUser,
@@ -12,6 +13,7 @@ import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import {
   proxyAddDeliveryAddress,
+  proxyDeleteAccount,
   proxyDeleteDeliveryAddress,
   proxyUser,
   proxyUserAddresses,
@@ -19,14 +21,24 @@ import {
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
-  return proxyDefault(req);
-}
-
-export async function GET(req: NextRequest) {
   const url = req.url?.replace(
     process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
     ""
   );
+
+  switch (url) {
+    case "/user/delete":
+      return proxyDeleteAccount();
+  }
+
+  return proxyDefault(req);
+}
+
+export async function GET(req: NextRequest) {
+  const params = req.nextUrl.searchParams;
+  const url = req.url
+    ?.replace(process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "", "")
+    .replace(req.nextUrl.search, "");
 
   switch (url) {
     case "/user/photo":
@@ -37,6 +49,10 @@ export async function GET(req: NextRequest) {
       return proxyGetPaymentCardsByUser();
     case "/user/addresses":
       return proxyUserAddresses();
+    case "/orders/history":
+      return proxyOrderHistory();
+    case "/orders":
+      return proxyGetOrder(req, params);
   }
 
   return proxyDefault(req);

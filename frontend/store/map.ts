@@ -1,10 +1,10 @@
-import { Address, DeliveryAddress, MapAddress } from "@/types";
-import { YMapsApi } from "@pbe/react-yandex-maps/typings/util/typing";
+import { DEFAULT_MAP_ZOOM } from "@/constants";
+import { DeliveryAddress, MapAddress } from "@/types";
 import { create } from "zustand";
 
 type MapState = {
-  map: YMapsApi | null;
-  setMap: (m: YMapsApi) => void;
+  mapInstance: ymaps.Map | null;
+  setMapInstance: (m: ymaps.Map) => void;
 
   isMapOpen: boolean;
   setIsMapOpen: (v: boolean) => void;
@@ -20,11 +20,13 @@ type MapState = {
 
   deliveryAddress?: DeliveryAddress;
   setDeliveryAddress: (v?: DeliveryAddress) => void;
+
+  handleCenterMove: (coords: number[]) => void;
 };
 
-export const useMapStore = create<MapState>((set) => ({
-  map: null,
-  setMap: (m: YMapsApi) => set({ map: m }),
+export const useMapStore = create<MapState>((set, get) => ({
+  mapInstance: null,
+  setMapInstance: (m: ymaps.Map) => set({ mapInstance: m }),
 
   isFieldsModalOpen: false,
   setIsFieldsModalOpen: (v: boolean) => set({ isFieldsModalOpen: v }),
@@ -37,4 +39,10 @@ export const useMapStore = create<MapState>((set) => ({
 
   isMapOpen: false,
   setIsMapOpen: (v: boolean) => set({ isMapOpen: v }),
+
+  handleCenterMove: (coords: number[]) => {
+    get().mapInstance?.setCenter(coords, DEFAULT_MAP_ZOOM, {
+      duration: 150,
+    });
+  },
 }));

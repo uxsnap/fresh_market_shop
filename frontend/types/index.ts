@@ -146,3 +146,27 @@ export type DeliveryAddress = Address & {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type OrderProduct = {
+  orderUid: string;
+  productUid: string;
+  count: number;
+  photos: Photo[];
+};
+
+export type OrderStatus = "new" | "paid" | "in_progress" | "done";
+
+export type Order = {
+  uid: string;
+  userUid: string;
+  num: number;
+  sum: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OrderWithProducts = {
+  order: Order;
+  products: OrderProduct[];
+};

@@ -18,6 +18,8 @@ import { useCallback, useEffect } from "react";
 
 import styles from "./UserInfo.module.css";
 import { useRouter } from "next/navigation";
+import { deleteAccount } from "@/api/auth/deleteAccount";
+import { useCartStore } from "@/store";
 
 type Form = {
   email: string;
@@ -37,6 +39,7 @@ export const UserInfo = () => {
   const router = useRouter();
   const logged = useAuthStore((s) => s.logged);
   const setLogged = useAuthStore((s) => s.setLogged);
+  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const { data, error } = useQuery({
     queryFn: getUser,
@@ -55,6 +58,7 @@ export const UserInfo = () => {
 
     if (errorBody?.type === jwtError) {
       logoutUser();
+      removeAllItems();
     }
   }, [error]);
 
@@ -75,8 +79,18 @@ export const UserInfo = () => {
     form.initialize(getInitialValues(data?.data));
   }, [data]);
 
-  const { mutate: logout, isPending } = useMutation({
+  const { mutate: logout, isPending: isPendingLogout } = useMutation({
     mutationFn: logoutUser,
+    mutationKey: [logoutUser.queryKey],
+    onSuccess: () => {
+      router.push("/");
+      setLogged(false);
+    },
+  });
+
+  const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
+    mutationFn: deleteAccount,
+    mutationKey: [deleteAccount.queryKey],
     onSuccess: () => {
       router.push("/");
       setLogged(false);
@@ -98,6 +112,10 @@ export const UserInfo = () => {
   const handleLogout = useCallback(() => {
     logout();
   }, [logout]);
+
+  const handleDelete = useCallback(() => {
+    mutateDelete();
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className={styles.root}>
@@ -145,14 +163,20 @@ export const UserInfo = () => {
 
       <Group justify="space-between">
         <Button
-          disabled={isPending}
+          disabled={isPendingLogout}
           onClick={handleLogout}
           p={0}
           variant="outline"
         >
           Выйти из системы
         </Button>
-        <Button p={0} variant="outline" c="danger.0">
+        <Button
+          disabled={isPendingDelete}
+          onClick={handleDelete}
+          p={0}
+          variant="outline"
+          c="danger.0"
+        >
           Удалить аккаунт
         </Button>
       </Group>

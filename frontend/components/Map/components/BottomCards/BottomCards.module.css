@@ -3,7 +3,6 @@
 
   width: 100%;
   z-index: 10;
-  height: 100%;
 
   @media (min-width: $mantine-breakpoint-md) {
     display: none !important;

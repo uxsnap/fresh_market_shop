@@ -22,9 +22,10 @@ export const Location = () => {
   const logged = useAuthStore((s) => s.logged);
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
 
-  const deliveryAddressesState = queryClient.getQueryState([
-    getDeliveryAddresses.queryKey,
-  ]);
+  // TODO: Разобраться почему не подтягивается state
+  // const deliveryAddressesState = queryClient.getQueryState([
+  //   getDeliveryAddresses.queryKey,
+  // ]);
 
   const isMapOpen = useMapStore((s) => s.isMapOpen);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
@@ -52,6 +53,10 @@ export const Location = () => {
     setIsMapOpen(false);
   }, [popupDisabled]);
 
+  // useEffect(() => {
+  //   console.log(deliveryAddressesState);
+  // }, [deliveryAddressesState]);
+
   if (!logged) {
     return null;
   }
@@ -68,7 +73,7 @@ export const Location = () => {
       >
         <Popover.Target>
           <Box w="100%">
-            {logged && deliveryAddressesState?.status === "success" && (
+            {logged && (
               <Group
                 wrap="nowrap"
                 ref={ref}

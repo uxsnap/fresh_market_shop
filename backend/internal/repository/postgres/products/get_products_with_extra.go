@@ -21,11 +21,11 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
-	sqlSelectPart := withPrefix("p", productRow.Columns())
+	sqlSelectPart := r.WithPrefix("p", productRow.Columns())
 	sqlFromPart := fmt.Sprintf("%s as p", productRow.Table())
 
 	if qFilters.WithCounts {
-		sqlSelectPart = append(sqlSelectPart, withPrefix("c", productsCountRow.Columns()[1:])...)
+		sqlSelectPart = append(sqlSelectPart, r.WithPrefix("c", productsCountRow.Columns()[1:])...)
 		sqlFromPart = sqlFromPart + fmt.Sprintf(" inner join %s as c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 
@@ -185,11 +185,11 @@ func (r *ProductsRepository) GetProductsByNameLikeWithExtra(ctx context.Context,
 	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
-	sqlSelectPart := withPrefix("p", productRow.Columns())
+	sqlSelectPart := r.WithPrefix("p", productRow.Columns())
 	sqlFromPart := fmt.Sprintf("%s as p", productRow.Table())
 
 	if qFilters.WithCounts {
-		sqlSelectPart = append(sqlSelectPart, withPrefix("c", productsCountRow.Columns()[1:])...)
+		sqlSelectPart = append(sqlSelectPart, r.WithPrefix("c", productsCountRow.Columns()[1:])...)
 		sqlFromPart = sqlFromPart + fmt.Sprintf(" inner join %s as c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 
@@ -277,14 +277,14 @@ func (r *ProductsRepository) GetProductsLikeNamesWithLimitOnEachWithExtra(ctx co
 	productsCountRow := pgEntity.NewProductCountRow(uuid.UUID{}, 0)
 	productPhotoRows := pgEntity.NewProductPhotoRows()
 
-	sqlSelectPart := fmt.Sprintf("SELECT %s", strings.Join(withPrefix("p", productRow.Columns()), ","))
+	sqlSelectPart := fmt.Sprintf("SELECT %s", strings.Join(r.WithPrefix("p", productRow.Columns()), ","))
 	if len(names) > 1 {
 		sqlSelectPart = "(" + sqlSelectPart
 	}
 	sqlFromPart := fmt.Sprintf("FROM %s p", productRow.Table())
 
 	if qFilters.WithCounts {
-		sqlSelectPart += fmt.Sprintf(", %s", strings.Join(withPrefix("c", productsCountRow.Columns()[1:]), ","))
+		sqlSelectPart += fmt.Sprintf(", %s", strings.Join(r.WithPrefix("c", productsCountRow.Columns()[1:]), ","))
 		sqlFromPart += fmt.Sprintf(" inner join %s c on p.uid=c.product_uid", productsCountRow.Table())
 	}
 

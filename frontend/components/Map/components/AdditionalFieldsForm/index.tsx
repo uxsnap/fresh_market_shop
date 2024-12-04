@@ -6,6 +6,15 @@ import { useMapFormContext } from "../../context";
 export const AdditionalFieldsForm = memo(() => {
   const form = useMapFormContext();
 
+  form.watch("addressUid", () => {
+    form.setValues({
+      apartment: undefined,
+      entrance: undefined,
+      floor: undefined,
+      code: undefined,
+    });
+  });
+
   return (
     <Group gap={20} w="100%" wrap="nowrap">
       <Stack gap={12} w="100%">

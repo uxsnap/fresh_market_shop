@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	uuid "github.com/satori/go.uuid"
-	"github.com/uxsnap/fresh_market_shop/backend/internal/consts"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
@@ -18,9 +17,10 @@ func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accessCookie, err := r.Cookie(consts.ACCESS_JWT_COOKIE_NAME)
-	if err != nil {
-		log.Printf("failed to get access token from request: %v", err)
+	tokenCookie := httpUtils.GetBearerToken(r)
+
+	if tokenCookie == "" {
+		log.Printf("failed to get access token from request")
 		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError(
 			errorWrapper.JsonParsingError, "не удалось получить access_token",
 		))
@@ -29,7 +29,7 @@ func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 
-	if err := h.AuthService.DeleteAuthUser(ctx, accessCookie.Value, req.Uid); err != nil {
+	if err := h.AuthService.DeleteAuthUser(ctx, tokenCookie, req.Uid); err != nil {
 		log.Printf("failed to delete user %s: %v", req.Uid, err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
 			errorWrapper.JsonParsingError, "не удалось удалить пользователя",

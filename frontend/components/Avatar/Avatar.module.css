@@ -27,6 +27,10 @@
 
       > .uploadInfo {
         opacity: 1;
+
+        span {
+          width: auto;
+        }
       }
     }
   }
@@ -51,6 +55,7 @@
   justify-content: center;
 
   span {
+    width: 100%;
     white-space: nowrap;
   }
 }

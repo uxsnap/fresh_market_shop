@@ -13,7 +13,7 @@ export const Street = () => {
   const searchValue = useMapStore((s) => s.searchValue);
   const setSearchValue = useMapStore((s) => s.setSearchValue);
 
-  // const setMapActiveAddress = useMapStore((s) => s.setMapActiveAddress);
+  const setMapAddress = useMapStore((s) => s.setMapAddress);
 
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
@@ -31,11 +31,11 @@ export const Street = () => {
     enabled: !!debounced.length,
   });
 
-  // form.watch("addressUid", ({ value }) => {
-  //   const curMapActiveAddress = data?.data.find((a) => a.uid === value);
+  form.watch("addressUid", ({ value }) => {
+    const curMapActiveAddress = data?.data.find((a) => a.uid === value);
 
-  //   setMapActiveAddress(curMapActiveAddress);
-  // });
+    setMapAddress(curMapActiveAddress);
+  });
 
   const preparedData = useMemo(() => {
     return data?.data.map((a) => ({

@@ -15,7 +15,7 @@ func AuthUserInfoFromContext(ctx context.Context) (AuthUserInfo, error) {
 	userInfoFromCtx := ctx.Value(ctxKeyAuthUserInfo{})
 	userInfo, ok := userInfoFromCtx.(AuthUserInfo)
 	if !ok {
-		return AuthUserInfo{}, errors.New("failed to get user from ctx")
+		return AuthUserInfo{}, errors.New("не удалось получить пользователя")
 	}
 
 	return userInfo, nil

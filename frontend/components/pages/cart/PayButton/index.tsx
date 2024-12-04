@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { makeOrder } from "@/api/order/makeOrder";
 import { useRouter } from "next/navigation";
+import { showErrorNotification } from "@/utils";
+import { AxiosError } from "axios";
 
 export const PayButton = () => {
   const [curPrice, setCurPrice] = useState<number>(0);
@@ -16,11 +18,15 @@ export const PayButton = () => {
 
   const price = useCartStore((s) => s.getFullPrice());
   const items = useCartStore((s) => s.items);
+  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const mutation = useMutation({
     mutationFn: makeOrder,
-    onSuccess: () => {
-      router.push("/order");
+    onSuccess: (data) => {
+      router.push(`/order/${data.data.uid}`);
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
     },
   });
 

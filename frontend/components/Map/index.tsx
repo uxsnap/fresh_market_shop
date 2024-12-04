@@ -21,9 +21,11 @@ export const Map = () => {
 
   const isMapOpen = useMapStore((s) => s.isMapOpen);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
+  const setMapAddress = useMapStore((s) => s.setMapAddress);
 
   const handleClose = () => {
     close();
+    setMapAddress();
     setIsMapOpen(false);
   };
 

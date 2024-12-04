@@ -9,35 +9,39 @@ import { useEffect, useState } from "react";
 
 import styles from "./order.module.css";
 import { PayButton } from "@/components/pages/cart/PayButton";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { OrderMain } from "@/components/pages/order/OrderMain";
+import { useQuery } from "@tanstack/react-query";
+import { getOrder } from "@/api/order/getOrder";
 
 export default function OrderPage() {
   const router = useRouter();
-  const items = useCartStore((s) => s.items);
   const logged = useAuthStore((s) => s.logged);
 
-  const [empty, setEmpty] = useState(false);
-
-  useEffect(() => {
-    setEmpty(!Object.keys(items).length);
-  }, [items]);
+  const { id } = useParams();
 
   useEffect(() => {
     if (logged === undefined) {
       return;
     }
 
-    if (!logged || empty) {
+    if (!logged) {
       router.push("/");
     }
-  }, [logged, empty]);
+  }, [logged]);
+
+  const { data, isFetching } = useQuery({
+    queryFn: () => getOrder(id + ""),
+    queryKey: [getOrder.queryKey],
+  });
+
+  console.log(data);
 
   return (
     <>
       <Box className={styles.root}>
-        <BackToCatalog empty={empty} />
+        <BackToCatalog />
 
         <Box mih={CART_MAIN_HEIGHT} pos="relative">
           <Group

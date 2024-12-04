@@ -13,8 +13,8 @@ export default function Profile() {
         <UserInfo />
 
         <Stack gap={16} w="100%">
-          <ShadowBox w="100%" mah={312} style={{ overflowY: "auto" }}>
-            <Addresses />
+          <ShadowBox p={12} w="100%" mah={312} style={{ overflowY: "auto" }}>
+            <Addresses offsetScrollbars={false} />
           </ShadowBox>
 
           <Orders />
