@@ -1,0 +1,28 @@
+.root {
+  position: fixed;
+  right: -55px;
+  bottom: 10%;
+  transform: rotate(-90deg);
+  cursor: pointer;
+  border-radius: 8px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background-color: var(--mantine-color-primary-2);
+  padding: 8px 12px;
+
+  span {
+    white-space: nowrap;
+  }
+}
+
+.form {
+  min-width: 340px;
+}
+
+.textarea {
+  min-height: 130px;
+
+  textarea {
+    min-height: 130px;
+  }
+}

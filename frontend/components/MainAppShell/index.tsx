@@ -14,6 +14,7 @@ import {
 import { verifyUser } from "@/api/auth/verify";
 import { useAuthStore } from "@/store/auth";
 import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
+import { Support } from "../Support";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +45,7 @@ const MainApp = ({ children }: PropsWithChildren) => {
     toggleMobile();
   };
 
-  const { mutate } = useMutation({
+  const { mutate, isSuccess } = useMutation({
     mutationFn: verifyUser,
     onSuccess: ({ isValid }) => {
       if (!isValid) {
@@ -84,6 +85,8 @@ const MainApp = ({ children }: PropsWithChildren) => {
         {children}
 
         <ItemCardExtended />
+
+        {isSuccess && <Support />}
       </AppShell.Main>
     </AppShell>
   );
