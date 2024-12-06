@@ -2,10 +2,10 @@
 -- +goose StatementBegin
 
 -- Темы обращений, справочник
-CREATE TYPE support_tickets_topics (
+CREATE TABLE support_tickets_topics (
     uid uuid PRIMARY KEY,
-    name varchar,
-    description varchar
+    name varchar(255) NOT NULL,
+    description varchar(255)
 );
 
 INSERT INTO support_tickets_topics (uid, name, description) 
@@ -57,7 +57,7 @@ CREATE TABLE support_tickets_solutions (
     email_text varchar,
     is_success boolean,
     created_at timestamp,
-    updated_at timestamp,
+    updated_at timestamp
 );
 -- +goose StatementEnd
 
