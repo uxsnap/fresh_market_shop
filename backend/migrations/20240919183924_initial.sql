@@ -102,7 +102,7 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('38e27c8f-570c-4d50-bf33-a0bd03afb107', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 100, 'Кета', 'Рыба с умеренным содержанием жира и высоким содержанием белка.', 127, 130, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb108', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 100, 'Минтай', 'Низкокалорийная рыба, идеальная для диеты.', 72, 90, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb109', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 100, 'Палтус', 'Белая рыба с высоким содержанием белка.', 186, 210, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('38e27c8f-570c-4d50-bf33-a0bd03afb110', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 100, 'Сардины', 'Жирная рыба, богатая кальцием и витамином D.', 140, 110, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('38e27c8f-570c-4d50-bf33-a0bd03afb110', 'e069195a-ab82-4a17-ad9d-111a1dee2afd', 100, 'Сельдь', 'Жирная рыба, богатая кальцием и витамином D.', 187, 110, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 -- Фрукты
 INSERT INTO products (uid, category_uid, weight, name, description, ccal, price, created_at, updated_at) VALUES
@@ -129,7 +129,8 @@ INSERT INTO products (uid, category_uid, weight, name, description, ccal, price,
 ('38e27c8f-570c-4d50-bf33-a0bd03afb308', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Редис', 'Овощ с низким содержанием калорий и высоким содержанием витамина C.', 0.8, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb309', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Зелёный лук', 'Ароматный овощ, богатый витаминами A и C.', 0.4, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
 ('38e27c8f-570c-4d50-bf33-a0bd03afb310', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Сельдерей', 'Низкокалорийный овощ с высоким содержанием клетчатки.', 0.4, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
-('38e27c8f-570c-4d50-bf33-a0bd03afb311', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Салат', 'Низкокалорийный продукт, богатый витаминами A, C и K, антиоксидантами и клетчаткой.', 0.15, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
+('38e27c8f-570c-4d50-bf33-a0bd03afb311', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Салат', 'Низкокалорийный продукт, богатый витаминами A, C и K, антиоксидантами и клетчаткой.', 0.15, 50, NOW()::TIMESTAMP, NOW()::TIMESTAMP),
+('38e27c8f-570c-4d50-bf33-a0bd03afb312', '82ebbd1c-dcfe-4d12-8729-bd778de4365c', 20, 'Болгарский перец', 'Сладкий овощ с высоким содержанием витамина C и антиоксидантов.', 8, 40, NOW()::TIMESTAMP, NOW()::TIMESTAMP);
 
 -- Мясной отдел
 INSERT INTO products (uid, category_uid, weight, name, description, ccal, price, created_at, updated_at) VALUES
@@ -287,6 +288,7 @@ INSERT INTO public.products_count (product_uid,stock_quantity) VALUES
 	('96e091ed-981a-4c4d-afdc-e5bae7151df8',10),
 	('06784003-3c44-4913-adb6-7e433f82d19e',10),
 	('fd99b689-646d-47e0-ac98-287b60be6f45',10),
+	('38e27c8f-570c-4d50-bf33-a0bd03afb312',10),
 	('a323efa1-4788-459d-a1c4-c1710d289edc',10);
 
 -- +goose Down

@@ -1,7 +1,7 @@
 -- +goose Up
 -- +goose StatementBegin
 
--- dairy
+-- Молочные продукты / dairy
 
 insert into product_photos (id, product_uid, img_path) VALUES
 (gen_random_uuid(), 'f1c52c01-d7be-43aa-b9f6-f30e5d7f9ec3', 'assets/imgs/dairy/milk_1.png'),

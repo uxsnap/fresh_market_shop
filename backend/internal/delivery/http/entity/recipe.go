@@ -13,6 +13,7 @@ type Recipe struct {
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 	CookingTime int64     `json:"cookingTime"`
+	Ccal        int64     `json:"ccal"`
 }
 
 type RecipeStep struct {
@@ -36,5 +37,6 @@ func RecipeFromEntity(re entity.Recipe) Recipe {
 		CreatedAt:   re.CreatedAt,
 		UpdatedAt:   re.UpdatedAt,
 		CookingTime: re.CookingTime,
+		Ccal:        re.Ccal,
 	}
 }

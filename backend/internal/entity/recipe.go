@@ -12,6 +12,7 @@ type Recipe struct {
 	CookingTime int64
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	Ccal        int64
 }
 
 type RecipeStep struct {

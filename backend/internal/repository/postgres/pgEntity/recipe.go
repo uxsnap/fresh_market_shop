@@ -17,6 +17,7 @@ type RecipeRow struct {
 	CookingTime pgtype.Interval
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
+	Ccal        int64
 }
 
 func NewRecipeRow() *RecipeRow {
@@ -34,6 +35,8 @@ func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 		Status:       pgtype.Present,
 		Microseconds: int64(recipe.CookingTime) / 1000,
 	}
+
+	rr.Ccal = recipe.Ccal
 
 	rr.CreatedAt = pgtype.Timestamp{
 		Time:   recipe.CreatedAt,
@@ -54,19 +57,20 @@ func (rr *RecipeRow) ToEntity() entity.Recipe {
 		CookingTime: rr.CookingTime.Microseconds,
 		CreatedAt:   rr.CreatedAt.Time,
 		UpdatedAt:   rr.UpdatedAt.Time,
+		Ccal:        rr.Ccal,
 	}
 }
 
-var recipesTableColumns = []string{"uid", "name", "created_at", "updated_at", "cooking_time"}
+var recipesTableColumns = []string{"uid", "name", "ccal", "created_at", "updated_at", "cooking_time"}
 
 func (rr *RecipeRow) Values() []interface{} {
 	return []interface{}{
-		rr.Uid, rr.Name, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.CookingTime,
+		rr.Uid, rr.Name, rr.Ccal, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.CookingTime,
 	}
 }
 
 func (rr *RecipeRow) ValuesToScan() []interface{} {
-	return []interface{}{&rr.Uid, &rr.Name, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime}
+	return []interface{}{&rr.Uid, &rr.Name, &rr.Ccal, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime}
 }
 
 func (rr *RecipeRow) Columns() []string {
@@ -78,11 +82,11 @@ func (rr *RecipeRow) Table() string {
 }
 
 func (rr *RecipeRow) Scan(row pgx.Row) error {
-	return row.Scan(&rr.Uid, &rr.Name, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime)
+	return row.Scan(&rr.Uid, &rr.Name, &rr.Ccal, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime)
 }
 
 func (rr *RecipeRow) ColumnsForUpdate() []string {
-	return []string{"name", "description", "cooking_time", "updated_at", "img_path"}
+	return []string{"name", "description", "ccal", "cooking_time", "updated_at", "img_path"}
 }
 
 func (rr *RecipeRow) ValuesForUpdate() []interface{} {
