@@ -170,3 +170,9 @@ export type OrderWithProducts = {
   order: Order;
   products: OrderProduct[];
 };
+
+export type Topic = {
+  uid: string;
+  name: string;
+  description: string;
+};

@@ -2,6 +2,7 @@ import {
   Button,
   Group,
   Popover,
+  Select,
   Stack,
   Text,
   Textarea,
@@ -12,8 +13,21 @@ import {
 import styles from "./Support.module.css";
 import { MailSent } from "../icons/MailSent";
 import { isNotEmpty, useForm } from "@mantine/form";
+import { useQuery } from "@tanstack/react-query";
+import { getAllTopics } from "@/api/support/getAllTopics";
 
 export const Support = () => {
+  const { data, isFetching } = useQuery({
+    queryFn: getAllTopics,
+    queryKey: [getAllTopics.queryKey],
+    select(data) {
+      return data.data.map((item) => ({
+        label: item.name,
+        value: item.uid,
+      }));
+    },
+  });
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -50,11 +64,18 @@ export const Support = () => {
           </Title>
 
           <Stack gap={16}>
-            <TextInput
+            <Select
+              w="100%"
               size="md"
-              label="Название проблемы"
-              placeholder="Введите название проблемы"
-              {...form.getInputProps("name")}
+              label="Тема обращения"
+              placeholder="Выберите тему обращения"
+              data={data ?? []}
+              allowDeselect={false}
+              withAsterisk
+              withScrollArea={false}
+              styles={{ dropdown: { maxHeight: 130, overflowY: "auto" } }}
+              key={form.key("topicUid")}
+              {...form.getInputProps("topicUid")}
             />
 
             <Textarea
@@ -69,7 +90,7 @@ export const Support = () => {
 
             <Button
               variant="accent"
-              // disabled={isPending}
+              disabled={isFetching}
               w="100%"
               type="submit"
               mih={32}

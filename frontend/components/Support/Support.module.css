@@ -20,9 +20,9 @@
 }
 
 .textarea {
-  min-height: 130px;
+  min-height: 160px;
 
   textarea {
-    min-height: 130px;
+    min-height: 160px;
   }
 }
