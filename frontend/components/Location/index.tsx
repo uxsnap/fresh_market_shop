@@ -11,21 +11,12 @@ import { useClickOutside } from "@mantine/hooks";
 import { getAddress } from "@/utils";
 import { useMapStore } from "@/store/map";
 import { useAuthStore } from "@/store/auth";
-import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const Location = () => {
-  const queryClient = useQueryClient();
-
   const [opened, setOpened] = useState(false);
 
   const logged = useAuthStore((s) => s.logged);
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
-
-  // TODO: Разобраться почему не подтягивается state
-  // const deliveryAddressesState = queryClient.getQueryState([
-  //   getDeliveryAddresses.queryKey,
-  // ]);
 
   const isMapOpen = useMapStore((s) => s.isMapOpen);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
@@ -52,10 +43,6 @@ export const Location = () => {
     setOpened(false);
     setIsMapOpen(false);
   }, [popupDisabled]);
-
-  // useEffect(() => {
-  //   console.log(deliveryAddressesState);
-  // }, [deliveryAddressesState]);
 
   if (!logged) {
     return null;
