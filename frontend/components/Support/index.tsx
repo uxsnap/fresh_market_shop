@@ -14,14 +14,17 @@ import {
 import styles from "./Support.module.css";
 import { MailSent } from "../icons/MailSent";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllTopics } from "@/api/support/getAllTopics";
 import { addTicket } from "@/api/support/addTicket";
 import { IMaskInput } from "react-imask";
 import { useState } from "react";
+import { getTickets } from "@/api/support/getTickets";
 
 export const Support = () => {
   const [opened, setOpened] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const { data, isFetching } = useQuery({
     queryFn: getAllTopics,
@@ -39,6 +42,9 @@ export const Support = () => {
     mutationKey: [addTicket.queryKey],
     onSuccess: () => {
       setOpened(false);
+      queryClient.invalidateQueries({
+        queryKey: [getTickets.queryKey],
+      });
     },
   });
 

@@ -176,3 +176,17 @@ export type Topic = {
   name: string;
   description: string;
 };
+
+export type ISupportItem = {
+  uid: string;
+  userUid: string;
+  topicUid: string;
+  solverUid: string;
+  fromEmail: string;
+  fromPhone: string;
+  title: string;
+  description: string;
+  status: "created" | "in_process" | "solved" | "cant_solve";
+  createdAt: string;
+  updatedAt: string;
+};

@@ -8,7 +8,7 @@ type Props = {
 
 export const Addresses = memo(({ offsetScrollbars = true }: Props) => (
   <Stack gap={16}>
-    <Title c="accent.0" order={2}>
+    <Title c="accent.0" order={3}>
       Адрес доставки
     </Title>
 

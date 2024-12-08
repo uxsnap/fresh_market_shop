@@ -5,6 +5,7 @@ import { Box, Group, Stack } from "@mantine/core";
 
 import styles from "./profile.module.css";
 import { ShadowBox } from "@/components/ShadowBox";
+import { SupportItemList } from "@/components/SupportItemList";
 
 export default function Profile() {
   return (
@@ -16,6 +17,8 @@ export default function Profile() {
           <ShadowBox p={12} w="100%" mah={312} style={{ overflowY: "auto" }}>
             <Addresses offsetScrollbars={false} />
           </ShadowBox>
+
+          <SupportItemList />
 
           <Orders />
         </Stack>

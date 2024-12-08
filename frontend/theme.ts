@@ -23,6 +23,7 @@ export const theme = createTheme({
     primary: ["#578C3E", "#B7D968", "#DCEABD", "", "", "", "", "", "", ""],
     bg: ["#F0EEEE", "#F8F8F8", "#FFFFFF", "", "", "", "", "", "", ""],
     danger: ["#B50000", "#8A0606", "#C23131", "", "", "", "", "", "", ""],
+    warning: ["#FFBE00", "", "", "", "", "", "", "", "", ""],
   },
   defaultRadius: "md",
   radius: {
