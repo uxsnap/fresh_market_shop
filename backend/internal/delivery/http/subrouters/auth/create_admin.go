@@ -24,9 +24,7 @@ func (h *AuthSubrouter) CreateAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := httpUtils.GetBearerToken(r)
-
-	uid, err := h.AuthService.CreateAdmin(ctx, req.Email, req.Password, token)
+	uid, err := h.AuthService.CreateAdmin(ctx, req.Email, req.Password, httpUtils.GetBearerToken(r))
 	if err != nil {
 		log.Printf("failed to create admin user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
