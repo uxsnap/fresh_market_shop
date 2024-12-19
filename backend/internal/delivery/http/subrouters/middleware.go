@@ -97,7 +97,6 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 		ctx := r.Context()
 
 		tokenCookie := httpUtils.GetBearerToken(r)
-
 		if tokenCookie == "" {
 			log.Printf("отсутствует токен")
 			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(errorWrapper.JwtAuthMiddleware, "отсутствует токен"))
@@ -105,7 +104,6 @@ func (m *Middleware) Auth(next http.Handler) http.Handler {
 		}
 
 		userInfo, errorWrapper := m.verifyToken(ctx, tokenCookie)
-
 		if errorWrapper != nil {
 			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper)
 			return

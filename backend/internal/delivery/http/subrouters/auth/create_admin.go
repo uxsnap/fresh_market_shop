@@ -10,8 +10,8 @@ import (
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
-	var req RegisterRequest
+func (h *AuthSubrouter) CreateAdmin(w http.ResponseWriter, r *http.Request) {
+	var req CreateAdminRequest
 	if err := httpUtils.DecodeJsonRequest(r, &req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -24,9 +24,11 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uid, err := h.AuthService.Register(ctx, req.Email, req.Password)
+	token := httpUtils.GetBearerToken(r)
+
+	uid, err := h.AuthService.CreateAdmin(ctx, req.Email, req.Password, token)
 	if err != nil {
-		log.Printf("failed to register user: %v", err)
+		log.Printf("failed to create admin user: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return
 	}
@@ -37,7 +39,7 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 		FirstName: fullName.firstName,
 		LastName:  fullName.lastName,
 	}); err != nil {
-		log.Printf("failed to create user %s in gw: %v", uid, err)
+		log.Printf("failed to create admin user %s in gw: %v", uid, err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
 			errorWrapper.UserNameError, err.Error(),
 		))
@@ -49,12 +51,12 @@ func (h *AuthSubrouter) Register(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-type RegisterRequest struct {
+type CreateAdminRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-type RegisterResponse struct {
+type CreateAdminResponse struct {
 	Uid string `json:"uid"`
 }

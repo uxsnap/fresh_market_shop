@@ -25,5 +25,11 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Post("/verify/jwt", as.VerifyJwt)
 
 		r.Post("/verify/email/{token}", as.VerifyEmail)
+
+		r.Group(func(r chi.Router) {
+			r.Use(as.Middleware.Auth)
+
+			r.Post("/admin", as.CreateAdmin)
+		})
 	}
 }
