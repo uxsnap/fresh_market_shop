@@ -14,6 +14,7 @@ service Auth {
     rpc GetUser(GetUserRequest) returns (GetUserResponse); // required accessJwt in ctx
     rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
     rpc CreateAdmin(AdminCreateRequest) returns (AdminCreateResponse);
+    rpc GetAdmins(google.protobuf.Empty) returns (AdminsResponse);
 
     rpc Login(LoginRequest) returns (JwtResponse);
     rpc Logout(LogoutRequest) returns (google.protobuf.Empty); // required accessJwt in ctx
@@ -66,6 +67,10 @@ message GetUserResponse {
     repeated string permissions = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp updated_at = 6;
+}
+
+message AdminsResponse {
+    repeated GetUserResponse users = 1;
 }
 
 message DeleteUserRequest {

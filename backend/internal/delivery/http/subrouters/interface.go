@@ -37,6 +37,7 @@ type ProductsService interface {
 type AuthService interface {
 	Register(ctx context.Context, email string, password string) (uuid.UUID, error)
 	CreateAdmin(ctx context.Context, email string, password string, token string) (uuid.UUID, error)
+	GetAdmins(ctx context.Context) ([]entity.AuthUser, error)
 	UpdateAuthUser(ctx context.Context, accessToken string, uid uuid.UUID, email string, password string) (accessJwt string, refreshJwt string, err error)
 	GetAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID, email string) (entity.AuthUser, error)
 	DeleteAuthUser(ctx context.Context, accessJwt string, uid uuid.UUID) error

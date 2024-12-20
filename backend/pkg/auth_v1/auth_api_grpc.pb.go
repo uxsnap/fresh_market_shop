@@ -28,6 +28,7 @@ type AuthClient interface {
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	CreateAdmin(ctx context.Context, in *AdminCreateRequest, opts ...grpc.CallOption) (*AdminCreateResponse, error)
+	GetAdmins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminsResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*JwtResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Refresh(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*JwtResponse, error)
@@ -83,6 +84,15 @@ func (c *authClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts
 func (c *authClient) CreateAdmin(ctx context.Context, in *AdminCreateRequest, opts ...grpc.CallOption) (*AdminCreateResponse, error) {
 	out := new(AdminCreateResponse)
 	err := c.cc.Invoke(ctx, "/auth.Auth/CreateAdmin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) GetAdmins(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*AdminsResponse, error) {
+	out := new(AdminsResponse)
+	err := c.cc.Invoke(ctx, "/auth.Auth/GetAdmins", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -152,6 +162,7 @@ type AuthServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	CreateAdmin(context.Context, *AdminCreateRequest) (*AdminCreateResponse, error)
+	GetAdmins(context.Context, *emptypb.Empty) (*AdminsResponse, error)
 	Login(context.Context, *LoginRequest) (*JwtResponse, error)
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	Refresh(context.Context, *RefreshRequest) (*JwtResponse, error)
@@ -179,6 +190,9 @@ func (UnimplementedAuthServer) DeleteUser(context.Context, *DeleteUserRequest) (
 }
 func (UnimplementedAuthServer) CreateAdmin(context.Context, *AdminCreateRequest) (*AdminCreateResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAdmin not implemented")
+}
+func (UnimplementedAuthServer) GetAdmins(context.Context, *emptypb.Empty) (*AdminsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdmins not implemented")
 }
 func (UnimplementedAuthServer) Login(context.Context, *LoginRequest) (*JwtResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
@@ -297,6 +311,24 @@ func _Auth_CreateAdmin_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).CreateAdmin(ctx, req.(*AdminCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_GetAdmins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GetAdmins(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/auth.Auth/GetAdmins",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GetAdmins(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -435,6 +467,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateAdmin",
 			Handler:    _Auth_CreateAdmin_Handler,
+		},
+		{
+			MethodName: "GetAdmins",
+			Handler:    _Auth_GetAdmins_Handler,
 		},
 		{
 			MethodName: "Login",

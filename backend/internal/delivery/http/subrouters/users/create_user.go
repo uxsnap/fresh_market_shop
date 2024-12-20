@@ -9,7 +9,7 @@ import (
 )
 
 // unused
-func (h *UsersSubrouter) createUser(w http.ResponseWriter, r *http.Request) {
+func (h *UsersSubrouter) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	var user httpEntity.User
