@@ -1,0 +1,11 @@
+.root {
+  padding: 16px;
+
+  @media (min-width: $mantine-breakpoint-md) {
+    padding: 20px;
+  }
+}
+
+img.logo {
+  cursor: pointer;
+}

@@ -27,7 +27,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 		r.Post("/verify/email/{token}", as.VerifyEmail)
 
 		r.Group(func(r chi.Router) {
-			r.Use(as.Middleware.Auth)
+			r.Use(as.Middleware.AuthOrPass)
 
 			r.Post("/admin", as.CreateAdmin)
 		})

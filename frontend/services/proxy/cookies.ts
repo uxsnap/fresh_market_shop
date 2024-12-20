@@ -15,6 +15,7 @@ export const getAppCookie = async () => {
   return {
     access_jwt: cookieStore.get("access_jwt")?.value,
     refresh_jwt: cookieStore.get("refresh_jwt")?.value,
+    role: cookieStore.get("role")?.value,
   };
 };
 
@@ -23,7 +24,7 @@ export const getAuthCookieTokensFromServer =
     const result: NextServerResult = { success: false };
 
     try {
-      const { access_jwt, refresh_jwt } = await getAppCookie();
+      const { access_jwt, refresh_jwt, role } = await getAppCookie();
 
       if (access_jwt && refresh_jwt) {
         result.tokens = { access_jwt, refresh_jwt };

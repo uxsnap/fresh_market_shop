@@ -1,7 +1,11 @@
 import axios from "axios";
 import { publicApiErrorResponse } from "@/utils";
 import { NextRequest } from "next/server";
-import { parseResponseCookies, setAuthCookiesFromResponse } from "./cookies";
+import {
+  parseJwt,
+  parseResponseCookies,
+  setAuthCookiesFromResponse,
+} from "./cookies";
 
 export const proxyLogin = async (req: NextRequest) => {
   try {

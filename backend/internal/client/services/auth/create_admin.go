@@ -12,7 +12,9 @@ import (
 func (c *AuthClient) CreateAdmin(ctx context.Context, email string, password string, token string) (uuid.UUID, error) {
 	log.Printf("authClient.CreateAdmin: email %s, token %s", email, token)
 
-	ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, token)
+	if token != "" {
+		ctx = metadata.AppendToOutgoingContext(ctx, accessJwtKey, token)
+	}
 
 	resp, err := c.client.CreateAdmin(ctx, &auth_v1.AdminCreateRequest{
 		Email:    email,

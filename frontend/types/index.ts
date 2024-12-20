@@ -190,3 +190,9 @@ export type ISupportItem = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type Admin = {
+  uid: string;
+  email: string;
+  name: string;
+};

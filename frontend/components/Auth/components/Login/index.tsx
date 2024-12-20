@@ -5,6 +5,8 @@ import { Buttons } from "../Buttons";
 import { loginUser } from "@/api/auth/login";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
+import { verifyUser } from "@/api/auth/verify";
+import { useRouter } from "next/navigation";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -13,6 +15,9 @@ type Props = {
 
 export const Login = ({ onChange, close }: Props) => {
   const setLogged = useAuthStore((s) => s.setLogged);
+  const setAdmin = useAuthStore((s) => s.setAdmin);
+
+  const router = useRouter();
 
   const form = useForm({
     mode: "uncontrolled",
@@ -26,11 +31,23 @@ export const Login = ({ onChange, close }: Props) => {
     },
   });
 
+  const { mutate: mutateVerify } = useMutation({
+    mutationFn: verifyUser,
+    onSuccess: ({ isValid, isAdmin }) => {
+      if (!isValid) {
+        router.push("/");
+      }
+
+      setAdmin(isAdmin);
+    },
+  });
+
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: () => {
       close();
       setLogged(true);
+      mutateVerify();
     },
   });
 
