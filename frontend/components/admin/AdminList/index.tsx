@@ -11,10 +11,11 @@ export const AdminList = memo(() => {
     staleTime: Infinity,
   });
 
-  const rows = data?.data.map((admin) => (
+  console.log(data?.data);
+
+  const rows = data?.data.admins.map((admin) => (
     <Table.Tr key={admin.name}>
       <Table.Td>{admin.uid}</Table.Td>
-      <Table.Td>{admin.name}</Table.Td>
       <Table.Td>{admin.email}</Table.Td>
     </Table.Tr>
   ));
@@ -25,7 +26,6 @@ export const AdminList = memo(() => {
         <Table.Tr>
           <Table.Th>ID</Table.Th>
           <Table.Th>Mail</Table.Th>
-          <Table.Th>Имя</Table.Th>
         </Table.Tr>
       </Table.Thead>
 

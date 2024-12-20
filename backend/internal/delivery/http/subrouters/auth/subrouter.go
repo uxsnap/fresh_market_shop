@@ -30,6 +30,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(as.Middleware.AuthOrPass)
 
 			r.Post("/admin", as.CreateAdmin)
+			r.Get("/admins", as.GetAdmins)
 		})
 	}
 }

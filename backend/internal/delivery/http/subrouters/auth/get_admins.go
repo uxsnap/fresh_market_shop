@@ -13,7 +13,7 @@ import (
 func (h *AuthSubrouter) GetAdmins(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	users, err := h.AuthService.GetAdmins(ctx)
+	users, err := h.AuthService.GetAdmins(ctx, httpUtils.GetBearerToken(r))
 	if err != nil {
 		log.Printf("failed to get admin users: %v", err)
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
