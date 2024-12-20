@@ -11,6 +11,7 @@ import Link from "next/link";
 
 export const UserMenu = () => {
   const setLogged = useAuthStore((s) => s.setLogged);
+  const admin = useAuthStore((s) => s.admin);
   const [opened, setOpened] = useState(false);
 
   const { mutate, isPending } = useMutation({
@@ -58,6 +59,14 @@ export const UserMenu = () => {
             >
               <div>Перейти в профиль</div>
             </Link>
+
+            <Divider mx={12} size="xs" bg="var(--mantine-color-accent-0)" />
+
+            {admin && (
+              <Link className={styles.link} href="/admin">
+                <div>Перейти в панель админа</div>
+              </Link>
+            )}
 
             <Divider mx={12} size="xs" bg="var(--mantine-color-accent-0)" />
 

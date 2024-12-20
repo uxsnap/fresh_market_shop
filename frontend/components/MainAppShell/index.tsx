@@ -15,6 +15,7 @@ import { verifyUser } from "@/api/auth/verify";
 import { useAuthStore } from "@/store/auth";
 import { ItemCardExtended } from "../ItemCard/ItemExtendedCard";
 import { Support } from "../Support";
+import { AdminHeader } from "../admin/Header";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,10 @@ const MainApp = ({ children }: PropsWithChildren) => {
   const pathname = usePathname();
   const router = useRouter();
   const setLogged = useAuthStore((s) => s.setLogged);
+  const setAdmin = useAuthStore((s) => s.setAdmin);
+  const admin = useAuthStore((s) => s.admin);
+
+  const isAdmin = admin && pathname.startsWith("/admin");
 
   const isDesktop = useMatches({
     base: false,
@@ -47,12 +52,13 @@ const MainApp = ({ children }: PropsWithChildren) => {
 
   const { mutate, isSuccess } = useMutation({
     mutationFn: verifyUser,
-    onSuccess: ({ isValid }) => {
+    onSuccess: ({ isValid, isAdmin }) => {
       if (!isValid) {
         router.push("/");
       }
 
       setLogged(isValid);
+      setAdmin(isAdmin);
     },
   });
 
@@ -64,29 +70,35 @@ const MainApp = ({ children }: PropsWithChildren) => {
     <AppShell
       header={{ height: { base: 125, md: 78 } }}
       navbar={{
-        width: 300,
+        width: isAdmin ? 0 : 300,
         breakpoint: "md",
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
     >
       <AppShell.Header zIndex={3}>
-        <Header
-          opened={isDesktop ? desktopOpened : mobileOpened}
-          onNavbar={handleToggle}
-        />
+        {isAdmin ? (
+          <AdminHeader />
+        ) : (
+          <Header
+            opened={isDesktop ? desktopOpened : mobileOpened}
+            onNavbar={handleToggle}
+          />
+        )}
       </AppShell.Header>
 
-      <AppShell.Navbar zIndex={1} px={12} py={20}>
-        <SideMenu />
-      </AppShell.Navbar>
+      {!isAdmin && (
+        <AppShell.Navbar zIndex={1} px={12} py={20}>
+          <SideMenu />
+        </AppShell.Navbar>
+      )}
 
       <AppShell.Main>
         {children}
 
         <ItemCardExtended />
 
-        {isSuccess && <Support />}
+        {isSuccess && !isAdmin && <Support />}
       </AppShell.Main>
     </AppShell>
   );
