@@ -11,8 +11,6 @@ export const OrderItemList = () => {
     queryKey: [getOrdersHistory.queryKey],
   });
 
-  console.log(data);
-
   return (
     <Box>
       <LoadingOverlay

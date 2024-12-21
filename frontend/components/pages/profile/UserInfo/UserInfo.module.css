@@ -4,6 +4,11 @@
   @media (min-width: $mantine-breakpoint-md) {
     max-width: 386px;
   }
+
+  &.pending {
+    pointer-events: none;
+    opacity: 0.8;
+  }
 }
 
 .wrapper {

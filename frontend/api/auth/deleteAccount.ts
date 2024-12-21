@@ -1,7 +1,11 @@
 import client from "../client";
 
-export const deleteAccount = () => {
-  return client.delete("/user/delete");
+type Body = {
+  uid: string;
+};
+
+export const deleteAccount = (body?: Body) => {
+  return client.post("/user/delete", body ?? {});
 };
 
 deleteAccount.queryKey = "deleteAccount";

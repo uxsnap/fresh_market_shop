@@ -5,6 +5,8 @@ import { Buttons } from "../Buttons";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "@/api/auth/register";
 import { useRouter } from "next/navigation";
+import { showErrorNotification, showInlineErrorNotification } from "@/utils";
+import { AxiosError } from "axios";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -32,6 +34,11 @@ export const Register = ({ onChange, close }: Props) => {
     onSuccess: () => {
       close();
       router.push("/email_sent");
+    },
+    onError: () => {
+      showInlineErrorNotification(
+        "Ошибка регистрации, возможно такой email уже используется"
+      );
     },
   });
 

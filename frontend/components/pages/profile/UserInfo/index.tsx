@@ -20,6 +20,7 @@ import styles from "./UserInfo.module.css";
 import { useRouter } from "next/navigation";
 import { deleteAccount } from "@/api/auth/deleteAccount";
 import { useCartStore } from "@/store";
+import cn from "classnames";
 
 type Form = {
   email: string;
@@ -39,6 +40,7 @@ export const UserInfo = () => {
   const router = useRouter();
   const logged = useAuthStore((s) => s.logged);
   const setLogged = useAuthStore((s) => s.setLogged);
+  const setAdmin = useAuthStore((s) => s.setAdmin);
   const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const { data, error } = useQuery({
@@ -84,16 +86,18 @@ export const UserInfo = () => {
     mutationKey: [logoutUser.queryKey],
     onSuccess: () => {
       router.push("/");
+      setAdmin(false);
       setLogged(false);
     },
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
-    mutationFn: deleteAccount,
+    mutationFn: () => deleteAccount(),
     mutationKey: [deleteAccount.queryKey],
     onSuccess: () => {
-      router.push("/");
       setLogged(false);
+      setAdmin(false);
+      router.push("/");
     },
   });
 
@@ -117,8 +121,13 @@ export const UserInfo = () => {
     mutateDelete();
   }, []);
 
+  const isPending = isPendingDelete || isPendingLogout;
+
   return (
-    <form onSubmit={handleSubmit} className={styles.root}>
+    <form
+      onSubmit={handleSubmit}
+      className={cn(styles.root, isPending && styles.pending)}
+    >
       <ShadowBox w="100%">
         <Stack className={styles.wrapper} gap={12}>
           <Box className={styles.avatarWrapper}>
@@ -163,7 +172,7 @@ export const UserInfo = () => {
 
       <Group justify="space-between">
         <Button
-          disabled={isPendingLogout}
+          disabled={isPending}
           onClick={handleLogout}
           p={0}
           variant="outline"
@@ -171,7 +180,7 @@ export const UserInfo = () => {
           Выйти из системы
         </Button>
         <Button
-          disabled={isPendingDelete}
+          disabled={isPending}
           onClick={handleDelete}
           p={0}
           variant="outline"

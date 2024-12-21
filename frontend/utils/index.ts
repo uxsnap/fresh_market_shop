@@ -61,6 +61,14 @@ export const getErrorBody = (error: AxiosError<{ error: ErrorWrapper }>) => {
   return error.response?.data?.error;
 };
 
+export const showInlineErrorNotification = (message: string) => {
+  notifications.show({
+    title: "Ошибка!",
+    message,
+    color: "red",
+  });
+};
+
 export const showErrorNotification = (
   error: AxiosError<{ error: ErrorWrapper }>
 ) => {

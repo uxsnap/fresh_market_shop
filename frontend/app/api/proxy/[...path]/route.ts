@@ -20,20 +20,6 @@ import {
 } from "@/services/proxy/user";
 import { NextRequest } from "next/server";
 
-export async function DELETE(req: NextRequest) {
-  const url = req.url?.replace(
-    process.env.NEXT_PUBLIC_API_PROXY_BASE_URL + "",
-    ""
-  );
-
-  switch (url) {
-    case "/user/delete":
-      return proxyDeleteAccount();
-  }
-
-  return proxyDefault(req);
-}
-
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
   const url = req.url
@@ -79,6 +65,8 @@ export async function POST(req: NextRequest) {
       return proxyAddDeliveryAddress(req);
     case "/user/addresses/delete":
       return proxyDeleteDeliveryAddress(req);
+    case "/user/delete":
+      return proxyDeleteAccount(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);
