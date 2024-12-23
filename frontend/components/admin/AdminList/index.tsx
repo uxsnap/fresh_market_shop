@@ -2,27 +2,52 @@ import { deleteAccount } from "@/api/auth/deleteAccount";
 import { getAdmins } from "@/api/auth/getAdmins";
 import { Close } from "@/components/icons/Close";
 import { Admin } from "@/types";
-import { showSuccessNotification } from "@/utils";
-import { ActionIcon, Box, Button, Group, Modal, Table } from "@mantine/core";
+import {
+  showErrorNotification,
+  showInlineErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Group,
+  Modal,
+  Table,
+  Title,
+} from "@mantine/core";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { memo, useState } from "react";
+import { AxiosError } from "axios";
+import { memo, useEffect, useState } from "react";
 
 export const AdminList = memo(() => {
   const [deleteCandidate, setDeleteCandidate] = useState<Admin | undefined>();
 
-  const { data, isFetched, refetch } = useQuery({
+  const { data, isFetched, refetch, error } = useQuery({
     queryFn: getAdmins,
     queryKey: [getAdmins.queryKey],
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    retry: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      showErrorNotification(error as AxiosError<any>);
+    }
+  }, [error]);
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
     mutationFn: deleteAccount,
     mutationKey: [deleteAccount.queryKey],
+    onError: () => {
+      showInlineErrorNotification("Ошибка удаления пользователя!");
+      setDeleteCandidate(undefined);
+    },
     onSuccess: () => {
       showSuccessNotification("Пользователь был удален!");
       refetch();
+      setDeleteCandidate(undefined);
     },
   });
 
@@ -48,7 +73,11 @@ export const AdminList = memo(() => {
       <Modal
         opened={!!deleteCandidate}
         onClose={close}
-        title={`Удалить пользователя ${deleteCandidate?.email}?`}
+        title={
+          <Title c="accent.0" order={3}>
+            Удалить пользователя {deleteCandidate?.email}?
+          </Title>
+        }
         centered
       >
         <Group wrap="nowrap">

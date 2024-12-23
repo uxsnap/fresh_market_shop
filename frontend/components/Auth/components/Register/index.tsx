@@ -24,6 +24,10 @@ export const Register = ({ onChange, close }: Props) => {
       password: "",
     },
     validate: {
+      name: (value) =>
+        value.length >= 1
+          ? null
+          : "Длина имени пользователя должна быть больше 1",
       email: (value) =>
         /^\S+@\S+$/.test(value) ? null : "Неправильный формат email",
     },

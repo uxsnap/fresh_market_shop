@@ -115,8 +115,9 @@ export const proxyDeleteAccount = async (req: NextRequest) => {
     let userUid;
 
     const body = await req.json();
+    const isOtherUser = !!Object.keys(body).length;
 
-    if (Object.keys(body).length) {
+    if (isOtherUser) {
       userUid = body.uid;
     } else {
       const parsed = parseJwt(tokens.access_jwt);
@@ -131,7 +132,16 @@ export const proxyDeleteAccount = async (req: NextRequest) => {
       },
     });
 
-    return deleteAuthCookies();
+    if (!isOtherUser) {
+      return deleteAuthCookies();
+    }
+
+    return Response.json(
+      {},
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     return publicApiErrorResponse(error);
   }

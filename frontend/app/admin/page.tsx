@@ -1,15 +1,31 @@
 "use client";
 
 import { AdminList } from "@/components/admin/AdminList";
-import { Box, Stack, Tabs } from "@mantine/core";
+import { CreateButton } from "@/components/admin/CreateButton";
+import { useAdminStore } from "@/store/admin";
+import { AdminTab } from "@/types";
+import { Box, Group, Stack, Tabs } from "@mantine/core";
 
 export default function AdminPage() {
+  const tab = useAdminStore((s) => s.tab);
+  const setTab = useAdminStore((s) => s.setTab);
+
   return (
     <Stack gap={24} p={8} m={0} miw="100%">
-      <Tabs color="accent.0" variant="pills" defaultValue="admins">
-        <Tabs.List>
-          <Tabs.Tab value="admins">Администраторы</Tabs.Tab>
-        </Tabs.List>
+      <Tabs
+        value={tab}
+        onChange={(v) => setTab(v as AdminTab)}
+        color="accent.0"
+        variant="pills"
+        defaultValue="admins"
+      >
+        <Group justify="space-between">
+          <Tabs.List>
+            <Tabs.Tab value="admins">Администраторы</Tabs.Tab>
+          </Tabs.List>
+
+          <CreateButton />
+        </Group>
 
         <Box mt={24}>
           <Tabs.Panel value="admins">

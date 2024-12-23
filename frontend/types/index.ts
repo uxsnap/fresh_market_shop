@@ -196,3 +196,7 @@ export type Admin = {
   email: string;
   name: string;
 };
+
+export enum AdminTab {
+  admins = "admins",
+}
