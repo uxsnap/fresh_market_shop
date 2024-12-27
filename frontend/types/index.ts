@@ -38,6 +38,11 @@ export type ProductWithPhotos = {
   photos?: Photo[];
 };
 
+export type ProductsWithTotal = {
+  products: ProductWithPhotos[];
+  total: number;
+};
+
 export type ProductItem = {
   id: string;
   price: number;
@@ -199,4 +204,5 @@ export type Admin = {
 
 export enum AdminTab {
   admins = "admins",
+  products = "products",
 }

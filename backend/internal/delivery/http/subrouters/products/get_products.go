@@ -41,14 +41,16 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		resp := make([]httpEntity.ProductWithExtra, 0, len(products))
-		for _, product := range products {
-			resp = append(resp, httpEntity.ProductWithExtra{
+		resp := httpEntity.ProductsWithExtra{}
+		for _, product := range products.Products {
+			resp.Products = append(resp.Products, httpEntity.ProductWithExtra{
 				Product: httpEntity.ProductFromEntity(product.Product),
 				Count:   product.StockQuantity,
 				Photos:  httpEntity.ProductPhotosFromEntity(product.Photos),
 			})
 		}
+
+		resp.Total = products.Total
 
 		httpUtils.WriteResponseJson(w, resp)
 		return

@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminList } from "@/components/admin/AdminList";
+import { AdminProductList } from "@/components/admin/AdminProductList";
 import { CreateButton } from "@/components/admin/CreateButton";
 import { useAdminStore } from "@/store/admin";
 import { AdminTab } from "@/types";
@@ -22,6 +23,7 @@ export default function AdminPage() {
         <Group justify="space-between">
           <Tabs.List>
             <Tabs.Tab value="admins">Администраторы</Tabs.Tab>
+            <Tabs.Tab value="products">Продукты</Tabs.Tab>
           </Tabs.List>
 
           <CreateButton />
@@ -30,6 +32,10 @@ export default function AdminPage() {
         <Box mt={24}>
           <Tabs.Panel value="admins">
             <AdminList />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="products">
+            <AdminProductList />
           </Tabs.Panel>
         </Box>
       </Tabs>

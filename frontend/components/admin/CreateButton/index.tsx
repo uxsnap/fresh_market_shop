@@ -7,6 +7,7 @@ import { CreateAdminModal } from "./CreateAdminModal";
 
 const mapTabToText: Record<AdminTab, string> = {
   [AdminTab.admins]: "Создать админа",
+  [AdminTab.products]: "Добавить продукт",
 };
 
 export const CreateButton = () => {

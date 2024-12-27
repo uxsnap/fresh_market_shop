@@ -13,7 +13,7 @@ type ProductsService interface {
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	GetProductByUid(ctx context.Context, uid uuid.UUID) (entity.Product, bool, error)
 	GetProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Product, error)
-	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) (entity.ProductsWithExtra, error)
 	GetProductsByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Product, error)
 	GetProductsByNameLikeWithExtra(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.Product, error)

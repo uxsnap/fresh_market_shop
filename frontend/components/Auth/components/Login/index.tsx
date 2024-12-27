@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
 import { verifyUser } from "@/api/auth/verify";
 import { useRouter } from "next/navigation";
+import { showInlineErrorNotification } from "@/utils";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -40,6 +41,11 @@ export const Login = ({ onChange, close }: Props) => {
 
       setAdmin(isAdmin);
     },
+    onError: () => {
+      showInlineErrorNotification(
+        "Ошибка верификации, возможно такого пользователя не существует"
+      );
+    },
   });
 
   const mutation = useMutation({
@@ -48,6 +54,11 @@ export const Login = ({ onChange, close }: Props) => {
       close();
       setLogged(true);
       mutateVerify();
+    },
+    onError: () => {
+      showInlineErrorNotification(
+        "Ошибка логина, возможно такого пользователя не существует"
+      );
     },
   });
 

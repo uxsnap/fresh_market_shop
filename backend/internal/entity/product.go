@@ -18,6 +18,11 @@ type Product struct {
 	Weight      int32
 }
 
+type ProductsWithExtra struct {
+	Products []ProductWithExtra
+	Total    int64
+}
+
 type ProductWithExtra struct {
 	Product
 	StockQuantity int64

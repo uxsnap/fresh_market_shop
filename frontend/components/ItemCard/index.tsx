@@ -11,7 +11,7 @@ import { getFallbackImg } from "@/utils";
 
 type Props = {
   item: ProductItem;
-  onExtended: () => void;
+  onExtended?: () => void;
 };
 
 const mapTypeToValues: Record<string, any> = {
@@ -53,7 +53,7 @@ export const ItemCard = memo(({ item, onExtended }: Props) => {
   return (
     <Card p={8} w={maw} radius="md" withBorder pos="relative">
       <Card.Section>
-        <ItemCardIcon type="max" onClick={onExtended} />
+        <ItemCardIcon type="max" onClick={() => onExtended?.()} />
 
         <Image
           style={{ userSelect: "none" }}

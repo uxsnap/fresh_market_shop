@@ -22,6 +22,7 @@ type ProductsRepository interface {
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error)
 	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
+	GetProductsTotal(ctx context.Context) (int64, error)
 }
 
 type CategoriesRepository interface {

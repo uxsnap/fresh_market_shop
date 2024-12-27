@@ -47,6 +47,11 @@ func ProductToEntity(product Product) entity.Product {
 	}
 }
 
+type ProductsWithExtra struct {
+	Products []ProductWithExtra `json:"products"`
+	Total    int64              `json:"total"`
+}
+
 type ProductWithExtra struct {
 	Product Product        `json:"product"`
 	Count   int64          `json:"count,omitempty"`

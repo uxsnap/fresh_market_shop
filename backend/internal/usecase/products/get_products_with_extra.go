@@ -9,10 +9,12 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseProducts) GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error) {
+func (uc *UseCaseProducts) GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) (entity.ProductsWithExtra, error) {
 	log.Printf("ucProducts.GetProductsWithExtra")
 
 	categoryUid := qFilters.CategoryUid
+
+	var products entity.ProductsWithExtra
 
 	if !uuid.Equal(categoryUid, uuid.UUID{}) {
 		_, categoryFound, err := uc.categoriesRepository.GetCategoryByUid(ctx, categoryUid)
@@ -22,14 +24,31 @@ func (uc *UseCaseProducts) GetProductsWithExtra(ctx context.Context, qFilters en
 
 		if !categoryFound {
 			log.Printf("category %s not found", categoryUid)
-			return nil, errors.New("category not found")
+			return products, errors.New("category not found")
 		}
 	}
 
-	products, err := uc.productsRepository.GetProductsWithExtra(ctx, qFilters)
-	if err != nil {
+	if err := uc.txManager.NewPgTransaction().Execute(ctx, func(ctx context.Context) error {
+		productsFromRepo, err := uc.productsRepository.GetProductsWithExtra(ctx, qFilters)
+		if err != nil {
+			log.Printf("failed to get products: %v", err)
+			return errors.WithStack(err)
+		}
+
+		total, err := uc.productsRepository.GetProductsTotal(ctx)
+		if err != nil {
+			log.Printf("failed to get products total: %v", err)
+			return errors.WithStack(err)
+		}
+
+		products.Products = productsFromRepo
+		products.Total = total
+
+		return nil
+	}); err != nil {
 		log.Printf("failed to get products: %v", err)
-		return nil, errors.WithStack(err)
+		return products, errors.WithStack(err)
 	}
+
 	return products, nil
 }

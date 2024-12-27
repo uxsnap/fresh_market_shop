@@ -24,6 +24,7 @@ type QueryFilters struct {
 	WithCounts         bool
 	WithPhotos         bool
 	WithRandom         bool
+	WithItemsCount     bool
 	CcalMin            uint64
 	CcalMax            uint64
 	CreatedBefore      time.Time
@@ -60,6 +61,7 @@ const (
 	QueryFieldWithPhotos        = "with_photos"
 	QueryFieldCcalMin           = "ccal_min"
 	QueryFieldCcalMax           = "ccal_max"
+	QueryWithItemsCount         = "with_items_count"
 	QueryFieldCreatedBefore     = "created_before"
 	QueryFieldCreatedAfter      = "created_after"
 	QueryFieldCategoryUid       = "category_uid"
@@ -126,6 +128,7 @@ var fieldsParsers = map[string]func(url.Values, *QueryFilters) error{
 	QueryFieldWithCounts:        parseWithCounts,
 	QueryFieldWithPhotos:        parseWithPhotos,
 	QueryFieldCcalMin:           parseCcalMin,
+	QueryWithItemsCount:         parseWithItemsCount,
 	QueryFieldCcalMax:           parseCcalMax,
 	QueryFieldCreatedBefore:     parseCreatedBefore,
 	QueryFieldCreatedAfter:      parseCreatedAfter,
@@ -269,6 +272,10 @@ func parseWithPhotos(query url.Values, qFilters *QueryFilters) error {
 
 func parseCcalMin(query url.Values, qFilters *QueryFilters) error {
 	return parseUint64(query, QueryFieldCcalMin, &qFilters.CcalMin)
+}
+
+func parseWithItemsCount(query url.Values, qFilters *QueryFilters) error {
+	return parseBool(query, QueryWithItemsCount, &qFilters.WithItemsCount)
 }
 
 func parseCcalMax(query url.Values, qFilters *QueryFilters) error {
