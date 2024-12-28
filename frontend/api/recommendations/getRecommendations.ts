@@ -1,4 +1,4 @@
-import { ProductWithPhotos } from "@/types";
+import { ProductsWithTotal } from "@/types";
 import client from "../client";
 
 type Params = {
@@ -9,7 +9,7 @@ type Params = {
 };
 
 export const getRecommendations = (params?: Params) => {
-  return client.get<ProductWithPhotos[]>("/recommendations", {
+  return client.get<ProductsWithTotal>("/recommendations", {
     params,
   });
 };

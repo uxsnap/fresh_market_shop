@@ -17,6 +17,7 @@ type Product struct {
 	CreatedAt   time.Time `json:"createdAt"`
 	UpdatedAt   time.Time `json:"updatedAt"`
 	Weight      int32     `json:"weight"`
+	IsDeleted   bool      `json:"isDeleted"`
 }
 
 func ProductFromEntity(product entity.Product) Product {
@@ -30,6 +31,7 @@ func ProductFromEntity(product entity.Product) Product {
 		CreatedAt:   product.CreatedAt,
 		UpdatedAt:   product.UpdatedAt,
 		Weight:      product.Weight,
+		IsDeleted:   product.IsDeleted,
 	}
 }
 
@@ -44,6 +46,7 @@ func ProductToEntity(product Product) entity.Product {
 		CreatedAt:   product.CreatedAt,
 		UpdatedAt:   product.UpdatedAt,
 		Weight:      product.Weight,
+		IsDeleted:   product.IsDeleted,
 	}
 }
 

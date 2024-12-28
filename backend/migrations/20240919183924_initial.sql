@@ -31,7 +31,8 @@ CREATE TABLE products (
 		weight INT NOT null,
     price INT NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    updated_at TIMESTAMP NOT NULL,
+		is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 
 create index ix_products_category_uid on products (category_uid);

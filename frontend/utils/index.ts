@@ -34,6 +34,7 @@ export const convertProductToProductItem = (
   weight: item.product.weight,
   ccal: item.product.ccal,
   description: item.product.description,
+  isDeleted: item.product.isDeleted,
 });
 
 export const formatDuration = (duration: number) => {

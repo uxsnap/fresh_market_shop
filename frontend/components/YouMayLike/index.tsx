@@ -10,7 +10,7 @@ export const YouMayLike = memo(() => {
     queryKey: [getRecommendations.queryKey],
     queryFn: () => getRecommendations({ with_photos: true, limit: 50 }),
     select(data): ProductItem[] {
-      return data.data.map(convertProductToProductItem);
+      return data.data.products.map(convertProductToProductItem);
     },
   });
 

@@ -16,6 +16,7 @@ type Product struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	Weight      int32
+	IsDeleted   bool
 }
 
 type ProductsWithExtra struct {

@@ -12,7 +12,7 @@ import (
 const ProductsTableName = "products"
 
 var productsTableFields = []string{
-	"uid", "category_uid", "name", "description", "ccal", "price", "created_at", "updated_at", "weight",
+	"uid", "category_uid", "name", "description", "ccal", "price", "created_at", "updated_at", "weight", "is_deleted",
 }
 
 type ProductRow struct {
@@ -25,6 +25,7 @@ type ProductRow struct {
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 	Weight      int32
+	IsDeleted   bool
 }
 
 func NewProductRow() *ProductRow {
@@ -49,6 +50,7 @@ func (p *ProductRow) FromEntity(product entity.Product) *ProductRow {
 	p.Ccal = product.Ccal
 	p.Price = product.Price
 	p.Weight = product.Weight
+	p.IsDeleted = product.IsDeleted
 
 	if product.CreatedAt.Unix() == 0 {
 		p.CreatedAt = pgtype.Timestamp{
@@ -71,6 +73,7 @@ func (p *ProductRow) FromEntity(product entity.Product) *ProductRow {
 			Status: pgtype.Present,
 		}
 	}
+
 	return p
 }
 
@@ -85,13 +88,14 @@ func (p *ProductRow) ToEntity() entity.Product {
 		CreatedAt:   p.CreatedAt.Time,
 		UpdatedAt:   p.UpdatedAt.Time,
 		Weight:      p.Weight,
+		IsDeleted:   p.IsDeleted,
 	}
 }
 
 func (p *ProductRow) Values() []interface{} {
 	return []interface{}{
 		p.Uid, p.CategoryUid, p.Name, p.Description,
-		p.Ccal, p.Price, p.CreatedAt, p.UpdatedAt, p.Weight,
+		p.Ccal, p.Price, p.CreatedAt, p.UpdatedAt, p.Weight, p.IsDeleted,
 	}
 }
 
@@ -106,7 +110,7 @@ func (p *ProductRow) Table() string {
 func (p *ProductRow) ValuesForScan() []interface{} {
 	return []interface{}{
 		&p.Uid, &p.CategoryUid, &p.Name, &p.Description,
-		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt, &p.Weight,
+		&p.Ccal, &p.Price, &p.CreatedAt, &p.UpdatedAt, &p.Weight, &p.IsDeleted,
 	}
 }
 
@@ -116,14 +120,14 @@ func (p *ProductRow) Scan(row pgx.Row) error {
 
 func (p *ProductRow) ColumnsForUpdate() []string {
 	return []string{
-		"category_uid", "name", "description", "ccal", "price", "weight", "updated_at",
+		"category_uid", "name", "description", "ccal", "price", "weight", "updated_at", "is_deleted",
 	}
 }
 
 func (p *ProductRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
 		p.CategoryUid, p.Name, p.Description, p.Ccal,
-		p.Price, p.Weight, p.UpdatedAt,
+		p.Price, p.Weight, p.UpdatedAt, p.IsDeleted,
 	}
 }
 

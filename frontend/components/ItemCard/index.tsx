@@ -1,17 +1,32 @@
 "use client";
 
-import { Card, Text, Stack, useMatches, Image } from "@mantine/core";
+import {
+  Card,
+  Text,
+  Stack,
+  useMatches,
+  Image,
+  Box,
+  Overlay,
+  LoadingOverlay,
+} from "@mantine/core";
 import { ProductItem } from "@/types";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import { ItemCardIcon } from "./ItemCardIcon";
 import styles from "./ItemCard.module.css";
 import { ItemCounter } from "./ItemCounter";
-import { getFallbackImg } from "@/utils";
+import { getFallbackImg, showErrorNotification } from "@/utils";
+import { Trash } from "../icons/Trash";
+import { Refresh } from "../icons/Refresh";
+import { useMutation } from "@tanstack/react-query";
+import { deleteProduct } from "@/api/products/deleteProduct";
+import { AxiosError } from "axios";
 
 type Props = {
   item: ProductItem;
   onExtended?: () => void;
+  editable?: boolean;
 };
 
 const mapTypeToValues: Record<string, any> = {
@@ -37,63 +52,113 @@ const mapTypeToValues: Record<string, any> = {
   },
 };
 
-export const ItemCard = memo(({ item, onExtended }: Props) => {
-  const type = useMatches({
-    base: "small",
-    md: "default",
-  });
+export const ItemCard = memo(
+  ({ item, onExtended, editable = false }: Props) => {
+    const type = useMatches({
+      base: "small",
+      md: "default",
+    });
+    const [deleted, setDeleted] = useState(false);
 
-  const { maw, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
-    mapTypeToValues[type];
+    const { maw, priceFz, priceLh, infoFz, infoLh, nameFz, nameLh } =
+      mapTypeToValues[type];
 
-  const { price, name, imgs = [], weight, ccal } = item;
+    const { price, name, imgs = [], weight, ccal } = item;
 
-  const fallbackSrc = useMemo(() => getFallbackImg(name), [name]);
+    const fallbackSrc = useMemo(() => getFallbackImg(name), [name]);
 
-  return (
-    <Card p={8} w={maw} radius="md" withBorder pos="relative">
-      <Card.Section>
-        <ItemCardIcon type="max" onClick={() => onExtended?.()} />
+    const { mutate, isPending } = useMutation({
+      mutationFn: deleteProduct,
+      mutationKey: [deleteProduct.queryKey],
+      onSuccess: () => {
+        setDeleted(true);
+      },
+      onError: (error: AxiosError<any>) => {
+        showErrorNotification(error);
+      },
+    });
 
-        <Image
-          style={{ userSelect: "none" }}
-          loading="lazy"
-          src={imgs[0]}
-          className={styles.img}
-          alt={name}
-          fit="contain"
-          fallbackSrc={fallbackSrc}
-          w="100%"
-        />
-      </Card.Section>
+    useEffect(() => {
+      setDeleted(item.isDeleted);
+    }, [item]);
 
-      <Stack mt={8} gap={4}>
-        <Text lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
-          {price} Руб.
-        </Text>
+    const handleDelete = useCallback(() => {
+      mutate(item.id);
+    }, [item.id, deleted]);
+
+    const handleRevive = useCallback(() => {
+      setDeleted(false);
+    }, [item.id, deleted]);
+
+    return (
+      <Card p={8} w={maw} radius="md" withBorder pos="relative">
+        <Card.Section>
+          <LoadingOverlay
+            visible={isPending}
+            overlayProps={{ radius: "sm", blur: 2 }}
+            loaderProps={{ color: "accent.0", type: "bars" }}
+          />
+
+          {deleted && (
+            <Overlay
+              onClick={handleRevive}
+              color="var(--mantine-color-accent-0)"
+              backgroundOpacity={0.85}
+              className={styles.overlay}
+              zIndex={1}
+            >
+              <Refresh size={30} fill="var(--mantine-color-bg-2)" />
+            </Overlay>
+          )}
+
+          {editable && (
+            <Box className={styles.deleteIcon} onClick={handleDelete}>
+              <Trash />
+            </Box>
+          )}
+
+          <ItemCardIcon type="max" onClick={() => onExtended?.()} />
+
+          <Image
+            style={{ userSelect: "none" }}
+            loading="lazy"
+            src={imgs[0]}
+            className={styles.img}
+            alt={name}
+            fit="contain"
+            fallbackSrc={fallbackSrc}
+            w="100%"
+          />
+        </Card.Section>
+
+        <Stack mt={8} gap={4}>
+          <Text lh={`${priceLh}px`} fw={700} fz={priceFz} c="accent.0">
+            {price} Руб.
+          </Text>
+          <Text
+            truncate="end"
+            lh={`${infoLh}px`}
+            fw={500}
+            fz={infoFz}
+            c="accent.2"
+          >
+            {weight} грамм/{ccal} ккал.
+          </Text>
+        </Stack>
+
         <Text
           truncate="end"
-          lh={`${infoLh}px`}
+          lh={`${nameLh}px`}
           fw={500}
-          fz={infoFz}
-          c="accent.2"
+          fz={nameFz}
+          mt={8}
+          c="accent.0"
         >
-          {weight} грамм/{ccal} ккал.
+          {name}
         </Text>
-      </Stack>
 
-      <Text
-        truncate="end"
-        lh={`${nameLh}px`}
-        fw={500}
-        fz={nameFz}
-        mt={8}
-        c="accent.0"
-      >
-        {name}
-      </Text>
-
-      <ItemCounter item={item} />
-    </Card>
-  );
-});
+        {!editable && <ItemCounter item={item} />}
+      </Card>
+    );
+  }
+);

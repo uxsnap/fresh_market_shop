@@ -43,7 +43,7 @@ export const AdminProductList = () => {
 
       <Group gap={12} justify="center">
         {(data?.products ?? []).map((item, ind) => (
-          <ItemCard item={item} key={ind} />
+          <ItemCard editable item={item} key={ind} />
         ))}
       </Group>
 

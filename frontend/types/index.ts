@@ -26,6 +26,7 @@ export type Product = {
   createdAt: string;
   updatedAt: string;
   weight: number;
+  isDeleted: boolean;
 };
 
 export type Photo = {
@@ -51,6 +52,7 @@ export type ProductItem = {
   weight: number;
   ccal: number;
   description: string;
+  isDeleted: boolean;
 };
 
 export type CartItem = {
