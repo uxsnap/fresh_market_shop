@@ -12,6 +12,21 @@ import (
 func (h *ProductsSubrouter) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
+	userInfo, err := httpEntity.AuthUserInfoFromContext(r.Context())
+	if err != nil {
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось найти юзера",
+		))
+		return
+	}
+
+	if userInfo.Role != "admin" {
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "нет разрешений на удаление продукта",
+		))
+		return
+	}
+
 	var product httpEntity.Product
 	if err := httpUtils.DecodeJsonRequest(r, &product); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(

@@ -38,9 +38,15 @@ export const proxyReviveProduct = async (req: NextRequest) => {
 
     const body = await req.json();
 
-    await axios.patch(`${process.env.NEXT_PUBLIC_API}/products/${body.uid}`, {
-      headers: { Authorization: `Bearer ${tokens.access_jwt}` },
-    });
+    console.log(body, tokens);
+
+    await axios.patch(
+      `${process.env.NEXT_PUBLIC_API}/products/${body.uid}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${tokens.access_jwt}` },
+      }
+    );
 
     return Response.json(
       {},

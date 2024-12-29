@@ -10,7 +10,10 @@ import {
   proxyGetPaymentCardsByUser,
 } from "@/services/proxy/paymentCards";
 import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
-import { proxyDeleteProduct } from "@/services/proxy/products";
+import {
+  proxyDeleteProduct,
+  proxyReviveProduct,
+} from "@/services/proxy/products";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import {
   proxyAddDeliveryAddress,
@@ -71,7 +74,7 @@ export async function POST(req: NextRequest) {
     case "/products/delete":
       return proxyDeleteProduct(req);
     case "/products/revive":
-      return proxyDeleteProduct(req);
+      return proxyReviveProduct(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

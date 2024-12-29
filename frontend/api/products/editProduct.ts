@@ -1,7 +1,7 @@
 import client from "../client";
 
 type Body = {
-  uid?: string;
+  uid: string;
   price: number;
   name: string;
   weight: number;
@@ -10,8 +10,8 @@ type Body = {
   categoryUid: string;
 };
 
-export const createProduct = (body: Body) => {
-  return client.post("/products", body);
+export const editProduct = (body: Body) => {
+  return client.put("/products", body);
 };
 
-createProduct.queryKey = "createProduct";
+editProduct.queryKey = "editProduct";

@@ -1,5 +1,6 @@
 import { getCategories } from "@/api/categories/getCategories";
 import { createProduct } from "@/api/products/createProduct";
+import { editProduct } from "@/api/products/editProduct";
 import { getProducts } from "@/api/products/getProducts";
 import { useAdminStore } from "@/store/admin";
 import { showErrorNotification, showSuccessNotification } from "@/utils";
@@ -72,9 +73,8 @@ export const ProductModal = ({ onClose }: Props) => {
     onClose();
   };
 
-  const { mutate, isPending } = useMutation({
+  const { mutate: mutateCreate, isPending: isPendingCreate } = useMutation({
     mutationFn: createProduct,
-    mutationKey: [createProduct.queryKey],
     onSuccess: () => {
       onClose();
 
@@ -89,11 +89,33 @@ export const ProductModal = ({ onClose }: Props) => {
     },
   });
 
+  const { mutate: mutateEdit, isPending: isPendingUpdate } = useMutation({
+    mutationFn: editProduct,
+    onSuccess: () => {
+      onClose();
+
+      queryClient.invalidateQueries({
+        queryKey: [getProducts.queryKey],
+      });
+
+      showSuccessNotification("Продукт успешно обновлен!");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
+
   const handleSubmit = form.onSubmit((values) => {
-    mutate({
+    const submitValues = {
       ...values,
       weight: parseInt(values.weight, 10),
-    });
+    };
+
+    if (productItem) {
+      return mutateEdit({ ...submitValues, uid: productItem.id });
+    }
+
+    mutateCreate(submitValues);
   });
 
   const { data: categories } = useQuery({
@@ -197,7 +219,12 @@ export const ProductModal = ({ onClose }: Props) => {
         />
 
         <Group wrap="nowrap" mt={4} justify="space-between">
-          <Button disabled={isPending} w="100%" type="submit" variant="accent">
+          <Button
+            disabled={isPendingCreate || isPendingUpdate}
+            w="100%"
+            type="submit"
+            variant="accent"
+          >
             Сохранить
           </Button>
 
