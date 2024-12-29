@@ -70,6 +70,8 @@ export async function POST(req: NextRequest) {
       return proxyDeleteAccount(req);
     case "/products/delete":
       return proxyDeleteProduct(req);
+    case "/products/revive":
+      return proxyDeleteProduct(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

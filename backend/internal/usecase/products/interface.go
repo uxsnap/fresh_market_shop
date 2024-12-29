@@ -17,6 +17,7 @@ type ProductsRepository interface {
 	GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	UpdateProduct(ctx context.Context, product entity.Product) error
 	DeleteProduct(ctx context.Context, productUid uuid.UUID) error
+	ReviveProduct(ctx context.Context, productUid uuid.UUID) error
 
 	CreateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error

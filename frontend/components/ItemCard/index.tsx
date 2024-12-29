@@ -22,6 +22,7 @@ import { Refresh } from "../icons/Refresh";
 import { useMutation } from "@tanstack/react-query";
 import { deleteProduct } from "@/api/products/deleteProduct";
 import { AxiosError } from "axios";
+import { reviveProduct } from "@/api/products/reviveProduct";
 
 type Props = {
   item: ProductItem;
@@ -67,11 +68,22 @@ export const ItemCard = memo(
 
     const fallbackSrc = useMemo(() => getFallbackImg(name), [name]);
 
-    const { mutate, isPending } = useMutation({
+    const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
       mutationFn: deleteProduct,
       mutationKey: [deleteProduct.queryKey],
       onSuccess: () => {
         setDeleted(true);
+      },
+      onError: (error: AxiosError<any>) => {
+        showErrorNotification(error);
+      },
+    });
+
+    const { mutate: mutateRevive, isPending: isPendingRevive } = useMutation({
+      mutationFn: reviveProduct,
+      mutationKey: [reviveProduct.queryKey],
+      onSuccess: () => {
+        setDeleted(false);
       },
       onError: (error: AxiosError<any>) => {
         showErrorNotification(error);
@@ -83,12 +95,14 @@ export const ItemCard = memo(
     }, [item]);
 
     const handleDelete = useCallback(() => {
-      mutate(item.id);
+      mutateDelete(item.id);
     }, [item.id, deleted]);
 
     const handleRevive = useCallback(() => {
-      setDeleted(false);
+      mutateRevive(item.id);
     }, [item.id, deleted]);
+
+    const isPending = isPendingDelete || isPendingRevive;
 
     return (
       <Card p={8} w={maw} radius="md" withBorder pos="relative">

@@ -19,6 +19,7 @@ type ProductsService interface {
 	GetProductsLikeNamesWithLimitOnEach(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.Product, error)
 	GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
+	ReviveProduct(ctx context.Context, uid uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
 	IncrementProductCount(ctx context.Context, productUid uuid.UUID, incValue int64) error
