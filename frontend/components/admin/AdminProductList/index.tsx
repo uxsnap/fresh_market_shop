@@ -1,5 +1,6 @@
 import { getProducts } from "@/api/products/getProducts";
 import { ItemCard } from "@/components/ItemCard";
+import { useAdminStore } from "@/store/admin";
 import { ProductItem } from "@/types";
 import { convertProductToProductItem } from "@/utils";
 import { Group, LoadingOverlay, Pagination, Stack } from "@mantine/core";
@@ -12,6 +13,9 @@ const PRODUCTS_LIMIT = 30;
 export const AdminProductList = () => {
   const [activePage, setPage] = useState(1);
   const [_, scrollTo] = useWindowScroll();
+
+  const setModalOpen = useAdminStore((s) => s.setModalOpen);
+  const setProductItem = useAdminStore((s) => s.setProductItem);
 
   const { data, isFetching } = useQuery({
     queryKey: [getProducts.queryKey, activePage],
@@ -32,6 +36,11 @@ export const AdminProductList = () => {
     scrollTo({ y: 0 });
   }, [activePage]);
 
+  const handleEdit = (item: ProductItem) => {
+    setProductItem(item);
+    setModalOpen(true);
+  };
+
   return (
     <Stack gap={20} pos="relative" justify="center" align="center">
       <LoadingOverlay
@@ -43,7 +52,12 @@ export const AdminProductList = () => {
 
       <Group gap={12} justify="center">
         {(data?.products ?? []).map((item, ind) => (
-          <ItemCard editable item={item} key={ind} />
+          <ItemCard
+            onExtended={() => handleEdit(item)}
+            editable
+            item={item}
+            key={ind}
+          />
         ))}
       </Group>
 

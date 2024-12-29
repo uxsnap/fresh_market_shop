@@ -25,7 +25,6 @@ type ProductsRepository interface {
 	GetProductsWithExtra(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	GetProductsTotal(ctx context.Context) (int64, error)
 }
-
 type CategoriesRepository interface {
 	CreateCategory(ctx context.Context, category entity.Category) error
 	GetCategoryByUid(ctx context.Context, uid uuid.UUID) (entity.Category, bool, error)

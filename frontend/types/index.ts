@@ -53,6 +53,7 @@ export type ProductItem = {
   ccal: number;
   description: string;
   isDeleted: boolean;
+  categoryUid: string;
 };
 
 export type CartItem = {

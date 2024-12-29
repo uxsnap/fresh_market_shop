@@ -35,6 +35,7 @@ export const convertProductToProductItem = (
   ccal: item.product.ccal,
   description: item.product.description,
   isDeleted: item.product.isDeleted,
+  categoryUid: item.product.categoryUid,
 });
 
 export const formatDuration = (duration: number) => {
