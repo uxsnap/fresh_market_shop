@@ -19,6 +19,8 @@ type ProductsRepository interface {
 	DeleteProduct(ctx context.Context, productUid uuid.UUID) error
 	ReviveProduct(ctx context.Context, productUid uuid.UUID) error
 
+	UpdateProductPhotos(ctx context.Context, uid uuid.UUID, imgPaths []string) error
+
 	CreateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, count int64) error
 	GetProductCount(ctx context.Context, productUid uuid.UUID) (int64, bool, error)

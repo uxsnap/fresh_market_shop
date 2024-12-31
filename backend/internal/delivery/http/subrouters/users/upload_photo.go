@@ -13,6 +13,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/consts"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
+	formUtils "github.com/uxsnap/fresh_market_shop/backend/internal/utils"
 )
 
 const MAX_PHOTO_SIZE = 15
@@ -34,7 +35,7 @@ func (h *UsersSubrouter) uploadPhoto(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !httpUtils.IsImageExtensionAllowed(handler.Filename) {
+	if !formUtils.IsImageExtensionAllowed(handler.Filename) {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
 			errorWrapper.UserPhotoError, "неподдерживаемый формат",
 		))
@@ -53,7 +54,7 @@ func (h *UsersSubrouter) uploadPhoto(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newFileName := fmt.Sprintf("%v.%v", uid.String(), httpUtils.GetFileExtension(handler.Filename))
+	newFileName := fmt.Sprintf("%v.%v", uid.String(), formUtils.GetFileExtension(handler.Filename))
 
 	dst, err := os.Create(filepath.Join(
 		uploadPath, consts.USER_PHOTO_PATH, newFileName,

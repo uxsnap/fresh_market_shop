@@ -2,6 +2,7 @@ package subrouters
 
 import (
 	"context"
+	"mime/multipart"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -20,6 +21,8 @@ type ProductsService interface {
 	GetProductsLikeNamesWithLimitOnEachWithExtra(ctx context.Context, names []string, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	DeleteProduct(ctx context.Context, uid uuid.UUID) error
 	ReviveProduct(ctx context.Context, uid uuid.UUID) error
+
+	UploadProductPhotos(ctx context.Context, uid uuid.UUID, form *multipart.Form) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
 	IncrementProductCount(ctx context.Context, productUid uuid.UUID, incValue int64) error

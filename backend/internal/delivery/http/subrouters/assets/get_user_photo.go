@@ -11,6 +11,7 @@ import (
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
+	formUtils "github.com/uxsnap/fresh_market_shop/backend/internal/utils"
 )
 
 func handleIsFileMatches(curFilePath string) bool {
@@ -20,7 +21,7 @@ func handleIsFileMatches(curFilePath string) bool {
 		return false
 	}
 
-	if !httpUtils.IsImageExtensionAllowed(matches[0]) {
+	if !formUtils.IsImageExtensionAllowed(matches[0]) {
 		return false
 	}
 

@@ -1,4 +1,4 @@
-package httpUtils
+package formUtils
 
 import (
 	"strings"
