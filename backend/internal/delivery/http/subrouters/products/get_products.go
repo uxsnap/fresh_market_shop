@@ -19,6 +19,7 @@ func (h *ProductsSubrouter) GetProducts(w http.ResponseWriter, r *http.Request) 
 			entity.QueryFieldLimit,
 		).
 		WithAllowed(
+			entity.QueryFieldName,
 			entity.QueryFieldWithCounts,
 			entity.QueryFieldWithPhotos,
 			entity.QueryFieldCreatedBefore,

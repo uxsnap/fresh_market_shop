@@ -46,6 +46,12 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 			}})
 	}
 
+	if len(qFilters.Name) != 0 {
+		sql = sql.Where(squirrel.Like{
+			"LOWER(name)": "%" + strings.ToLower(qFilters.Name) + "%",
+		})
+	}
+
 	if qFilters.CcalMin > 0 {
 		sql = sql.Where(squirrel.GtOrEq{
 			"p.ccal": qFilters.CcalMin,
