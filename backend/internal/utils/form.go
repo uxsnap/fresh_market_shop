@@ -1,4 +1,4 @@
-package formUtils
+package utils
 
 import (
 	"strings"

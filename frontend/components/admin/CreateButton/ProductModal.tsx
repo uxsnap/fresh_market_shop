@@ -16,7 +16,10 @@ import {
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ImgsUpload } from "../ImgsUpload";
+import { FileWithPath } from "@mantine/dropzone";
+import { updatePhotos } from "@/api/products/updatePhotos";
 
 type Props = {
   onClose: () => void;
@@ -30,6 +33,8 @@ const weightData = [
 export const ProductModal = ({ onClose }: Props) => {
   const productItem = useAdminStore((s) => s.productItem);
   const setProductItem = useAdminStore((s) => s.setProductItem);
+
+  const [files, setFiles] = useState<FileWithPath[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -105,6 +110,29 @@ export const ProductModal = ({ onClose }: Props) => {
     },
   });
 
+  const { mutate: mutateFiles } = useMutation({
+    mutationFn: updatePhotos,
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
+
+  const handleFiles = () => {
+    if (!files.length || !productItem) {
+      return;
+    }
+
+    const form = new FormData();
+    form.append("category", productItem.categoryUid);
+    form.append("uid", productItem.id);
+
+    for (const file of files) {
+      form.append("file", file);
+    }
+
+    mutateFiles(form);
+  };
+
   const handleSubmit = form.onSubmit((values) => {
     const submitValues = {
       ...values,
@@ -112,10 +140,12 @@ export const ProductModal = ({ onClose }: Props) => {
     };
 
     if (productItem) {
-      return mutateEdit({ ...submitValues, uid: productItem.id });
+      mutateEdit({ ...submitValues, uid: productItem.id });
+    } else {
+      mutateCreate(submitValues);
     }
 
-    mutateCreate(submitValues);
+    handleFiles();
   });
 
   const { data: categories } = useQuery({
@@ -217,6 +247,8 @@ export const ProductModal = ({ onClose }: Props) => {
           {...form.getInputProps("weight")}
           comboboxProps={{ withinPortal: false }}
         />
+
+        <ImgsUpload files={files} setFiles={setFiles} />
 
         <Group wrap="nowrap" mt={4} justify="space-between">
           <Button

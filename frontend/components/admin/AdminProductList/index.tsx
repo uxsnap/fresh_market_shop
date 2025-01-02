@@ -4,7 +4,7 @@ import { useAdminStore } from "@/store/admin";
 import { ProductItem } from "@/types";
 import { convertProductToProductItem } from "@/utils";
 import { Group, LoadingOverlay, Pagination, Stack } from "@mantine/core";
-import { useWindowScroll } from "@mantine/hooks";
+import { useIsFirstRender, useWindowScroll } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Filters } from "./Filters";
@@ -14,6 +14,7 @@ const PRODUCTS_LIMIT = 30;
 export const AdminProductList = () => {
   const [activePage, setPage] = useState(1);
   const [_, scrollTo] = useWindowScroll();
+  const firstRender = useIsFirstRender();
 
   const [filters, setFilters] = useState({ name: "" });
 
@@ -48,7 +49,7 @@ export const AdminProductList = () => {
   return (
     <Stack gap={20} pos="relative">
       <LoadingOverlay
-        visible={isLoading}
+        visible={isLoading && firstRender}
         zIndex={1}
         overlayProps={{ radius: "sm", blur: 2 }}
         loaderProps={{ color: "primary.0", type: "bars" }}

@@ -10,7 +10,7 @@ import (
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
-	formUtils "github.com/uxsnap/fresh_market_shop/backend/internal/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/utils"
 )
 
 const CATEGORY_KEY = "category"
@@ -27,7 +27,7 @@ func (uc *UseCaseProducts) uploadProductFile(dir string, file *multipart.FileHea
 
 	defer curFile.Close()
 
-	if !formUtils.IsImageExtensionAllowed(file.Filename) {
+	if !utils.IsImageExtensionAllowed(file.Filename) {
 		log.Println("error file extension", err)
 		return errors.New("error file extension")
 	}
@@ -53,7 +53,13 @@ func (uc *UseCaseProducts) uploadProductFile(dir string, file *multipart.FileHea
 func (uc *UseCaseProducts) UploadProductPhotos(ctx context.Context, productUid uuid.UUID, form *multipart.Form) error {
 	log.Printf("ucProducts.UploadProductPhotos: uid %s", productUid)
 
-	categoryName, ok := form.Value[CATEGORY_KEY]
+	categoryUid, err := uuid.FromString(form.Value[CATEGORY_KEY][0])
+	if err != nil {
+		log.Printf("failed to get category name %s", productUid)
+		return errors.New("no category name")
+	}
+
+	categoryName, ok := utils.MapCategoryIdToCategoryName[categoryUid]
 	if !ok {
 		log.Printf("failed to get category name %s", productUid)
 		return errors.New("no category name")
@@ -61,7 +67,7 @@ func (uc *UseCaseProducts) UploadProductPhotos(ctx context.Context, productUid u
 
 	uploadPath, _ := os.Getwd()
 
-	serverDir := filepath.Join("assets", "imgs", categoryName[0])
+	serverDir := filepath.Join("assets", "imgs", categoryName)
 	productDir := filepath.Join(uploadPath, serverDir)
 	if _, err := os.Stat(productDir); err != nil {
 		log.Printf("failed to get category name %s %v", productUid, err)

@@ -58,3 +58,33 @@ export const proxyReviveProduct = async (req: NextRequest) => {
     return publicApiErrorResponse(error);
   }
 };
+
+export const proxyProductPhotos = async (req: NextRequest) => {
+  try {
+    const { tokens } = await getAuthCookieTokensFromServer();
+
+    if (!tokens?.access_jwt) {
+      return deleteAuthCookies();
+    }
+
+    const formData = await req.formData();
+    const uid = formData.get("uid");
+
+    await axios.postForm(
+      `${process.env.NEXT_PUBLIC_API}/products/${uid}/photos`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${tokens.access_jwt}` },
+      }
+    );
+
+    return Response.json(
+      {},
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return publicApiErrorResponse(error);
+  }
+};
