@@ -23,6 +23,7 @@ type ProductsService interface {
 	ReviveProduct(ctx context.Context, uid uuid.UUID) error
 
 	UploadProductPhotos(ctx context.Context, uid uuid.UUID, form *multipart.Form) error
+	DeleteProductPhotos(ctx context.Context, productUid uuid.UUID, photosUids ...uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
 	IncrementProductCount(ctx context.Context, productUid uuid.UUID, incValue int64) error

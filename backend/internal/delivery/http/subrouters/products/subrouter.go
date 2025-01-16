@@ -34,6 +34,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Patch("/{uid}", ps.ReviveProduct)
 
 			r.Post("/{uid}/photos", ps.AddPhotos)
+			r.Delete("/{uid}/photos", ps.DeleteProductPhotos)
 		})
 	}
 }
