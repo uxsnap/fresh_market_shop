@@ -26,9 +26,10 @@ export const convertProductToProductItem = (
   item: ProductWithPhotos
 ): ProductItem => ({
   id: item.product.uid,
-  imgs: (item.photos ?? []).map(
-    (p) => `${process.env.NEXT_PUBLIC_API}/${p.path}`
-  ),
+  imgs: (item.photos ?? []).map((p) => ({
+    path: `${process.env.NEXT_PUBLIC_API}/${p.path}`,
+    uid: p.uid,
+  })),
   price: item.product.price,
   name: item.product.name,
   weight: item.product.weight,

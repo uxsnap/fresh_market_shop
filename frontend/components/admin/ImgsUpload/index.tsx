@@ -1,34 +1,53 @@
 import { useState } from "react";
 import { Text, Image, SimpleGrid, Stack, CloseButton } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
+import { BackendImg } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { isServerImgFile, showErrorNotification } from "@/utils";
+import { deleteProductPhoto } from "@/api/products/deleteProductPhoto";
 
 const MAX_FILES = 3;
 
 type Props = {
-  files: FileWithPath[];
-  setFiles: (files: FileWithPath[]) => void;
+  productUid: string;
+  files: (FileWithPath | BackendImg)[];
+  setFiles: (files: (FileWithPath | BackendImg)[]) => void;
 };
 
-export const ImgsUpload = ({ files, setFiles }: Props) => {
+export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
   const handleFiles = (newFiles: FileWithPath[]) => {
     setFiles([...newFiles, ...files].slice(0, MAX_FILES));
   };
 
-  const handleDelete = (ind: number) => {
-    files.splice(ind, 1);
+  const { mutate } = useMutation({
+    mutationFn: deleteProductPhoto,
+    mutationKey: [deleteProductPhoto.queryKey],
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
 
+  const handleDelete = (ind: number) => {
+    if (isServerImgFile(files[ind])) {
+      mutate({ uid: productUid, photoUid: files[ind].uid });
+    }
+
+    files.splice(ind, 1);
     setFiles([...files]);
   };
 
   const previews = files.map((file, ind) => {
-    const imageUrl = URL.createObjectURL(file);
+    const imageUrl = "uid" in file ? file.path : URL.createObjectURL(file);
 
     return (
       <Stack justify="center" align="center" pos="relative" mih={50} miw={50}>
         <Image
           key={imageUrl}
           src={imageUrl}
-          onLoad={() => URL.revokeObjectURL(imageUrl)}
+          onLoad={() =>
+            "uid" in file ? file.path : URL.revokeObjectURL(imageUrl)
+          }
         />
 
         <CloseButton

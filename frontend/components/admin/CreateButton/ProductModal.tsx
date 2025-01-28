@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { ImgsUpload } from "../ImgsUpload";
 import { FileWithPath } from "@mantine/dropzone";
 import { updatePhotos } from "@/api/products/updatePhotos";
+import { BackendImg } from "@/types";
 
 type Props = {
   onClose: () => void;
@@ -34,7 +35,15 @@ export const ProductModal = ({ onClose }: Props) => {
   const productItem = useAdminStore((s) => s.productItem);
   const setProductItem = useAdminStore((s) => s.setProductItem);
 
-  const [files, setFiles] = useState<FileWithPath[]>([]);
+  const [files, setFiles] = useState<(FileWithPath | BackendImg)[]>([]);
+
+  useEffect(() => {
+    if (!productItem?.imgs.length) {
+      return;
+    }
+
+    setFiles(productItem.imgs);
+  }, [productItem]);
 
   const queryClient = useQueryClient();
 
@@ -127,6 +136,10 @@ export const ProductModal = ({ onClose }: Props) => {
     form.append("uid", productItem.id);
 
     for (const file of files) {
+      if ("uid" in file) {
+        continue;
+      }
+
       form.append("file", file);
     }
 
@@ -248,7 +261,13 @@ export const ProductModal = ({ onClose }: Props) => {
           comboboxProps={{ withinPortal: false }}
         />
 
-        <ImgsUpload files={files} setFiles={setFiles} />
+        {productItem && (
+          <ImgsUpload
+            productUid={productItem.id}
+            files={files}
+            setFiles={setFiles}
+          />
+        )}
 
         <Group wrap="nowrap" mt={4} justify="space-between">
           <Button
