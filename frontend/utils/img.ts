@@ -45,3 +45,7 @@ export const processImgFile = (file: File): Promise<File> => {
 export const getBase64Img = (res: AxiosResponse<any, any>) => {
   return `data:${res.headers["content-type"]};base64,${Buffer.from(res.data).toString("base64")}`;
 };
+
+export const isServerImgFile = (file: { path?: string }) => {
+  return "uid" in file;
+};

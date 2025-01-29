@@ -12,6 +12,7 @@ import {
 import { proxyGetPhoto, proxyUpdatePhoto } from "@/services/proxy/photo";
 import {
   proxyDeleteProduct,
+  proxyDeleteProductPhoto,
   proxyProductPhotos,
   proxyReviveProduct,
 } from "@/services/proxy/products";
@@ -78,6 +79,8 @@ export async function POST(req: NextRequest) {
       return proxyReviveProduct(req);
     case "/products/photos":
       return proxyProductPhotos(req);
+    case "/products/photos/delete":
+      return proxyDeleteProductPhoto(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

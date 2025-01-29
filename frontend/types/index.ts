@@ -44,11 +44,16 @@ export type ProductsWithTotal = {
   total: number;
 };
 
+export type BackendImg = {
+  path: string;
+  uid: string;
+};
+
 export type ProductItem = {
   id: string;
   price: number;
   name: string;
-  imgs: string[];
+  imgs: BackendImg[];
   weight: number;
   ccal: number;
   description: string;
