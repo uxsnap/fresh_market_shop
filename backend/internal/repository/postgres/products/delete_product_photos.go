@@ -2,10 +2,9 @@ package repositoryProducts
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"strings"
 
+	"github.com/Masterminds/squirrel"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
 	"github.com/pkg/errors"
@@ -17,31 +16,22 @@ import (
 func (r *ProductsRepository) DeleteProductPhotos(ctx context.Context, productUid uuid.UUID, photosUids ...uuid.UUID) error {
 	log.Printf("productsRepository.DeleteProductPhotos: product uid %s, product photos uids %v", productUid, photosUids)
 
+	photosUidsArgs := make([]pgtype.UUID, len(photosUids))
+	for i := 0; i < len(photosUids); i++ {
+		photosUidsArgs[i] = pgtype.UUID{Bytes: photosUids[i], Status: pgtype.Present}
+	}
+
 	productPhotoRow := pgEntity.NewProductPhotoRow().FromEntity(entity.ProductPhoto{ProductUid: productUid})
 	stmt := sq.Delete(
 		productPhotoRow.Table(),
 	).PlaceholderFormat(
 		sq.Dollar,
 	).Where(
-		productPhotoRow.ConditionProductUidEqual(),
+		squirrel.And{
+			productPhotoRow.ConditionProductUidEqual(),
+			squirrel.Eq{"id": photosUidsArgs},
+		},
 	)
-
-	if len(photosUids) != 0 {
-		photosUidsArgs := make([]pgtype.UUID, len(photosUids))
-		for i := 0; i < len(photosUids); i++ {
-			photosUidsArgs[i] = pgtype.UUID{Bytes: photosUids[i], Status: pgtype.Present}
-		}
-
-		stmtIn := strings.Builder{}
-		stmtIn.WriteString(" photo_uid IN ($1")
-
-		for i := 2; i <= len(photosUidsArgs); i++ {
-			stmtIn.WriteString(fmt.Sprintf(",$%d", i))
-		}
-		stmtIn.WriteString(")")
-
-		stmt = stmt.Where(stmtIn.String())
-	}
 
 	sql, args, err := stmt.ToSql()
 	if err != nil {

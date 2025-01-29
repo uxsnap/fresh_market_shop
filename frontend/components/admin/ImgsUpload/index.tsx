@@ -29,21 +29,30 @@ export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
   });
 
   const handleDelete = (ind: number) => {
-    if (isServerImgFile(files[ind])) {
-      mutate({ uid: productUid, photoUid: files[ind].uid });
-    }
+    const file = files[ind];
 
-    files.splice(ind, 1);
-    setFiles([...files]);
+    const newArr = [...files];
+    newArr.splice(ind, 1);
+    setFiles(newArr);
+
+    if (isServerImgFile(file)) {
+      mutate({ uid: productUid, photoUid: file.uid });
+    }
   };
 
   const previews = files.map((file, ind) => {
     const imageUrl = "uid" in file ? file.path : URL.createObjectURL(file);
 
     return (
-      <Stack justify="center" align="center" pos="relative" mih={50} miw={50}>
+      <Stack
+        key={imageUrl}
+        justify="center"
+        align="center"
+        pos="relative"
+        mih={50}
+        miw={50}
+      >
         <Image
-          key={imageUrl}
           src={imageUrl}
           onLoad={() =>
             "uid" in file ? file.path : URL.revokeObjectURL(imageUrl)

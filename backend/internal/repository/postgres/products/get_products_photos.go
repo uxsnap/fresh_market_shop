@@ -33,7 +33,7 @@ func (r *ProductsRepository) GetProductPhotos(ctx context.Context, productUid uu
 		}
 
 		stmtIn := strings.Builder{}
-		stmtIn.WriteString(" photo_uid IN ($1")
+		stmtIn.WriteString(" id IN ($1")
 
 		for i := 2; i <= len(photosUidsArgs); i++ {
 			stmtIn.WriteString(fmt.Sprintf(",$%d", i))

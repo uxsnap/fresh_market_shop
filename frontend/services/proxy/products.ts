@@ -98,8 +98,9 @@ export const proxyDeleteProductPhoto = async (req: NextRequest) => {
     const body = await req.json();
 
     await axios.delete(
-      `${process.env.NEXT_PUBLIC_API}/products/${body.uid}/photos/${body.photoUid}`,
+      `${process.env.NEXT_PUBLIC_API}/products/${body.uid}/photos`,
       {
+        data: { photos: [body.photoUid] },
         headers: { Authorization: `Bearer ${tokens.access_jwt}` },
       }
     );
