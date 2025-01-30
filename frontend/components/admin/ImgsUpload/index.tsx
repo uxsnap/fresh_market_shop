@@ -16,8 +16,18 @@ type Props = {
 };
 
 export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
-  const handleFiles = (newFiles: FileWithPath[]) => {
-    setFiles([...newFiles, ...files].slice(0, MAX_FILES));
+  const handleFiles = (uploaded: FileWithPath[]) => {
+    const newFiles = [...uploaded, ...files];
+
+    for (let i = MAX_FILES; i < newFiles.length; i++) {
+      const file = newFiles[i];
+
+      if (isServerImgFile(file)) {
+        mutate({ uid: productUid, photoUid: file.uid });
+      }
+    }
+
+    setFiles(newFiles.slice(0, MAX_FILES));
   };
 
   const { mutate } = useMutation({

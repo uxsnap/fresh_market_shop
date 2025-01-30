@@ -23,21 +23,15 @@ func (uc *UseCaseProducts) DeleteProductPhotos(ctx context.Context, productUid u
 		return errors.New("empty product photos uids")
 	}
 
-	photos, err := uc.productsRepository.GetProductPhotos(ctx, productUid, photosUids...)
-	if err != nil {
-		fmt.Printf("failed to delete product %s photos: %v", productUid, err)
-		return errors.WithStack(err)
-	}
-
 	if err := uc.productsRepository.DeleteProductPhotos(ctx, productUid, photosUids...); err != nil {
 		log.Printf("failed to delete product %s photos: %v", productUid, err)
 		return errors.WithStack(err)
 	}
 
 	//TODO: подумать над этим местом
-	for _, photo := range photos {
-		_ = uc.deleteProductFile(photo.FilePath)
-	}
+	// for _, photo := range photos {
+	// 	_ = uc.deleteProductFile(photo.FilePath)
+	// }
 	return nil
 }
 
