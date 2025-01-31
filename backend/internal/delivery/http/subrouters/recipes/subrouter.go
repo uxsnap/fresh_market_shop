@@ -25,6 +25,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 
 			r.Put("/", rs.UpdateRecipe)
 
+			r.Post("/{recipe_uid}/photos", rs.AddPhotos)
 			r.Delete("/{recipe_uid}", rs.DeleteRecipe)
 		})
 	}

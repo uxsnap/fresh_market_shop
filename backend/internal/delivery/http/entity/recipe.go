@@ -40,3 +40,14 @@ func RecipeFromEntity(re entity.Recipe) Recipe {
 		Ccal:        re.Ccal,
 	}
 }
+
+func RecipeToEntity(re Recipe) entity.Recipe {
+	return entity.Recipe{
+		Uid:         re.Uid,
+		Name:        re.Name,
+		CreatedAt:   re.CreatedAt,
+		UpdatedAt:   re.UpdatedAt,
+		CookingTime: re.CookingTime,
+		Ccal:        re.Ccal,
+	}
+}

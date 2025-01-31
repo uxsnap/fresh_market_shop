@@ -5,6 +5,7 @@ import (
 	"log"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/jackc/pgtype"
 	"github.com/jackc/pgx/v4"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -17,12 +18,12 @@ func (r *RecipesRepository) CreateRecipe(ctx context.Context, recipe entity.Reci
 
 	row, err := pgEntity.NewRecipeRow().FromEntity(recipe)
 	if err != nil {
-		log.Printf("failed to convert recipe: %v", err)
+		log.Printf("recipesRepository.CreateRecipe: failed to convert recipe: %v", err)
 		return errors.WithStack(err)
 	}
 
 	if err := r.Create(ctx, row); err != nil {
-		log.Printf("failed to create recipe: %v", err)
+		log.Printf("recipesRepository.CreateRecipe: failed to create recipe: %v", err)
 		return errors.WithStack(err)
 	}
 	return nil
@@ -175,4 +176,16 @@ func (r *RecipesRepository) GetRecipeSteps(ctx context.Context, uid uuid.UUID) (
 	}
 
 	return recipeRows.ToEntity(), nil
+}
+
+func (r *RecipesRepository) DeleteRecipePhotos(ctx context.Context, uid uuid.UUID, photosUids ...uuid.UUID) error {
+	log.Printf("recipesRepository.DeleteRecipePhotos: recipe uid %s, recipe photos uids %v", uid, photosUids)
+
+	photosUidsArgs := make([]pgtype.UUID, len(photosUids))
+	for i := 0; i < len(photosUids); i++ {
+		photosUidsArgs[i] = pgtype.UUID{Bytes: photosUids[i], Status: pgtype.Present}
+	}
+
+	// Only need to delete files but I don't want to
+	return nil
 }

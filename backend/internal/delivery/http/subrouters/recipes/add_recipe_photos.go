@@ -1,15 +1,17 @@
-package productsSubrouter
+package recipesSubrouter
 
 import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi"
+	uuid "github.com/satori/go.uuid"
 	httpEntity "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/entity"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
-func (h *ProductsSubrouter) CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *RecipesSubrouter) AddPhotos(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
 	userInfo, err := httpEntity.AuthUserInfoFromContext(r.Context())
@@ -22,28 +24,34 @@ func (h *ProductsSubrouter) CreateProduct(w http.ResponseWriter, r *http.Request
 
 	if userInfo.Role != "admin" {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "нет разрешений на добавление продукта",
+			errorWrapper.JsonParsingError, "нет разрешений на добавление фото",
 		))
 		return
 	}
 
-	var product httpEntity.Product
-	if err := httpUtils.DecodeJsonRequest(r, &product); err != nil {
+	recipeUid, err := uuid.FromString(chi.URLParam(r, "recipe_uid"))
+	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
 			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
 		))
 		return
 	}
 
-	uid, err := h.ProductsService.CreateProduct(ctx, httpEntity.ProductToEntity(product))
-	if err != nil {
+	defer r.Body.Close()
+
+	if err := r.ParseMultipartForm(15 << 20); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
-			errorWrapper.InternalError, err.Error(),
+			errorWrapper.JsonParsingError, "не удалось распарсить тело формы",
 		))
 		return
 	}
 
-	httpUtils.WriteResponseJson(w, httpEntity.UUID{
-		Uid: uid,
-	})
+	if err := h.RecipesService.UploadRecipePhotos(ctx, recipeUid, r.MultipartForm); err != nil {
+		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось добавить фото рецепта",
+		))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

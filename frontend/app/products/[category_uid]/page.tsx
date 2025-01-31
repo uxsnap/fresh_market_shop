@@ -27,7 +27,7 @@ export default function ProductPage() {
         with_photos: true,
       }),
     select(data): ProductItem[] {
-      return data.data.map(convertProductToProductItem);
+      return data.data.products.map(convertProductToProductItem);
     },
   });
 
