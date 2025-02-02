@@ -33,8 +33,8 @@ export const Filters = ({ setFilters }: Props) => {
     <Group pl={16} gap={12}>
       <TextInput
         miw={200}
-        label="Имя"
-        placeholder="Введите имя"
+        label="Название"
+        placeholder="Введите название рецепта"
         onChange={handleName}
         value={innerFilters.name}
       />

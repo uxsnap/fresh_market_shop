@@ -15,6 +15,11 @@ type Recipe struct {
 	Ccal        int64
 }
 
+type RecipesWithTotal struct {
+	Recipes []Recipe
+	Total   int64
+}
+
 type RecipeStep struct {
 	RecipeUid   uuid.UUID
 	Step        int64

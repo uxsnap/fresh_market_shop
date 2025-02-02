@@ -213,4 +213,10 @@ export type Admin = {
 export enum AdminTab {
   admins = "admins",
   products = "products",
+  recipes = "recipes",
 }
+
+export type RecipesWithTotal = {
+  recipes: Recipe[];
+  total: number;
+};

@@ -2,6 +2,7 @@
 
 import { AdminList } from "@/components/admin/AdminList";
 import { AdminProductList } from "@/components/admin/AdminProductList";
+import { AdminRecipeList } from "@/components/admin/AdminRecipeList";
 import { CreateButton } from "@/components/admin/CreateButton";
 import { useAdminStore } from "@/store/admin";
 import { AdminTab } from "@/types";
@@ -24,6 +25,7 @@ export default function AdminPage() {
           <Tabs.List>
             <Tabs.Tab value="admins">Администраторы</Tabs.Tab>
             <Tabs.Tab value="products">Продукты</Tabs.Tab>
+            <Tabs.Tab value="recipes">Рецепты</Tabs.Tab>
           </Tabs.List>
 
           <CreateButton />
@@ -36,6 +38,10 @@ export default function AdminPage() {
 
           <Tabs.Panel value="products">
             <AdminProductList />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="recipes">
+            <AdminRecipeList />
           </Tabs.Panel>
         </Box>
       </Tabs>

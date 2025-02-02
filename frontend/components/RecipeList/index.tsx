@@ -10,7 +10,7 @@ import { Recipe as IRecipe } from "@/types";
 
 export const RecipeList = memo(() => {
   const { data, isFetching } = useQuery({
-    queryFn: getRecipes,
+    queryFn: () => getRecipes({}),
     queryKey: [getRecipes.queryKey],
   });
 
@@ -42,7 +42,7 @@ export const RecipeList = memo(() => {
 
         <ScrollArea type="never" w="100%">
           <Group wrap="nowrap" gap={20}>
-            {data?.data.map((item) => (
+            {data?.data.recipes.map((item) => (
               <Recipe
                 key={item.uid}
                 name={item.name}

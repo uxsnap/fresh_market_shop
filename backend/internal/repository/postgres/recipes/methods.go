@@ -3,6 +3,7 @@ package repositoryRecipes
 import (
 	"context"
 	"log"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -10,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
+	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/repository/postgres/pgEntity"
 )
 
@@ -96,6 +98,10 @@ func (r *RecipesRepository) GetRecipes(ctx context.Context, qFilters entity.Quer
 	}
 	if offset != 0 {
 		sql = sql.Offset(offset)
+	}
+
+	if qFilters.Name != "" {
+		sql = sql.Where(sq.Like{"lower(name)": "%" + strings.ToLower(qFilters.Name) + "%"})
 	}
 
 	stmt, args, err := sql.ToSql()
@@ -188,4 +194,32 @@ func (r *RecipesRepository) DeleteRecipePhotos(ctx context.Context, uid uuid.UUI
 
 	// Only need to delete files but I don't want to
 	return nil
+}
+
+func (r *RecipesRepository) GetRecipesTotal(ctx context.Context) (int64, error) {
+	log.Printf("recipesRepository.GetRecipesTotal")
+
+	stmt, args, err := sq.Select("count(*)").
+		From(pgEntity.NewRecipeRow().Table()).
+		PlaceholderFormat(sq.Dollar).ToSql()
+
+	if err != nil {
+		log.Printf("failed to get recipes total: %v", err)
+		return 0, errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось получить количество рецептов")
+	}
+
+	var total int64
+
+	rows, err := r.DB().Query(ctx, stmt, args...)
+
+	for rows.Next() {
+		rows.Scan(&total)
+	}
+
+	if err != nil {
+		log.Printf("failed to get recipesw total: %v", err)
+		return 0, errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось получить количество рецептов")
+	}
+
+	return total, nil
 }
