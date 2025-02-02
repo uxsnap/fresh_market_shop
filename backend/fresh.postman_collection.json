@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "99c4fe82-b38f-45a9-9175-ff4253df2e7d",
+		"_postman_id": "066ac72e-82bb-4e44-ab3e-f974cbcff105",
 		"name": "fresh Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12232823"
@@ -214,7 +214,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
+							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\",\n    \"name\": \"test test\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -243,7 +243,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@test\",\n    \"password\": \"hui123\"\n}",
+							"raw": "{\n    \"email\": \"superAdmin@admin\",\n    \"password\": \"hui123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -435,6 +435,58 @@
 							"path": [
 								"auth",
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"superAdmin@admin\",\n    \"password\": \"hui123\",\n    \"name\": \"tes tes\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/admin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get admins",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/auth/admins",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"admins"
 							]
 						}
 					},
@@ -1015,6 +1067,52 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "upload photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1cGVyQWRtaW5AYWRtaW4iLCJleHBpcmVkX2F0IjoxNzM1NjU1MDkxLCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJhZG1pbiIsInNlc3Npb25fdWlkIjoiZTUyMGQyYjktOWNiMy00NDA4LWIyZGQtNGVjOWUwZGFiNzJiIiwidXNlcl91aWQiOiJiMGRlMTE5MC04YjgwLTQwYWEtYWM5ZS03YmI3MDdkZGUyMGQifQ.FWcaAg9qIRIVpO20nXyhUSwXU28AgyEPrHvpgDKz4b0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category",
+									"value": "bread",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/nuxxx/Desktop/fresh_market_shop/backend/assets/imgs/fish/сhum_salmon_1.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/products/e2dff304-23ee-4162-a466-cb120ce9b6af/photos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"products",
+								"e2dff304-23ee-4162-a466-cb120ce9b6af",
+								"photos"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1039,6 +1137,77 @@
 						"header": [],
 						"url": {
 							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete recipe",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1cGVyQWRtaW5AYWRtaW4iLCJleHBpcmVkX2F0IjoxNzM4MzMyNjM5LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJhZG1pbiIsInNlc3Npb25fdWlkIjoiMzkzMTU0YjQtMjUxZS00YjgzLWFlNTYtNzIzNzg1OTdiZWUzIiwidXNlcl91aWQiOiJjZGIwN2MwZS1lMjAyLTQwN2MtOTYzYS00Mzg1YzFhY2JlYzYifQ.qOixbtQonGhH-yBYrTqoYe6cynB_oSZpt5PtDa_EUSc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/recipes/7f14286d-58e0-4778-b7d5-826a784fdfe7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"7f14286d-58e0-4778-b7d5-826a784fdfe7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload recipe photos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN1cGVyQWRtaW5AYWRtaW4iLCJleHBpcmVkX2F0IjoxNzM4MzMyNjM5LCJwZXJtaXNzaW9ucyI6Im5vdF92ZXJpZmllZCIsInJvbGUiOiJhZG1pbiIsInNlc3Npb25fdWlkIjoiMzkzMTU0YjQtMjUxZS00YjgzLWFlNTYtNzIzNzg1OTdiZWUzIiwidXNlcl91aWQiOiJjZGIwN2MwZS1lMjAyLTQwN2MtOTYzYS00Mzg1YzFhY2JlYzYifQ.qOixbtQonGhH-yBYrTqoYe6cynB_oSZpt5PtDa_EUSc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/uxsnap/Desktop/1.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/recipes/7f14286d-58e0-4778-b7d5-826a784fdfe8/photos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"recipes",
+								"7f14286d-58e0-4778-b7d5-826a784fdfe8",
+								"photos"
+							]
 						}
 					},
 					"response": []
