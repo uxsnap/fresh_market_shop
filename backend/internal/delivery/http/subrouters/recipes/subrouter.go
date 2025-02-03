@@ -22,6 +22,7 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(rs.Middleware.Auth)
 
 			r.Post("/", rs.CreateRecipe)
+			r.Post("/steps", rs.AddSteps)
 
 			r.Put("/", rs.UpdateRecipe)
 

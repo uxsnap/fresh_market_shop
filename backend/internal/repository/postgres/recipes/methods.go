@@ -19,6 +19,7 @@ func (r *RecipesRepository) CreateRecipe(ctx context.Context, recipe entity.Reci
 	log.Printf("recipesRepository.CreateRecipe: uid %s name %s", recipe.Uid, recipe.Name)
 
 	row, err := pgEntity.NewRecipeRow().FromEntity(recipe)
+
 	if err != nil {
 		log.Printf("recipesRepository.CreateRecipe: failed to convert recipe: %v", err)
 		return errors.WithStack(err)
@@ -222,4 +223,29 @@ func (r *RecipesRepository) GetRecipesTotal(ctx context.Context) (int64, error) 
 	}
 
 	return total, nil
+}
+
+func (r *RecipesRepository) AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error {
+	log.Printf("recipesRepository.AddRecipeSteps")
+
+	sql := sq.Insert(pgEntity.NewRecipeStepRow().Table()).PlaceholderFormat(sq.Dollar)
+
+	for _, step := range rSteps {
+		sql = sql.Values(pgEntity.NewRecipeStepRow().FromEntity(step))
+	}
+
+	stmt, args, err := sql.ToSql()
+
+	if err != nil {
+		log.Printf("failed to add recipe steps: %v", err)
+		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+	}
+
+	_, err = r.DB().Exec(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to add recipe steps: %v", err)
+		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+	}
+
+	return nil
 }

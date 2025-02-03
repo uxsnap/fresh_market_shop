@@ -1,7 +1,9 @@
 package pgEntity
 
 import (
+	"fmt"
 	"strings"
+	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgtype"
@@ -33,20 +35,37 @@ func (rr *RecipeRow) FromEntity(recipe entity.Recipe) (*RecipeRow, error) {
 	rr.Name = recipe.Name
 	rr.CookingTime = pgtype.Interval{
 		Status:       pgtype.Present,
-		Microseconds: int64(recipe.CookingTime) / 1000,
+		Microseconds: int64(recipe.CookingTime),
 	}
 
 	rr.Ccal = recipe.Ccal
 
-	rr.CreatedAt = pgtype.Timestamp{
-		Time:   recipe.CreatedAt,
-		Status: pgStatusFromTime(recipe.CreatedAt),
+	if recipe.CreatedAt.Unix() <= 0 {
+		rr.CreatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
+			Status: pgtype.Null,
+		}
+	} else {
+		rr.CreatedAt = pgtype.Timestamp{
+			Time:   recipe.CreatedAt.UTC(),
+			Status: pgtype.Present,
+		}
 	}
 
-	rr.UpdatedAt = pgtype.Timestamp{
-		Time:   recipe.UpdatedAt,
-		Status: pgStatusFromTime(recipe.UpdatedAt),
+	if recipe.UpdatedAt.Unix() <= 0 {
+		rr.UpdatedAt = pgtype.Timestamp{
+			Time:   time.Now().UTC(),
+			Status: pgtype.Null,
+		}
+	} else {
+		rr.UpdatedAt = pgtype.Timestamp{
+			Time:   recipe.UpdatedAt.UTC(),
+			Status: pgtype.Present,
+		}
 	}
+
+	fmt.Println(rr.CreatedAt, rr.UpdatedAt)
+
 	return rr, nil
 }
 
@@ -61,16 +80,16 @@ func (rr *RecipeRow) ToEntity() entity.Recipe {
 	}
 }
 
-var recipesTableColumns = []string{"uid", "name", "ccal", "created_at", "updated_at", "cooking_time"}
+var recipesTableColumns = []string{"uid", "name", "ccal", "cooking_time", "created_at", "updated_at"}
 
 func (rr *RecipeRow) Values() []interface{} {
 	return []interface{}{
-		rr.Uid, rr.Name, rr.Ccal, rr.CookingTime, rr.CreatedAt, rr.UpdatedAt, rr.CookingTime,
+		rr.Uid, rr.Name, rr.Ccal, rr.CookingTime, rr.CreatedAt.Time, rr.UpdatedAt.Time,
 	}
 }
 
 func (rr *RecipeRow) ValuesToScan() []interface{} {
-	return []interface{}{&rr.Uid, &rr.Name, &rr.Ccal, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime}
+	return []interface{}{&rr.Uid, &rr.Name, &rr.Ccal, &rr.CookingTime, &rr.CreatedAt, &rr.UpdatedAt}
 }
 
 func (rr *RecipeRow) Columns() []string {
@@ -82,16 +101,16 @@ func (rr *RecipeRow) Table() string {
 }
 
 func (rr *RecipeRow) Scan(row pgx.Row) error {
-	return row.Scan(&rr.Uid, &rr.Name, &rr.Ccal, &rr.CreatedAt, &rr.UpdatedAt, &rr.CookingTime)
+	return row.Scan(&rr.Uid, &rr.Name, &rr.Ccal, &rr.CookingTime, &rr.CreatedAt, &rr.UpdatedAt)
 }
 
 func (rr *RecipeRow) ColumnsForUpdate() []string {
-	return []string{"name", "description", "ccal", "cooking_time", "updated_at", "img_path"}
+	return []string{"name", "ccal", "cooking_time", "updated_at"}
 }
 
 func (rr *RecipeRow) ValuesForUpdate() []interface{} {
 	return []interface{}{
-		rr.Name, rr.UpdatedAt, rr.CookingTime,
+		rr.Name, rr.Ccal, rr.CookingTime, rr.UpdatedAt,
 	}
 }
 

@@ -80,6 +80,8 @@ type RecipesService interface {
 
 	UploadRecipePhotos(ctx context.Context, uid uuid.UUID, form *multipart.Form) error
 	DeleteRecipePhotos(ctx context.Context, uid uuid.UUID, photosUids ...uuid.UUID) error
+
+	AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error
 }
 
 type OrdersService interface {

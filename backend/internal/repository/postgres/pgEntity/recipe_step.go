@@ -48,6 +48,14 @@ func (rs *RecipeStepRow) ToEntity() entity.RecipeStep {
 	}
 }
 
+func (rs *RecipeStepRow) FromEntity(rse entity.RecipeStep) *RecipeStepRow {
+	rs.RecipeUid = pgUidFromUUID(rse.RecipeUid)
+	rs.Description = rse.Description
+	rs.Step = rse.Step
+
+	return rs
+}
+
 func NewRecipeStepRows() *Rows[*RecipeStepRow, entity.RecipeStep] {
 	return &Rows[*RecipeStepRow, entity.RecipeStep]{}
 }

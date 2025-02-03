@@ -35,6 +35,14 @@ func RecipeStepFromEntity(re entity.RecipeStep) RecipeStep {
 	}
 }
 
+func RecipeStepToEntity(re RecipeStep) entity.RecipeStep {
+	return entity.RecipeStep{
+		RecipeUid:   re.RecipeUid,
+		Step:        re.Step,
+		Description: re.Description,
+	}
+}
+
 func RecipeFromEntity(re entity.Recipe) Recipe {
 	return Recipe{
 		Uid:         re.Uid,

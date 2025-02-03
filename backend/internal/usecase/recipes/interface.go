@@ -23,4 +23,6 @@ type RecipesRepository interface {
 	DeleteRecipePhotos(ctx context.Context, uid uuid.UUID, photosUids ...uuid.UUID) error
 
 	GetRecipesTotal(ctx context.Context) (int64, error)
+
+	AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error
 }
