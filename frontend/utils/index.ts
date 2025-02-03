@@ -7,7 +7,7 @@ import {
   DeliveryAddress,
 } from "@/types";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
+import { AxiosError, formToJSON } from "axios";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -132,6 +132,18 @@ export const getStreetInfoFromGeo = (geoObject: ExtendedGeoObject) => {
     street: splittedAddressLine[1].replace("улица", "").trim(),
     houseNumber: splittedAddressLine[2].split(" ")[0],
   };
+};
+
+export const convertTimeToDuration = (val: string): number => {
+  const [hh, mm] = val.split(":").map((v) => parseInt(v, 10));
+
+  return dayJs.duration({ hours: hh, minutes: mm }).asMilliseconds() * 1000;
+};
+
+export const convertDurationToTime = (val: number): string => {
+  const durObj = dayJs.duration(val);
+
+  return `${durObj.asHours()}:${durObj.asMinutes()}`;
 };
 
 export * from "./img";

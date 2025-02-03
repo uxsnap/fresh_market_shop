@@ -51,7 +51,7 @@ export const AdminRecipeList = () => {
 
       <Filters setFilters={setFilters} />
 
-      <Group mt={12} gap={12} justify="center">
+      <Group mt={12} gap={12} justify="left">
         {data?.data.recipes.map((item) => (
           <Recipe
             key={item.uid}

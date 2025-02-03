@@ -1,12 +1,16 @@
-import { getCategories } from "@/api/categories/getCategories";
-import { createProduct } from "@/api/products/createProduct";
 import { editProduct } from "@/api/products/editProduct";
 import { getProducts } from "@/api/products/getProducts";
 import { useAdminStore } from "@/store/admin";
-import { showErrorNotification, showSuccessNotification } from "@/utils";
+import {
+  convertDurationToTime,
+  convertTimeToDuration,
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
 import {
   Button,
   Group,
+  Input,
   NumberInput,
   Select,
   Stack,
@@ -21,6 +25,13 @@ import { ImgsUpload } from "../ImgsUpload";
 import { FileWithPath } from "@mantine/dropzone";
 import { updatePhotos } from "@/api/products/updatePhotos";
 import { BackendImg } from "@/types";
+import { createRecipe } from "@/api/recipes/createRecipe";
+import { TimeInput } from "@mantine/dates";
+
+import styles from "./CreateButton.module.css";
+import { getRecipes } from "@/api/recipes/getRecipes";
+import { IMaskInput } from "react-imask";
+import { COOKING_TIME_BORDERS } from "@/constants";
 
 type Props = {
   onClose: () => void;
@@ -32,18 +43,18 @@ const weightData = [
 ];
 
 export const RecipeModal = ({ onClose }: Props) => {
-  const productItem = useAdminStore((s) => s.productItem);
-  const setProductItem = useAdminStore((s) => s.setProductItem);
+  const recipeItem = useAdminStore((s) => s.recipeItem);
+  const setRecipeItem = useAdminStore((s) => s.setRecipeItem);
 
-  const [files, setFiles] = useState<(FileWithPath | BackendImg)[]>([]);
+  // const [files, setFiles] = useState<(FileWithPath | BackendImg)[]>([]);
 
-  useEffect(() => {
-    if (!productItem?.imgs.length) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!productItem?.imgs.length) {
+  //     return;
+  //   }
 
-    setFiles(productItem.imgs);
-  }, [productItem]);
+  //   setFiles(productItem.imgs);
+  // }, [productItem]);
 
   const queryClient = useQueryClient();
 
@@ -51,52 +62,58 @@ export const RecipeModal = ({ onClose }: Props) => {
     mode: "uncontrolled",
     initialValues: {
       name: "",
-      description: "",
-      categoryUid: "",
       ccal: 0,
-      price: 0,
-      weight: "",
+      cookingTime: "",
     },
     validate: {
       name: hasLength({ min: 1 }, "Длина названия должна быть больше 1"),
-      description: hasLength({ min: 1 }, "Длина описания должна быть больше 1"),
-      categoryUid: isNotEmpty("Категория не должна быть пустой"),
       ccal: isNotEmpty("Калорийность не должна быть пустой"),
-      price: isNotEmpty("Цена не должна быть пустой"),
-      weight: isNotEmpty("Вес не должна быть пустой"),
+      cookingTime: (value) => {
+        if (value.length < 5) {
+          return "Время приготовления не должно быть пустым";
+        }
+
+        const time = convertTimeToDuration(value);
+
+        if (
+          time < COOKING_TIME_BORDERS.min ||
+          time > COOKING_TIME_BORDERS.max
+        ) {
+          return "Время приготовления выходит за временные границы";
+        }
+
+        return null;
+      },
     },
   });
 
   useEffect(() => {
-    if (!productItem) {
+    if (!recipeItem) {
       return;
     }
 
     form.setValues({
-      name: productItem.name,
-      description: productItem.description,
-      ccal: productItem.ccal,
-      price: productItem.price,
-      weight: productItem.weight + "",
-      categoryUid: productItem.categoryUid,
+      name: recipeItem.name,
+      cookingTime: convertDurationToTime(recipeItem.cookingTime),
+      ccal: recipeItem.ccal,
     });
-  }, [productItem]);
+  }, [recipeItem]);
 
   const handleClose = () => {
-    setProductItem(undefined);
+    setRecipeItem(undefined);
     onClose();
   };
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = useMutation({
-    mutationFn: createProduct,
+    mutationFn: createRecipe,
     onSuccess: () => {
       onClose();
 
       queryClient.invalidateQueries({
-        queryKey: [getProducts.queryKey],
+        queryKey: [getRecipes.queryKey],
       });
 
-      showSuccessNotification("Продукт успешно добавлен!");
+      showSuccessNotification("Рецепт успешно добавлен!");
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
@@ -109,7 +126,7 @@ export const RecipeModal = ({ onClose }: Props) => {
       onClose();
 
       queryClient.invalidateQueries({
-        queryKey: [getProducts.queryKey],
+        queryKey: [getRecipes.queryKey],
       });
 
       showSuccessNotification("Продукт успешно обновлен!");
@@ -126,52 +143,39 @@ export const RecipeModal = ({ onClose }: Props) => {
     },
   });
 
-  const handleFiles = () => {
-    if (!files.length || !productItem) {
-      return;
-    }
+  // const handleFiles = () => {
+  //   if (!files.length || !productItem) {
+  //     return;
+  //   }
 
-    const form = new FormData();
-    form.append("category", productItem.categoryUid);
-    form.append("uid", productItem.id);
+  //   const form = new FormData();
+  //   form.append("category", productItem.categoryUid);
+  //   form.append("uid", productItem.id);
 
-    for (const file of files) {
-      if ("uid" in file) {
-        continue;
-      }
+  //   for (const file of files) {
+  //     if ("uid" in file) {
+  //       continue;
+  //     }
 
-      form.append("file", file);
-    }
+  //     form.append("file", file);
+  //   }
 
-    mutateFiles(form);
-  };
+  //   mutateFiles(form);
+  // };
 
   const handleSubmit = form.onSubmit((values) => {
     const submitValues = {
       ...values,
-      weight: parseInt(values.weight, 10),
+      cookingTime: convertTimeToDuration(values.cookingTime),
     };
 
-    if (productItem) {
-      mutateEdit({ ...submitValues, uid: productItem.id });
-    } else {
-      mutateCreate(submitValues);
-    }
+    // if (recipeItem) {
+    //   mutateEdit({ ...submitValues, uid: recipeItem.id });
+    // } else {
+    mutateCreate(submitValues);
+    // }
 
-    handleFiles();
-  });
-
-  const { data: categories } = useQuery({
-    queryKey: [getCategories.queryKey],
-    queryFn: getCategories,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    select(data) {
-      return data.data.map((c) => ({
-        label: c.name,
-        value: c.uid,
-      }));
-    },
+    // handleFiles();
   });
 
   return (
@@ -184,32 +188,6 @@ export const RecipeModal = ({ onClose }: Props) => {
           required
           placeholder="Введите название"
           {...form.getInputProps("name")}
-        />
-
-        <Select
-          w="100%"
-          size="md"
-          label="Категория"
-          placeholder="Выберите категорию"
-          data={categories ?? []}
-          withAsterisk
-          required
-          withScrollArea={false}
-          styles={{ dropdown: { maxHeight: 130, overflowY: "auto" } }}
-          key={form.key("categoryUid")}
-          {...form.getInputProps("categoryUid")}
-          comboboxProps={{ withinPortal: false }}
-        />
-
-        <Textarea
-          radius="md"
-          label="Описание"
-          placeholder="Введите описание"
-          withAsterisk
-          required
-          {...form.getInputProps("description")}
-          resize="vertical"
-          minRows={10}
         />
 
         <NumberInput
@@ -229,45 +207,32 @@ export const RecipeModal = ({ onClose }: Props) => {
           {...form.getInputProps("ccal")}
         />
 
-        <NumberInput
+        <TextInput
+          placeholder="Введите время приготовления"
+          component={IMaskInput}
+          // @ts-ignore
+          mask="00:00"
           w="100%"
-          min={1}
-          hideControls
-          allowLeadingZeros={false}
-          allowNegative={false}
-          allowDecimal={false}
-          withAsterisk
           lh={1}
           required
           size="md"
-          label="Цена"
-          placeholder="Введите цену"
-          key={form.key("price")}
-          {...form.getInputProps("price")}
-        />
-
-        <Select
-          w="100%"
-          size="md"
-          label="Вес"
-          placeholder="Выберите вес"
-          data={weightData}
           withAsterisk
-          required
-          withScrollArea={false}
-          styles={{ dropdown: { maxHeight: 130, overflowY: "auto" } }}
-          key={form.key("weight")}
-          {...form.getInputProps("weight")}
-          comboboxProps={{ withinPortal: false }}
+          label="Время приготовления"
+          key={form.key("cookingTime")}
+          {...form.getInputProps("cookingTime")}
+          classNames={{ input: styles.time }}
         />
 
-        {productItem && (
+        {/* <Input.Error {...form.getInputProps("cookingTime")} /> */}
+        {/* </Input.Wrapper> */}
+
+        {/* {productItem && (
           <ImgsUpload
             productUid={productItem.id}
             files={files}
             setFiles={setFiles}
           />
-        )}
+        )} */}
 
         <Group wrap="nowrap" mt={4} justify="space-between">
           <Button
