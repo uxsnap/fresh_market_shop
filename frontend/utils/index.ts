@@ -141,9 +141,10 @@ export const convertTimeToDuration = (val: string): number => {
 };
 
 export const convertDurationToTime = (val: number): string => {
-  const durObj = dayJs.duration(val);
+  const hours = dayJs.duration(val / 1000).hours();
+  const minutes = dayJs.duration(val / 1000).minutes();
 
-  return `${durObj.asHours()}:${durObj.asMinutes()}`;
+  return `${hours < 10 ? 0 : ""}${hours}:${minutes < 10 ? 0 : ""}${minutes}`;
 };
 
 export * from "./img";

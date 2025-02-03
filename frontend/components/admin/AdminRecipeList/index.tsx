@@ -51,13 +51,16 @@ export const AdminRecipeList = () => {
 
       <Filters setFilters={setFilters} />
 
-      <Group mt={12} gap={12} justify="left">
+      <Group mt={12} gap={16} justify="left">
         {data?.data.recipes.map((item) => (
           <Recipe
+            uid={item.uid}
             key={item.uid}
             name={item.name}
             img={getRecipeBg(item.uid)}
             time={formatDuration(item.cookingTime)}
+            onExtended={() => handleEdit(item)}
+            editable
           />
         ))}
       </Group>

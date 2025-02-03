@@ -32,6 +32,7 @@ import styles from "./CreateButton.module.css";
 import { getRecipes } from "@/api/recipes/getRecipes";
 import { IMaskInput } from "react-imask";
 import { COOKING_TIME_BORDERS } from "@/constants";
+import { editRecipe } from "@/api/recipes/editRecipe";
 
 type Props = {
   onClose: () => void;
@@ -92,6 +93,8 @@ export const RecipeModal = ({ onClose }: Props) => {
       return;
     }
 
+    form.reset();
+
     form.setValues({
       name: recipeItem.name,
       cookingTime: convertDurationToTime(recipeItem.cookingTime),
@@ -121,7 +124,7 @@ export const RecipeModal = ({ onClose }: Props) => {
   });
 
   const { mutate: mutateEdit, isPending: isPendingUpdate } = useMutation({
-    mutationFn: editProduct,
+    mutationFn: editRecipe,
     onSuccess: () => {
       onClose();
 
@@ -129,19 +132,19 @@ export const RecipeModal = ({ onClose }: Props) => {
         queryKey: [getRecipes.queryKey],
       });
 
-      showSuccessNotification("Продукт успешно обновлен!");
+      showSuccessNotification("Рецепт успешно обновлен!");
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
     },
   });
 
-  const { mutate: mutateFiles } = useMutation({
-    mutationFn: updatePhotos,
-    onError: (error: AxiosError<any>) => {
-      showErrorNotification(error);
-    },
-  });
+  // const { mutate: mutateFiles } = useMutation({
+  //   mutationFn: updatePhotos,
+  //   onError: (error: AxiosError<any>) => {
+  //     showErrorNotification(error);
+  //   },
+  // });
 
   // const handleFiles = () => {
   //   if (!files.length || !productItem) {
@@ -169,11 +172,11 @@ export const RecipeModal = ({ onClose }: Props) => {
       cookingTime: convertTimeToDuration(values.cookingTime),
     };
 
-    // if (recipeItem) {
-    //   mutateEdit({ ...submitValues, uid: recipeItem.id });
-    // } else {
-    mutateCreate(submitValues);
-    // }
+    if (recipeItem) {
+      mutateEdit({ ...submitValues, uid: recipeItem.uid });
+    } else {
+      mutateCreate(submitValues);
+    }
 
     // handleFiles();
   });
@@ -218,13 +221,10 @@ export const RecipeModal = ({ onClose }: Props) => {
           size="md"
           withAsterisk
           label="Время приготовления"
+          classNames={{ input: styles.time }}
           key={form.key("cookingTime")}
           {...form.getInputProps("cookingTime")}
-          classNames={{ input: styles.time }}
         />
-
-        {/* <Input.Error {...form.getInputProps("cookingTime")} /> */}
-        {/* </Input.Wrapper> */}
 
         {/* {productItem && (
           <ImgsUpload

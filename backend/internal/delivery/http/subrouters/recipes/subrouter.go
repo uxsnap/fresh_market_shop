@@ -22,9 +22,9 @@ func New(deps subrouters.SubrouterDeps) func(r chi.Router) {
 			r.Use(rs.Middleware.Auth)
 
 			r.Post("/", rs.CreateRecipe)
-			r.Post("/steps", rs.AddSteps)
-
 			r.Put("/", rs.UpdateRecipe)
+
+			r.Post("/steps", rs.AddSteps)
 
 			r.Post("/{recipe_uid}/photos", rs.AddPhotos)
 			r.Delete("/{recipe_uid}", rs.DeleteRecipe)

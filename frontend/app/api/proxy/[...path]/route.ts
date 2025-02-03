@@ -16,6 +16,7 @@ import {
   proxyProductPhotos,
   proxyReviveProduct,
 } from "@/services/proxy/products";
+import { proxyDeleteRecipe } from "@/services/proxy/recipes";
 import { proxyUpdateUser } from "@/services/proxy/updateUser";
 import {
   proxyAddDeliveryAddress,
@@ -75,6 +76,8 @@ export async function POST(req: NextRequest) {
       return proxyDeleteAccount(req);
     case "/products/delete":
       return proxyDeleteProduct(req);
+    case "/recipes/delete":
+      return proxyDeleteRecipe(req);
     case "/products/revive":
       return proxyReviveProduct(req);
     case "/products/photos":

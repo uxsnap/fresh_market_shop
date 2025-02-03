@@ -91,6 +91,8 @@ func (r *BasePgRepository) Delete(ctx context.Context, row Row, condition sq.Sql
 	if err != nil {
 		return err
 	}
+
+	fmt.Println(stmt)
 	_, err = r.DB().Exec(ctx, stmt, args...)
 	return err
 }
