@@ -1,43 +1,15 @@
-import { useState } from "react";
 import { Text, Image, SimpleGrid, Stack, CloseButton } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
 import { BackendImg } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { isServerImgFile, showErrorNotification } from "@/utils";
-import { deleteProductPhoto } from "@/api/products/deleteProductPhoto";
-
-const MAX_FILES = 3;
 
 type Props = {
-  productUid: string;
   files: (FileWithPath | BackendImg)[];
   setFiles: (files: (FileWithPath | BackendImg)[]) => void;
+  onDelete: (file: FileWithPath | BackendImg) => void;
+  onDrop: (files: FileWithPath[]) => void;
 };
 
-export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
-  const handleFiles = (uploaded: FileWithPath[]) => {
-    const newFiles = [...uploaded, ...files];
-
-    for (let i = MAX_FILES; i < newFiles.length; i++) {
-      const file = newFiles[i];
-
-      if (isServerImgFile(file)) {
-        mutate({ uid: productUid, photoUid: file.uid });
-      }
-    }
-
-    setFiles(newFiles.slice(0, MAX_FILES));
-  };
-
-  const { mutate } = useMutation({
-    mutationFn: deleteProductPhoto,
-    mutationKey: [deleteProductPhoto.queryKey],
-    onError: (error: AxiosError<any>) => {
-      showErrorNotification(error);
-    },
-  });
-
+export const ImgsUpload = ({ files, setFiles, onDelete, onDrop }: Props) => {
   const handleDelete = (ind: number) => {
     const file = files[ind];
 
@@ -45,9 +17,7 @@ export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
     newArr.splice(ind, 1);
     setFiles(newArr);
 
-    if (isServerImgFile(file)) {
-      mutate({ uid: productUid, photoUid: file.uid });
-    }
+    onDelete(file);
   };
 
   const previews = files.map((file, ind) => {
@@ -84,7 +54,7 @@ export const ImgsUpload = ({ productUid, files, setFiles }: Props) => {
 
   return (
     <Stack gap={12}>
-      <Dropzone accept={IMAGE_MIME_TYPE} onDrop={handleFiles}>
+      <Dropzone accept={IMAGE_MIME_TYPE} onDrop={onDrop}>
         <Text ta="center">Загрузить изображения</Text>
       </Dropzone>
 

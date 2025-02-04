@@ -79,6 +79,10 @@ export type RecipeStep = {
   description: string;
 };
 
+export type RecipeStepObj = Omit<RecipeStep, "recipeUid" | "step"> & {
+  img: File | null;
+};
+
 export type Recipe = {
   uid: string;
   name: string;

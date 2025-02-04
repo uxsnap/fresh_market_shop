@@ -1,5 +1,3 @@
-import { editProduct } from "@/api/products/editProduct";
-import { getProducts } from "@/api/products/getProducts";
 import { useAdminStore } from "@/store/admin";
 import {
   convertDurationToTime,
@@ -10,52 +8,36 @@ import {
 import {
   Button,
   Group,
-  Input,
+  Modal,
   NumberInput,
-  Select,
   Stack,
-  Textarea,
   TextInput,
+  Title,
 } from "@mantine/core";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { ImgsUpload } from "../ImgsUpload";
-import { FileWithPath } from "@mantine/dropzone";
-import { updatePhotos } from "@/api/products/updatePhotos";
-import { BackendImg } from "@/types";
 import { createRecipe } from "@/api/recipes/createRecipe";
-import { TimeInput } from "@mantine/dates";
 
-import styles from "./CreateButton.module.css";
+import styles from "./RecipeModal.module.css";
 import { getRecipes } from "@/api/recipes/getRecipes";
 import { IMaskInput } from "react-imask";
 import { COOKING_TIME_BORDERS } from "@/constants";
 import { editRecipe } from "@/api/recipes/editRecipe";
+import { StepsModal } from "./StepsModal";
+import { RecipeStepObj } from "@/types";
 
 type Props = {
   onClose: () => void;
 };
 
-const weightData = [
-  { label: "20 грамм", value: "20" },
-  { label: "100 грамм", value: "100" },
-];
-
 export const RecipeModal = ({ onClose }: Props) => {
   const recipeItem = useAdminStore((s) => s.recipeItem);
   const setRecipeItem = useAdminStore((s) => s.setRecipeItem);
 
-  // const [files, setFiles] = useState<(FileWithPath | BackendImg)[]>([]);
-
-  // useEffect(() => {
-  //   if (!productItem?.imgs.length) {
-  //     return;
-  //   }
-
-  //   setFiles(productItem.imgs);
-  // }, [productItem]);
+  const [stepsModalOpened, setStepsModalOpened] = useState(false);
+  const [curSteps, setCurSteps] = useState<RecipeStepObj[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -139,33 +121,6 @@ export const RecipeModal = ({ onClose }: Props) => {
     },
   });
 
-  // const { mutate: mutateFiles } = useMutation({
-  //   mutationFn: updatePhotos,
-  //   onError: (error: AxiosError<any>) => {
-  //     showErrorNotification(error);
-  //   },
-  // });
-
-  // const handleFiles = () => {
-  //   if (!files.length || !productItem) {
-  //     return;
-  //   }
-
-  //   const form = new FormData();
-  //   form.append("category", productItem.categoryUid);
-  //   form.append("uid", productItem.id);
-
-  //   for (const file of files) {
-  //     if ("uid" in file) {
-  //       continue;
-  //     }
-
-  //     form.append("file", file);
-  //   }
-
-  //   mutateFiles(form);
-  // };
-
   const handleSubmit = form.onSubmit((values) => {
     const submitValues = {
       ...values,
@@ -177,78 +132,95 @@ export const RecipeModal = ({ onClose }: Props) => {
     } else {
       mutateCreate(submitValues);
     }
-
-    // handleFiles();
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack gap={16}>
-        <TextInput
-          size="md"
-          label="Название"
-          withAsterisk
-          required
-          placeholder="Введите название"
-          {...form.getInputProps("name")}
+    <>
+      <Modal
+        opened={stepsModalOpened}
+        onClose={() => setStepsModalOpened(false)}
+        title={
+          <Title c="accent.0" order={4}>
+            Шаги рецепта
+          </Title>
+        }
+      >
+        <StepsModal
+          onClose={() => setStepsModalOpened(false)}
+          steps={curSteps}
+          onChange={setCurSteps}
         />
+      </Modal>
 
-        <NumberInput
-          w="100%"
-          min={1}
-          hideControls
-          allowLeadingZeros={false}
-          allowNegative={false}
-          allowDecimal={false}
-          withAsterisk
-          lh={1}
-          size="md"
-          required
-          label="Калории"
-          placeholder="Введите калории"
-          key={form.key("ccal")}
-          {...form.getInputProps("ccal")}
-        />
-
-        <TextInput
-          placeholder="Введите время приготовления"
-          component={IMaskInput}
-          // @ts-ignore
-          mask="00:00"
-          w="100%"
-          lh={1}
-          required
-          size="md"
-          withAsterisk
-          label="Время приготовления"
-          classNames={{ input: styles.time }}
-          key={form.key("cookingTime")}
-          {...form.getInputProps("cookingTime")}
-        />
-
-        {/* {productItem && (
-          <ImgsUpload
-            productUid={productItem.id}
-            files={files}
-            setFiles={setFiles}
+      <form onSubmit={handleSubmit}>
+        <Stack gap={16}>
+          <TextInput
+            size="md"
+            label="Название"
+            withAsterisk
+            required
+            placeholder="Введите название"
+            {...form.getInputProps("name")}
           />
-        )} */}
 
-        <Group wrap="nowrap" mt={4} justify="space-between">
+          <NumberInput
+            w="100%"
+            min={1}
+            hideControls
+            allowLeadingZeros={false}
+            allowNegative={false}
+            allowDecimal={false}
+            withAsterisk
+            lh={1}
+            size="md"
+            required
+            label="Калории"
+            placeholder="Введите калории"
+            key={form.key("ccal")}
+            {...form.getInputProps("ccal")}
+          />
+
+          <TextInput
+            placeholder="Введите время приготовления"
+            component={IMaskInput}
+            // @ts-ignore
+            mask="00:00"
+            w="100%"
+            lh={1}
+            required
+            size="md"
+            withAsterisk
+            label="Время приготовления"
+            classNames={{ input: styles.time }}
+            key={form.key("cookingTime")}
+            {...form.getInputProps("cookingTime")}
+          />
+
           <Button
             disabled={isPendingCreate || isPendingUpdate}
             w="100%"
-            type="submit"
-            variant="accent"
+            variant="dashed"
+            onClick={() => setStepsModalOpened(true)}
           >
-            Сохранить
+            Редактировать шаги
           </Button>
 
-          <Button w="100%" onClick={handleClose} variant="accent-reverse">
-            Закрыть
-          </Button>
-        </Group>
-      </Stack>
-    </form>
+          <Group wrap="nowrap" mt={4} justify="space-between">
+            <Button
+              disabled={isPendingCreate || isPendingUpdate}
+              w="100%"
+              type="submit"
+              variant="accent"
+            >
+              Сохранить
+            </Button>
+
+            <Button w="100%" onClick={handleClose} variant="accent-reverse">
+              Закрыть
+            </Button>
+          </Group>
+        </Stack>
+      </form>
+    </>
   );
 };

@@ -4,7 +4,7 @@ import { Button, Modal, Title } from "@mantine/core";
 import { useMemo } from "react";
 import { CreateAdminModal } from "./CreateAdminModal";
 import { ProductModal } from "./ProductModal";
-import { RecipeModal } from "./RecipeModal";
+import { RecipeModal } from "./components/RecipeModal";
 
 const mapTabToText: Record<AdminTab, string> = {
   [AdminTab.admins]: "Создать админа",

@@ -21,6 +21,7 @@ import { ImgsUpload } from "../ImgsUpload";
 import { FileWithPath } from "@mantine/dropzone";
 import { updatePhotos } from "@/api/products/updatePhotos";
 import { BackendImg } from "@/types";
+import { ProductImgsUpload } from "../ProductImgsUpload";
 
 type Props = {
   onClose: () => void;
@@ -262,7 +263,7 @@ export const ProductModal = ({ onClose }: Props) => {
         />
 
         {productItem && (
-          <ImgsUpload
+          <ProductImgsUpload
             productUid={productItem.id}
             files={files}
             setFiles={setFiles}
