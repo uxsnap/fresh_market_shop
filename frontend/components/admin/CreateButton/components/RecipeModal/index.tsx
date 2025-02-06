@@ -2,34 +2,49 @@ import { useAdminStore } from "@/store/admin";
 import {
   convertDurationToTime,
   convertTimeToDuration,
+  getRecipeBg,
+  processImgFile,
+  renameFile,
   showErrorNotification,
   showSuccessNotification,
+  urlToObject,
 } from "@/utils";
 import {
   Button,
+  FileInput,
   Group,
   Modal,
   NumberInput,
   Stack,
   TextInput,
   Title,
+  Image,
 } from "@mantine/core";
 import { hasLength, isNotEmpty, useForm } from "@mantine/form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 import { createRecipe } from "@/api/recipes/createRecipe";
 
 import styles from "./RecipeModal.module.css";
 import { getRecipes } from "@/api/recipes/getRecipes";
 import { IMaskInput } from "react-imask";
-import { COOKING_TIME_BORDERS } from "@/constants";
 import { editRecipe } from "@/api/recipes/editRecipe";
 import { StepsModal } from "./StepsModal";
 import { RecipeStepObj } from "@/types";
+import { deleteRecipePhotos } from "@/api/recipes/deleteRecipePhotos";
+import { addRecipePhotos } from "@/api/recipes/addRecipePhotos";
+import { validateCookingTime } from "./utils";
 
 type Props = {
   onClose: () => void;
+};
+
+type Form = {
+  name: string;
+  ccal: number;
+  cookingTime: string;
+  img: null | File;
 };
 
 export const RecipeModal = ({ onClose }: Props) => {
@@ -37,68 +52,63 @@ export const RecipeModal = ({ onClose }: Props) => {
   const setRecipeItem = useAdminStore((s) => s.setRecipeItem);
 
   const [stepsModalOpened, setStepsModalOpened] = useState(false);
+
   const [curSteps, setCurSteps] = useState<RecipeStepObj[]>([]);
 
   const queryClient = useQueryClient();
 
-  const form = useForm({
+  const form = useForm<Form>({
     mode: "uncontrolled",
     initialValues: {
       name: "",
       ccal: 0,
       cookingTime: "",
+      img: null,
     },
     validate: {
       name: hasLength({ min: 1 }, "Длина названия должна быть больше 1"),
       ccal: isNotEmpty("Калорийность не должна быть пустой"),
-      cookingTime: (value) => {
-        if (value.length < 5) {
-          return "Время приготовления не должно быть пустым";
-        }
-
-        const time = convertTimeToDuration(value);
-
-        if (
-          time < COOKING_TIME_BORDERS.min ||
-          time > COOKING_TIME_BORDERS.max
-        ) {
-          return "Время приготовления выходит за временные границы";
-        }
-
-        return null;
-      },
+      cookingTime: validateCookingTime,
     },
   });
 
   useEffect(() => {
-    if (!recipeItem) {
-      return;
-    }
+    const asyncFunc = async () => {
+      form.reset();
 
-    form.reset();
+      if (!recipeItem) {
+        return;
+      }
 
-    form.setValues({
-      name: recipeItem.name,
-      cookingTime: convertDurationToTime(recipeItem.cookingTime),
-      ccal: recipeItem.ccal,
-    });
+      const img = await urlToObject(getRecipeBg(recipeItem.uid), "0.webp");
+
+      form.setValues({
+        name: recipeItem.name,
+        cookingTime: convertDurationToTime(recipeItem.cookingTime),
+        ccal: recipeItem.ccal,
+        img,
+      });
+    };
+
+    asyncFunc();
   }, [recipeItem]);
 
   const handleClose = () => {
     setRecipeItem(undefined);
+
+    queryClient.invalidateQueries({
+      queryKey: [getRecipes.queryKey],
+    });
+
     onClose();
   };
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = useMutation({
     mutationFn: createRecipe,
-    onSuccess: () => {
-      onClose();
-
-      queryClient.invalidateQueries({
-        queryKey: [getRecipes.queryKey],
-      });
-
+    onSuccess: ({ data }: AxiosResponse<{ uid: string }>) => {
       showSuccessNotification("Рецепт успешно добавлен!");
+
+      handleMainPhoto(data.uid, form.getValues().img);
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
@@ -107,15 +117,26 @@ export const RecipeModal = ({ onClose }: Props) => {
 
   const { mutate: mutateEdit, isPending: isPendingUpdate } = useMutation({
     mutationFn: editRecipe,
-    onSuccess: () => {
-      onClose();
-
-      queryClient.invalidateQueries({
-        queryKey: [getRecipes.queryKey],
-      });
-
+    onSuccess: ({ data }: AxiosResponse<{ uid: string }>) => {
       showSuccessNotification("Рецепт успешно обновлен!");
+
+      handleMainPhoto(data.uid, form.getValues().img);
     },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
+  });
+
+  const { mutate: mutateDeletePhoto, isPending: isPendingDeletePhoto } =
+    useMutation({
+      mutationFn: deleteRecipePhotos,
+      onError: (error: AxiosError<any>) => {
+        showErrorNotification(error);
+      },
+    });
+
+  const { mutate: mutateAddPhoto, isPending: isPendingAddPhoto } = useMutation({
+    mutationFn: addRecipePhotos,
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
     },
@@ -133,6 +154,27 @@ export const RecipeModal = ({ onClose }: Props) => {
       mutateCreate(submitValues);
     }
   });
+
+  const handleMainPhoto = async (uid: string, img: File | null) => {
+    if (!img) {
+      mutateDeletePhoto({ uid, photos: ["0.webp"] });
+      return;
+    }
+
+    const processed = await processImgFile(img);
+
+    const formData = new FormData();
+    formData.set("uid", uid);
+    formData.set("file", renameFile(processed, "0.webp"));
+
+    mutateAddPhoto(formData);
+  };
+
+  const isPending =
+    isPendingCreate ||
+    isPendingUpdate ||
+    isPendingDeletePhoto ||
+    isPendingAddPhoto;
 
   return (
     <>
@@ -190,14 +232,34 @@ export const RecipeModal = ({ onClose }: Props) => {
             required
             size="md"
             withAsterisk
-            label="Время приготовления"
+            label="Время приготовления (ЧЧ:ММ)"
             classNames={{ input: styles.time }}
             key={form.key("cookingTime")}
             {...form.getInputProps("cookingTime")}
           />
 
+          <FileInput
+            size="md"
+            label="Изображение"
+            withAsterisk
+            accept="image/webp"
+            required
+            placeholder="Выберите основное изображение"
+            clearable
+            key={form.key(`img`)}
+            {...form.getInputProps(`img`)}
+            onChange={(payload) => form.setFieldValue(`img`, payload)}
+          />
+
+          {form.getValues().img && (
+            <Image
+              style={{ width: 100, height: 100 }}
+              src={URL.createObjectURL(form.getValues().img as File)}
+            />
+          )}
+
           <Button
-            disabled={isPendingCreate || isPendingUpdate}
+            disabled={isPending}
             w="100%"
             variant="dashed"
             onClick={() => setStepsModalOpened(true)}
@@ -207,7 +269,7 @@ export const RecipeModal = ({ onClose }: Props) => {
 
           <Group wrap="nowrap" mt={4} justify="space-between">
             <Button
-              disabled={isPendingCreate || isPendingUpdate}
+              disabled={isPending}
               w="100%"
               type="submit"
               variant="accent"

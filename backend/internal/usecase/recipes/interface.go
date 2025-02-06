@@ -20,7 +20,6 @@ type RecipesRepository interface {
 	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
 
 	DeleteRecipe(ctx context.Context, uid uuid.UUID) error
-	DeleteRecipePhotos(ctx context.Context, uid uuid.UUID, photosUids ...uuid.UUID) error
 
 	GetRecipesTotal(ctx context.Context) (int64, error)
 

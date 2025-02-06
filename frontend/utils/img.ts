@@ -49,3 +49,19 @@ export const getBase64Img = (res: AxiosResponse<any, any>) => {
 export const isServerImgFile = (file: { path?: string }) => {
   return "uid" in file;
 };
+
+export const renameFile = (originalFile: File, newName: string) => {
+  return new File([originalFile], newName, {
+    type: originalFile.type,
+    lastModified: originalFile.lastModified,
+  });
+};
+
+export const urlToObject = async (image: string, name: string) => {
+  const response = await fetch(image);
+
+  const blob = await response.blob();
+  const file = new File([blob], name, { type: blob.type });
+
+  return file;
+};

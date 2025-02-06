@@ -4,19 +4,34 @@ import { AdminList } from "@/components/admin/AdminList";
 import { AdminProductList } from "@/components/admin/AdminProductList";
 import { AdminRecipeList } from "@/components/admin/AdminRecipeList";
 import { CreateButton } from "@/components/admin/CreateButton";
-import { useAdminStore } from "@/store/admin";
 import { AdminTab } from "@/types";
 import { Box, Group, Stack, Tabs } from "@mantine/core";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo } from "react";
 
 export default function AdminPage() {
-  const tab = useAdminStore((s) => s.tab);
-  const setTab = useAdminStore((s) => s.setTab);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = useMemo(() => new URLSearchParams(), []);
+
+  const tab = (searchParams.get("tab") ?? AdminTab.admins) as AdminTab;
+
+  const setSearchParams = (v: AdminTab) => {
+    params.set("tab", v);
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  useEffect(() => {
+    setSearchParams(tab);
+  }, []);
 
   return (
     <Stack gap={24} p={8} m={0} miw="100%">
       <Tabs
         value={tab}
-        onChange={(v) => setTab(v as AdminTab)}
+        onChange={(v) => setSearchParams(v as AdminTab)}
         color="accent.0"
         variant="pills"
         defaultValue="admins"

@@ -47,7 +47,7 @@ export const formatDuration = (duration: number) => {
 };
 
 export const getRecipeBg = (uid: string) => {
-  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${uid}/0.jpg`;
+  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${uid}/0.webp`;
 };
 
 export const getRecipeStepImg = (step: RecipeStep) => {

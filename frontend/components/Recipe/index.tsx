@@ -1,11 +1,4 @@
-import {
-  Text,
-  Title,
-  Stack,
-  BackgroundImage,
-  Box,
-  LoadingOverlay,
-} from "@mantine/core";
+import { Text, Title, Stack, BackgroundImage, Box } from "@mantine/core";
 
 import styles from "./Recipe.module.css";
 import { Trash } from "../icons/Trash";
@@ -40,7 +33,7 @@ export const Recipe = ({
 
   const queryClient = useQueryClient();
 
-  const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
+  const { mutate: mutateDelete } = useMutation({
     mutationFn: deleteRecipe,
     mutationKey: [deleteRecipe.queryKey],
     onSuccess: () => {
@@ -64,12 +57,6 @@ export const Recipe = ({
       className={styles.root}
       onClick={onClick}
     >
-      <LoadingOverlay
-        visible={isPendingDelete}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "accent.0", type: "bars" }}
-      />
-
       <Stack w="100%" className={styles.main} gap={16} justify="flex-end">
         <Box py={20} px={16}>
           <Title order={3} c="accent.0">

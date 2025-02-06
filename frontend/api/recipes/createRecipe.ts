@@ -7,7 +7,7 @@ type Body = {
 };
 
 export const createRecipe = (body: Body) => {
-  return client.post("/recipes", body);
+  return client.post<{ uid: string }>("/recipes", body);
 };
 
 createRecipe.queryKey = "createRecipe";

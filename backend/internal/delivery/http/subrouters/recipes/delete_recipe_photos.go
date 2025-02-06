@@ -52,5 +52,5 @@ func (h *RecipesSubrouter) DeleteRecipePhotos(w http.ResponseWriter, r *http.Req
 }
 
 type DeleteRecipePhotosRequest struct {
-	Photos []uuid.UUID `json:"photos"`
+	Photos []string `json:"photos"`
 }
