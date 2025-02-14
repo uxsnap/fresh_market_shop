@@ -230,35 +230,28 @@ func (r *RecipesRepository) AddRecipeSteps(ctx context.Context, uid uuid.UUID, r
 
 	row := pgEntity.NewRecipeStepRow()
 
-	dSql := sq.Delete(row.Table()).Where(sq.Eq{"recipe_uid": uid})
-	stmt, args, err := dSql.ToSql()
-	if err != nil {
-		log.Printf("failed to add recipe steps: %v", err)
-		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
-	}
-	_, err = r.DB().Exec(ctx, stmt, args...)
-	if err != nil {
-		log.Printf("failed to add recipe steps: %v", err)
-		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+	if dErr := r.Delete(ctx, row, sq.Eq{"recipe_uid": uid}); dErr != nil {
+		log.Printf("failed to delete recipe steps: %v", dErr)
+		return errorWrapper.NewError(errorWrapper.RecipeStepError, "не удалось добавить шаги рецепта")
 	}
 
-	sql := sq.Insert(row.Table()).PlaceholderFormat(sq.Dollar)
+	sql := sq.Insert(row.Table()).Columns(row.Columns()...).PlaceholderFormat(sq.Dollar)
 
 	for _, step := range rSteps {
-		sql = sql.Values(row.FromEntity(step))
+		sql = sql.Values(pgEntity.NewRecipeStepRow().FromEntity(step).Values()...)
 	}
 
-	stmt, args, err = sql.ToSql()
+	stmt, args, err := sql.ToSql()
 
 	if err != nil {
-		log.Printf("failed to add recipe steps: %v", err)
-		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+		log.Printf("failed to create query for recipe steps: %v", err)
+		return errorWrapper.NewError(errorWrapper.RecipeStepError, "не удалось добавить шаги рецепта")
 	}
 
 	_, err = r.DB().Exec(ctx, stmt, args...)
 	if err != nil {
 		log.Printf("failed to add recipe steps: %v", err)
-		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+		return errorWrapper.NewError(errorWrapper.RecipeStepError, "не удалось добавить шаги рецепта")
 	}
 
 	return nil

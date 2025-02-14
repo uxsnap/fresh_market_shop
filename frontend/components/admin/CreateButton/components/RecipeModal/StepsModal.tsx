@@ -84,7 +84,7 @@ export const StepsModal = ({ uid, onClose }: Props) => {
   const handleSubmit = form.onSubmit((values) => {
     mutateAdd({
       uid,
-      rSteps: values.formSteps.map((s, ind) => ({
+      steps: values.formSteps.map((s, ind) => ({
         recipeUid: uid,
         description: s.description,
         step: ind + 1,
@@ -98,6 +98,10 @@ export const StepsModal = ({ uid, onClose }: Props) => {
       img: null,
     });
   };
+
+  // const handlePhotos = () => {
+
+  // };
 
   return (
     <form onSubmit={handleSubmit}>

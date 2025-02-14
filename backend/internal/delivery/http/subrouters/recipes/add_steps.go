@@ -39,7 +39,7 @@ func (h *RecipesSubrouter) AddSteps(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var recipeSteps AddRecipeStepsRequest
-	if err := httpUtils.DecodeJsonRequest(r, recipeSteps); err != nil {
+	if err := httpUtils.DecodeJsonRequest(r, &recipeSteps); err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
 			errorWrapper.JsonParsingError, "не удалось распарсить тело запроса",
 		))

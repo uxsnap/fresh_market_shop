@@ -20,6 +20,7 @@ const (
 	UserPhotoError        = "user_photo_error"
 	AddressesError        = "addresses_error"
 	OrderHistoryError     = "order_history_error"
+	RecipeStepError       = "recipe_step_error"
 )
 
 type Error struct {

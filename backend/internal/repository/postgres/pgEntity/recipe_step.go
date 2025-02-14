@@ -50,8 +50,8 @@ func (rs *RecipeStepRow) ToEntity() entity.RecipeStep {
 
 func (rs *RecipeStepRow) FromEntity(rse entity.RecipeStep) *RecipeStepRow {
 	rs.RecipeUid = pgUidFromUUID(rse.RecipeUid)
-	rs.Description = rse.Description
 	rs.Step = rse.Step
+	rs.Description = rse.Description
 
 	return rs
 }

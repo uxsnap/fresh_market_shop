@@ -3,7 +3,7 @@ import client from "../client";
 
 type Body = {
   uid: string;
-  rSteps: RecipeStep[];
+  steps: RecipeStep[];
 };
 
 export const addRecipeSteps = (body: Body) => {

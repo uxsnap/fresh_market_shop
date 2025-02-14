@@ -18,7 +18,7 @@ func (uc *UseCaseRecipes) AddRecipeSteps(ctx context.Context, uid uuid.UUID, rSt
 	}
 
 	if err := uc.recipesRepository.AddRecipeSteps(ctx, uid, rSteps); err != nil {
-		log.Printf("failed to add recipe steps: %v", err)
+		log.Printf("uc failed to add recipe steps: %v", err)
 		return errors.WithStack(err)
 	}
 
