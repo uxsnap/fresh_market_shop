@@ -23,5 +23,6 @@ type RecipesRepository interface {
 
 	GetRecipesTotal(ctx context.Context) (int64, error)
 
-	AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error
+	AddRecipeSteps(ctx context.Context, uid uuid.UUID, rSteps []entity.RecipeStep) error
+	DeleteRecipeStep(ctx context.Context, uid uuid.UUID, step int) error
 }

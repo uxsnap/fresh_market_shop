@@ -35,7 +35,9 @@ func (h *RecipesSubrouter) CreateRecipe(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	uid, err := h.RecipesService.CreateRecipe(ctx, httpEntity.RecipeToEntity(recipe))
+	rEntity := httpEntity.RecipeToEntity(recipe)
+
+	uid, err := h.RecipesService.CreateRecipe(ctx, rEntity)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(
 			errorWrapper.InternalError, err.Error(),
@@ -43,7 +45,7 @@ func (h *RecipesSubrouter) CreateRecipe(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	httpUtils.WriteResponseJson(w, httpEntity.UUID{
-		Uid: uid,
-	})
+	rEntity.Uid = uid
+
+	httpUtils.WriteResponseJson(w, httpEntity.RecipeFromEntity(rEntity))
 }

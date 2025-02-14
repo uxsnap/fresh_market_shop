@@ -51,7 +51,7 @@ export const getRecipeBg = (uid: string) => {
 };
 
 export const getRecipeStepImg = (step: RecipeStep) => {
-  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.jpg`;
+  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.webp`;
 };
 
 export const publicApiErrorResponse = (error: unknown) => {

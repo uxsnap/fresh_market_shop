@@ -59,3 +59,18 @@ func (rs *RecipeStepRow) FromEntity(rse entity.RecipeStep) *RecipeStepRow {
 func NewRecipeStepRows() *Rows[*RecipeStepRow, entity.RecipeStep] {
 	return &Rows[*RecipeStepRow, entity.RecipeStep]{}
 }
+
+func (rs *RecipeStepRow) ColumnsForUpdate() []string {
+	return []string{"recipe_uid", "step", "description"}
+}
+
+func (rr *RecipeStepRow) Values() []interface{} {
+	return []interface{}{
+		rr.RecipeUid, rr.Step, rr.Description,
+	}
+}
+func (rr *RecipeStepRow) ValuesForUpdate() []interface{} {
+	return []interface{}{
+		rr.RecipeUid, rr.Step, rr.Description,
+	}
+}

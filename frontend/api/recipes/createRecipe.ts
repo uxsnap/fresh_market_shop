@@ -1,3 +1,4 @@
+import { Recipe } from "@/types";
 import client from "../client";
 
 type Body = {
@@ -7,7 +8,7 @@ type Body = {
 };
 
 export const createRecipe = (body: Body) => {
-  return client.post<{ uid: string }>("/recipes", body);
+  return client.post<Recipe>("/recipes", body);
 };
 
 createRecipe.queryKey = "createRecipe";

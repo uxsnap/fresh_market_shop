@@ -31,7 +31,7 @@ import { getRecipes } from "@/api/recipes/getRecipes";
 import { IMaskInput } from "react-imask";
 import { editRecipe } from "@/api/recipes/editRecipe";
 import { StepsModal } from "./StepsModal";
-import { RecipeStepObj } from "@/types";
+import { Recipe, RecipeStepObj } from "@/types";
 import { deleteRecipePhotos } from "@/api/recipes/deleteRecipePhotos";
 import { addRecipePhotos } from "@/api/recipes/addRecipePhotos";
 import { validateCookingTime } from "./utils";
@@ -52,8 +52,6 @@ export const RecipeModal = ({ onClose }: Props) => {
   const setRecipeItem = useAdminStore((s) => s.setRecipeItem);
 
   const [stepsModalOpened, setStepsModalOpened] = useState(false);
-
-  const [curSteps, setCurSteps] = useState<RecipeStepObj[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -91,22 +89,20 @@ export const RecipeModal = ({ onClose }: Props) => {
     };
 
     asyncFunc();
-  }, [recipeItem]);
+  }, []);
 
   const handleClose = () => {
     setRecipeItem(undefined);
-
-    queryClient.invalidateQueries({
-      queryKey: [getRecipes.queryKey],
-    });
 
     onClose();
   };
 
   const { mutate: mutateCreate, isPending: isPendingCreate } = useMutation({
     mutationFn: createRecipe,
-    onSuccess: ({ data }: AxiosResponse<{ uid: string }>) => {
+    onSuccess: ({ data }: AxiosResponse<Recipe>) => {
       showSuccessNotification("Рецепт успешно добавлен!");
+
+      setRecipeItem(data);
 
       handleMainPhoto(data.uid, form.getValues().img);
     },
@@ -119,6 +115,10 @@ export const RecipeModal = ({ onClose }: Props) => {
     mutationFn: editRecipe,
     onSuccess: ({ data }: AxiosResponse<{ uid: string }>) => {
       showSuccessNotification("Рецепт успешно обновлен!");
+
+      queryClient.invalidateQueries({
+        queryKey: [getRecipes.queryKey],
+      });
 
       handleMainPhoto(data.uid, form.getValues().img);
     },
@@ -137,6 +137,11 @@ export const RecipeModal = ({ onClose }: Props) => {
 
   const { mutate: mutateAddPhoto, isPending: isPendingAddPhoto } = useMutation({
     mutationFn: addRecipePhotos,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [getRecipes.queryKey],
+      });
+    },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
     },
@@ -187,11 +192,12 @@ export const RecipeModal = ({ onClose }: Props) => {
           </Title>
         }
       >
-        <StepsModal
-          onClose={() => setStepsModalOpened(false)}
-          steps={curSteps}
-          onChange={setCurSteps}
-        />
+        {recipeItem && (
+          <StepsModal
+            uid={recipeItem.uid}
+            onClose={() => setStepsModalOpened(false)}
+          />
+        )}
       </Modal>
 
       <form onSubmit={handleSubmit}>
@@ -259,7 +265,7 @@ export const RecipeModal = ({ onClose }: Props) => {
           )}
 
           <Button
-            disabled={isPending}
+            disabled={isPending || !recipeItem}
             w="100%"
             variant="dashed"
             onClick={() => setStepsModalOpened(true)}

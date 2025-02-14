@@ -23,6 +23,7 @@ CREATE TABLE recipes_steps (
 );
 
 CREATE INDEX ix_recipes_products_recipe_uid ON recipes_products (recipe_uid);
+CREATE INDEX ix_recipes_steps_step on recipes_steps (step); 
 CREATE INDEX ix_recipes_products_product_uid ON recipes_products (product_uid);
 
 -- +goose StatementEnd

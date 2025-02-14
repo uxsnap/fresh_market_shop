@@ -5,10 +5,11 @@ import (
 	"log"
 
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseRecipes) AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error {
+func (uc *UseCaseRecipes) AddRecipeSteps(ctx context.Context, uid uuid.UUID, rSteps []entity.RecipeStep) error {
 	log.Printf("ucRecipes.AddRecipeSteps")
 
 	if err := validateRecipeSteps(rSteps); err != nil {
@@ -16,7 +17,7 @@ func (uc *UseCaseRecipes) AddRecipeSteps(ctx context.Context, rSteps []entity.Re
 		return errors.WithStack(err)
 	}
 
-	if err := uc.recipesRepository.AddRecipeSteps(ctx, rSteps); err != nil {
+	if err := uc.recipesRepository.AddRecipeSteps(ctx, uid, rSteps); err != nil {
 		log.Printf("failed to add recipe steps: %v", err)
 		return errors.WithStack(err)
 	}

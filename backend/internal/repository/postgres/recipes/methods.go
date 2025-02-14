@@ -225,16 +225,30 @@ func (r *RecipesRepository) GetRecipesTotal(ctx context.Context) (int64, error) 
 	return total, nil
 }
 
-func (r *RecipesRepository) AddRecipeSteps(ctx context.Context, rSteps []entity.RecipeStep) error {
+func (r *RecipesRepository) AddRecipeSteps(ctx context.Context, uid uuid.UUID, rSteps []entity.RecipeStep) error {
 	log.Printf("recipesRepository.AddRecipeSteps")
 
-	sql := sq.Insert(pgEntity.NewRecipeStepRow().Table()).PlaceholderFormat(sq.Dollar)
+	row := pgEntity.NewRecipeStepRow()
 
-	for _, step := range rSteps {
-		sql = sql.Values(pgEntity.NewRecipeStepRow().FromEntity(step))
+	dSql := sq.Delete(row.Table()).Where(sq.Eq{"recipe_uid": uid})
+	stmt, args, err := dSql.ToSql()
+	if err != nil {
+		log.Printf("failed to add recipe steps: %v", err)
+		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+	}
+	_, err = r.DB().Exec(ctx, stmt, args...)
+	if err != nil {
+		log.Printf("failed to add recipe steps: %v", err)
+		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
 	}
 
-	stmt, args, err := sql.ToSql()
+	sql := sq.Insert(row.Table()).PlaceholderFormat(sq.Dollar)
+
+	for _, step := range rSteps {
+		sql = sql.Values(row.FromEntity(step))
+	}
+
+	stmt, args, err = sql.ToSql()
 
 	if err != nil {
 		log.Printf("failed to add recipe steps: %v", err)
@@ -245,6 +259,19 @@ func (r *RecipesRepository) AddRecipeSteps(ctx context.Context, rSteps []entity.
 	if err != nil {
 		log.Printf("failed to add recipe steps: %v", err)
 		return errorWrapper.NewError(errorWrapper.ProductCountError, "не удалось добавить шаги рецепта")
+	}
+
+	return nil
+}
+
+func (r *RecipesRepository) DeleteRecipeStep(ctx context.Context, uid uuid.UUID, step int) error {
+	log.Printf("recipesRepository.DeleteRecipeStep %v", step)
+
+	row := pgEntity.NewRecipeStepRow().FromEntity(entity.RecipeStep{RecipeUid: uid, Step: int64(step)})
+
+	if err := r.Delete(ctx, row, sq.Eq{"recipe_uid": uid, "step": step}); err != nil {
+		log.Printf("failed to delete recipe %s: %v", uid, err)
+		return errors.WithStack(err)
 	}
 
 	return nil
