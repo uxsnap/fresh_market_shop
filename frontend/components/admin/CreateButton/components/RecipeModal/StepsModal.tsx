@@ -1,8 +1,12 @@
+import { addRecipePhotos } from "@/api/recipes/addRecipePhotos";
 import { addRecipeSteps } from "@/api/recipes/addRecipeSteps";
+import { deleteRecipePhotos } from "@/api/recipes/deleteRecipePhotos";
 import { getRecipeSteps } from "@/api/recipes/getRecipeSteps";
 import { RecipeStepObj } from "@/types";
 import {
   getRecipeStepImg,
+  processImgFile,
+  renameFile,
   showErrorNotification,
   showSuccessNotification,
   urlToObject,
@@ -51,14 +55,31 @@ export const StepsModal = ({ uid, onClose }: Props) => {
   const { mutate: mutateAdd, isPending: isPendingAdding } = useMutation({
     mutationFn: addRecipeSteps,
     onSuccess: () => {
-      showSuccessNotification("Шаги рецепта успешно обновлены!");
+      showSuccessNotification("Шаги приготовления успешно обновлены!");
 
-      // handlePhotos();
+      handlePhotos();
     },
     onError: (error: AxiosError<any>) => {
       showErrorNotification(error);
     },
   });
+
+  const { mutate: mutateDeletePhoto, isPending: isPendingDeletePhoto } =
+    useMutation({
+      mutationFn: deleteRecipePhotos,
+      onError: (error: AxiosError<any>) => {
+        showErrorNotification(error);
+      },
+    });
+
+  const { mutate: mutateAddPhotos, isPending: isPendingAddPhoto } = useMutation(
+    {
+      mutationFn: addRecipePhotos,
+      onError: (error: AxiosError<any>) => {
+        showErrorNotification(error);
+      },
+    }
+  );
 
   useEffect(() => {
     const getSteps = async () => {
@@ -99,9 +120,35 @@ export const StepsModal = ({ uid, onClose }: Props) => {
     });
   };
 
+  const handlePhotos = async () => {
+    const formData = new FormData();
+    formData.set("uid", uid);
+
+    const { formSteps } = form.getValues();
+
+    for (let ind = 0; ind < formSteps.length; ind++) {
+      const step = formSteps[ind];
+
+      const processed = await processImgFile(step.img!);
+
+      formData.set("file", renameFile(processed, `${ind + 1}.webp`));
+    }
+
+    mutateAddPhotos(formData);
+  };
+
+  const handleRemoveItem = (ind: number) => {
+    form.removeListItem("formSteps", ind);
+
+    mutateDeletePhoto({ uid, photos: [`${ind}.webp`] });
+  };
+
   // const handlePhotos = () => {
 
   // };
+
+  const isPending =
+    isPendingDeletePhoto || isPendingAdding || isPendingAddPhoto;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -117,7 +164,7 @@ export const StepsModal = ({ uid, onClose }: Props) => {
                     withAsterisk
                     required
                     autosize
-                    disabled={isPendingAdding}
+                    disabled={isPending}
                     maxRows={5}
                     placeholder="Введите описание"
                     key={form.key(`formSteps.${ind}.description`)}
@@ -130,7 +177,7 @@ export const StepsModal = ({ uid, onClose }: Props) => {
                     withAsterisk
                     accept="image/webp"
                     required
-                    disabled={isPendingAdding}
+                    disabled={isPending}
                     placeholder="Выберите изображение"
                     clearable
                     key={form.key(`formSteps.${ind}.img`)}
@@ -151,7 +198,7 @@ export const StepsModal = ({ uid, onClose }: Props) => {
 
                 <ActionIcon
                   color="accent.0"
-                  onClick={() => form.removeListItem("formSteps", ind)}
+                  onClick={() => handleRemoveItem(ind)}
                 >
                   <IconTrash size={16} />
                 </ActionIcon>
@@ -165,12 +212,7 @@ export const StepsModal = ({ uid, onClose }: Props) => {
         </Stack>
 
         <Group wrap="nowrap" mt={4} justify="space-between">
-          <Button
-            disabled={isPendingAdding}
-            w="100%"
-            type="submit"
-            variant="accent"
-          >
+          <Button disabled={isPending} w="100%" type="submit" variant="accent">
             Сохранить
           </Button>
 
