@@ -1,21 +1,25 @@
 "use client";
 
 import { getDelivery } from "@/api/delivery/getDelivery";
+import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/auth";
 import { useMapStore } from "@/store/map";
+import { dayJs } from "@/utils";
 import { LoadingOverlay, Stack, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 export const DeliveryTime = () => {
   const logged = useAuthStore((s) => s.logged);
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
+  const setDelivery = useCartStore((s) => s.setDelivery);
 
   const { data, isFetching } = useQuery({
     queryKey: [getDelivery.queryKey],
     queryFn: () =>
       getDelivery({
-        orderUid: "",
-        deliveryAddressUid: deliveryAddress!.addressUid,
+        orderUid: "00000000-0000-0000-0000-000000000000",
+        deliveryAddressUid: deliveryAddress!.uid,
       }),
     enabled: !!logged && !!deliveryAddress,
   });
@@ -23,6 +27,17 @@ export const DeliveryTime = () => {
   if (!deliveryAddress) {
     return null;
   }
+
+  const time = dayJs(data?.data.time);
+  const formatted = time.format("Hч mmм");
+
+  useEffect(() => {
+    if (!data?.data) {
+      return;
+    }
+
+    setDelivery(data.data);
+  }, [data?.data]);
 
   return (
     <Stack gap={0} h={38} visibleFrom="sm">
@@ -34,7 +49,7 @@ export const DeliveryTime = () => {
       />
 
       <Text style={{ whiteSpace: "nowrap" }} fw={500} size="md" c="accent.0">
-        {data?.data.time}
+        Около {formatted}
       </Text>
 
       <Text style={{ whiteSpace: "nowrap" }} fw={500} size="xs" c="accent.2">

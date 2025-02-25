@@ -20,19 +20,25 @@ func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	order, isFound, err := h.OrdersService.GetOrder(ctx, entity.QueryFilters{
-		OrderUid: req.OrderUid,
-	})
-	if err != nil {
-		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
-		return
-	}
-	if !isFound {
-		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("bad request", "order not found"))
-		return
+	var orderPrice int64 = 1
+
+	if req.OrderUid != uuid.Nil {
+		order, isFound, err := h.OrdersService.GetOrder(ctx, entity.QueryFilters{
+			OrderUid: req.OrderUid,
+		})
+		if err != nil {
+			httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
+			return
+		}
+		if !isFound {
+			httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("bad request", "order not found"))
+			return
+		}
+
+		orderPrice = order.Sum
 	}
 
-	deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, order.Sum, req.DeliveryAddressUid)
+	deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, orderPrice, req.DeliveryAddressUid)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return

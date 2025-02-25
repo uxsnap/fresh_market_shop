@@ -1,4 +1,4 @@
-import { CartItem, ProductItem } from "@/types";
+import { CartItem, DeliveryData, ProductItem } from "@/types";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { create, StoreApi, UseBoundStore } from "zustand";
@@ -12,6 +12,8 @@ type CartState = {
   removeAllItems: () => void;
   getFullPrice: () => number;
   getCount: (itemId: string) => number;
+  delivery?: DeliveryData;
+  setDelivery: (delivery: DeliveryData) => void;
 };
 
 export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
@@ -71,13 +73,21 @@ export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
           return 0;
         }
 
-        return arr.reduce(
-          (acc, item) => acc + item.product.price * item.count,
-          0
+        return (
+          arr.reduce((acc, item) => acc + item.product.price * item.count, 0) +
+          (get().delivery?.price ?? 0)
         );
       },
       getCount(itemId: string) {
         return get().items[itemId]?.count ?? 0;
+      },
+
+      setDelivery: (delivery: DeliveryData) => {
+        return set((state) => {
+          state.delivery = delivery;
+
+          return state;
+        });
       },
       removeAllItems() {
         return set((state) => {

@@ -52,10 +52,12 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	deliveryTime = time.Duration(int64(t)) * time.Minute
 	deliveryTime += 5 * time.Minute // 5 минут на подмыться
 
-	deliveryPrice = int64(dist/100*priceForHungredMetres) + int64(float64(orderPrice)*0.05)
+	deliveryPrice = int64(dist/100*priceForHundredMetres) + int64(float64(orderPrice)*0.05)
 
 	if deliveryPrice < minDeliveryPrice {
 		deliveryPrice = minDeliveryPrice
+	} else if deliveryPrice > maxDeliveryPrice {
+		deliveryPrice = maxDeliveryPrice
 	}
 
 	addressParts := []string{
@@ -97,8 +99,9 @@ const (
 	earthRadiusM = 6372795.0
 	courierSpeed = 500.0 // метры в минуту
 	// это переедет в тарифы:
-	priceForHungredMetres = 50.0
+	priceForHundredMetres = 50.0
 	minDeliveryPrice      = 150
+	maxDeliveryPrice      = 350
 )
 
 func degToRad(deg float64) float64 {

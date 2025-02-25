@@ -18,7 +18,6 @@ export const PayButton = () => {
 
   const price = useCartStore((s) => s.getFullPrice());
   const items = useCartStore((s) => s.items);
-  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const mutation = useMutation({
     mutationFn: makeOrder,
