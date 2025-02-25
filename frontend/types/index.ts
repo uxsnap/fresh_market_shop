@@ -209,3 +209,8 @@ export enum AdminTab {
   admins = "admins",
   products = "products",
 }
+
+export type DeliveryData = {
+  price: number;
+  time: number;
+};

@@ -43,12 +43,12 @@ run:
 	nodemon --watch './internal/**/*.go' --signal SIGTERM --exec 'go' run ./cmd/main.go
 
 down:
-	docker-compose down
+	docker compose down
 	docker image rm fresh_market_shop-migrator
 	docker volume rm fresh_market_shop_postgres_volume
 
 restart-migrations:
-	docker-compose restart migrator
+	docker compose restart migrator
 
 build:
-	docker-compose up -d
+	docker compose up -d

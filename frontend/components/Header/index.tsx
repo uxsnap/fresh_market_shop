@@ -7,6 +7,7 @@ import { memo } from "react";
 import { UserAuth } from "./components/UserAuth";
 import { useDisclosure } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
+import { DeliveryTime } from "../DeliveryTime";
 
 type Props = {
   onNavbar: () => void;
@@ -52,7 +53,7 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
 
           <Location />
 
-          {/* <DeliveryTime /> */}
+          <DeliveryTime />
         </Group>
 
         <UserAuth>
