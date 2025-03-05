@@ -7,9 +7,12 @@ type Params = {
 };
 
 export const getProductsByCategory = ({ category_uid, ...rest }: Params) => {
-  return client.get<ProductWithPhotos[]>(`/categories/${category_uid}/products`, {
-    params: rest,
-  });
+  return client.get<{ products: ProductWithPhotos[] }>(
+    `/categories/${category_uid}/products`,
+    {
+      params: rest,
+    }
+  );
 };
 
 getProductsByCategory.queryKey = "getProductsByCategory";

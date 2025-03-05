@@ -22,7 +22,7 @@ func (h *ProductsSubrouter) CreateProduct(w http.ResponseWriter, r *http.Request
 
 	if userInfo.Role != "admin" {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
-			errorWrapper.JsonParsingError, "нет разрешений на удаление продукта",
+			errorWrapper.JsonParsingError, "нет разрешений на добавление продукта",
 		))
 		return
 	}

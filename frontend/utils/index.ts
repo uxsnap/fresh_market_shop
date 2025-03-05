@@ -7,7 +7,7 @@ import {
   DeliveryAddress,
 } from "@/types";
 import { notifications } from "@mantine/notifications";
-import { AxiosError } from "axios";
+import { AxiosError, formToJSON } from "axios";
 
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
@@ -26,9 +26,10 @@ export const convertProductToProductItem = (
   item: ProductWithPhotos
 ): ProductItem => ({
   id: item.product.uid,
-  imgs: (item.photos ?? []).map(
-    (p) => `${process.env.NEXT_PUBLIC_API}/${p.path}`
-  ),
+  imgs: (item.photos ?? []).map((p) => ({
+    path: `${process.env.NEXT_PUBLIC_API}/${p.path}`,
+    uid: p.uid,
+  })),
   price: item.product.price,
   name: item.product.name,
   weight: item.product.weight,
@@ -46,11 +47,11 @@ export const formatDuration = (duration: number) => {
 };
 
 export const getRecipeBg = (uid: string) => {
-  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${uid}/main.jpg`;
+  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${uid}/0.webp`;
 };
 
 export const getRecipeStepImg = (step: RecipeStep) => {
-  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.jpg`;
+  return `${process.env.NEXT_PUBLIC_API}/assets/recipes/${step.recipeUid}/${step.step}.webp`;
 };
 
 export const publicApiErrorResponse = (error: unknown) => {
@@ -131,6 +132,19 @@ export const getStreetInfoFromGeo = (geoObject: ExtendedGeoObject) => {
     street: splittedAddressLine[1].replace("улица", "").trim(),
     houseNumber: splittedAddressLine[2].split(" ")[0],
   };
+};
+
+export const convertTimeToDuration = (val: string): number => {
+  const [hh, mm] = val.split(":").map((v) => parseInt(v, 10));
+
+  return dayJs.duration({ hours: hh, minutes: mm }).asMilliseconds() * 1000;
+};
+
+export const convertDurationToTime = (val: number): string => {
+  const hours = dayJs.duration(val / 1000).hours();
+  const minutes = dayJs.duration(val / 1000).minutes();
+
+  return `${hours < 10 ? 0 : ""}${hours}:${minutes < 10 ? 0 : ""}${minutes}`;
 };
 
 export * from "./img";

@@ -22,6 +22,11 @@ type RecipeStep struct {
 	Description string    `json:"description"`
 }
 
+type RecipesWithTotal struct {
+	Recipes []Recipe `json:"recipes"`
+	Total   int64    `json:"total"`
+}
+
 func RecipeStepFromEntity(re entity.RecipeStep) RecipeStep {
 	return RecipeStep{
 		RecipeUid:   re.RecipeUid,
@@ -30,8 +35,27 @@ func RecipeStepFromEntity(re entity.RecipeStep) RecipeStep {
 	}
 }
 
+func RecipeStepToEntity(re RecipeStep) entity.RecipeStep {
+	return entity.RecipeStep{
+		RecipeUid:   re.RecipeUid,
+		Step:        re.Step,
+		Description: re.Description,
+	}
+}
+
 func RecipeFromEntity(re entity.Recipe) Recipe {
 	return Recipe{
+		Uid:         re.Uid,
+		Name:        re.Name,
+		CreatedAt:   re.CreatedAt,
+		UpdatedAt:   re.UpdatedAt,
+		CookingTime: re.CookingTime,
+		Ccal:        re.Ccal,
+	}
+}
+
+func RecipeToEntity(re Recipe) entity.Recipe {
+	return entity.Recipe{
 		Uid:         re.Uid,
 		Name:        re.Name,
 		CreatedAt:   re.CreatedAt,

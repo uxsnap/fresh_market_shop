@@ -1,34 +1,42 @@
-import { useState } from "react";
 import { Text, Image, SimpleGrid, Stack, CloseButton } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from "@mantine/dropzone";
-
-const MAX_FILES = 3;
+import { BackendImg } from "@/types";
 
 type Props = {
-  files: FileWithPath[];
-  setFiles: (files: FileWithPath[]) => void;
+  files: (FileWithPath | BackendImg)[];
+  setFiles: (files: (FileWithPath | BackendImg)[]) => void;
+  onDelete: (file: FileWithPath | BackendImg) => void;
+  onDrop: (files: FileWithPath[]) => void;
 };
 
-export const ImgsUpload = ({ files, setFiles }: Props) => {
-  const handleFiles = (newFiles: FileWithPath[]) => {
-    setFiles([...newFiles, ...files].slice(0, MAX_FILES));
-  };
-
+export const ImgsUpload = ({ files, setFiles, onDelete, onDrop }: Props) => {
   const handleDelete = (ind: number) => {
-    files.splice(ind, 1);
+    const file = files[ind];
 
-    setFiles([...files]);
+    const newArr = [...files];
+    newArr.splice(ind, 1);
+    setFiles(newArr);
+
+    onDelete(file);
   };
 
   const previews = files.map((file, ind) => {
-    const imageUrl = URL.createObjectURL(file);
+    const imageUrl = "uid" in file ? file.path : URL.createObjectURL(file);
 
     return (
-      <Stack justify="center" align="center" pos="relative" mih={50} miw={50}>
+      <Stack
+        key={imageUrl}
+        justify="center"
+        align="center"
+        pos="relative"
+        mih={50}
+        miw={50}
+      >
         <Image
-          key={imageUrl}
           src={imageUrl}
-          onLoad={() => URL.revokeObjectURL(imageUrl)}
+          onLoad={() =>
+            "uid" in file ? file.path : URL.revokeObjectURL(imageUrl)
+          }
         />
 
         <CloseButton
@@ -46,7 +54,7 @@ export const ImgsUpload = ({ files, setFiles }: Props) => {
 
   return (
     <Stack gap={12}>
-      <Dropzone accept={IMAGE_MIME_TYPE} onDrop={handleFiles}>
+      <Dropzone accept={IMAGE_MIME_TYPE} onDrop={onDrop}>
         <Text ta="center">Загрузить изображения</Text>
       </Dropzone>
 

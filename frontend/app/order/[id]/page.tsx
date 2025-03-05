@@ -36,8 +36,6 @@ export default function OrderPage() {
     queryKey: [getOrder.queryKey],
   });
 
-  console.log(data);
-
   return (
     <>
       <Box className={styles.root}>

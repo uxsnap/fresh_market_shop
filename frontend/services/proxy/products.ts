@@ -38,8 +38,6 @@ export const proxyReviveProduct = async (req: NextRequest) => {
 
     const body = await req.json();
 
-    console.log(body, tokens);
-
     await axios.patch(
       `${process.env.NEXT_PUBLIC_API}/products/${body.uid}`,
       {},
@@ -74,6 +72,35 @@ export const proxyProductPhotos = async (req: NextRequest) => {
       `${process.env.NEXT_PUBLIC_API}/products/${uid}/photos`,
       formData,
       {
+        headers: { Authorization: `Bearer ${tokens.access_jwt}` },
+      }
+    );
+
+    return Response.json(
+      {},
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return publicApiErrorResponse(error);
+  }
+};
+
+export const proxyDeleteProductPhoto = async (req: NextRequest) => {
+  try {
+    const { tokens } = await getAuthCookieTokensFromServer();
+
+    if (!tokens?.access_jwt) {
+      return deleteAuthCookies();
+    }
+
+    const body = await req.json();
+
+    await axios.delete(
+      `${process.env.NEXT_PUBLIC_API}/products/${body.uid}/photos`,
+      {
+        data: { photos: [body.photoUid] },
         headers: { Authorization: `Bearer ${tokens.access_jwt}` },
       }
     );

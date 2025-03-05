@@ -44,11 +44,16 @@ export type ProductsWithTotal = {
   total: number;
 };
 
+export type BackendImg = {
+  path: string;
+  uid: string;
+};
+
 export type ProductItem = {
   id: string;
   price: number;
   name: string;
-  imgs: string[];
+  imgs: BackendImg[];
   weight: number;
   ccal: number;
   description: string;
@@ -72,6 +77,10 @@ export type RecipeStep = {
   recipeUid: string;
   step: number;
   description: string;
+};
+
+export type RecipeStepObj = Omit<RecipeStep, "recipeUid" | "step"> & {
+  img: File | null;
 };
 
 export type Recipe = {
@@ -208,9 +217,15 @@ export type Admin = {
 export enum AdminTab {
   admins = "admins",
   products = "products",
+  recipes = "recipes",
 }
 
 export type DeliveryData = {
   price: number;
   time: number;
+};
+
+export type RecipesWithTotal = {
+  recipes: Recipe[];
+  total: number;
 };

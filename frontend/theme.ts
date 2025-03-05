@@ -5,6 +5,7 @@ import {
   createTheme,
   DEFAULT_THEME,
   defaultVariantColorsResolver,
+  FileInput,
   Input,
   PasswordInput,
   RangeSlider,
@@ -111,6 +112,22 @@ export const theme = createTheme({
   },
   components: {
     TextInput: TextInput.extend({
+      vars: (_, props) => {
+        switch (props.size) {
+          case "md":
+            return {
+              wrapper: {
+                "--input-height": rem(42),
+                "--input-padding-x": rem(8),
+                "--input-fz": rem(18),
+              },
+            };
+          default:
+            return { wrapper: {} };
+        }
+      },
+    }),
+    FileInput: FileInput.extend({
       vars: (_, props) => {
         switch (props.size) {
           case "md":

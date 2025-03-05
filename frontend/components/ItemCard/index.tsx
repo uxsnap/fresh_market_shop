@@ -136,7 +136,7 @@ export const ItemCard = memo(
           <Image
             style={{ userSelect: "none" }}
             loading="lazy"
-            src={imgs[0]}
+            src={imgs[0]?.path}
             className={styles.img}
             alt={name}
             fit="contain"

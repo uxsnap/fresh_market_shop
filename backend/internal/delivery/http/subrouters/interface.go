@@ -23,6 +23,7 @@ type ProductsService interface {
 	ReviveProduct(ctx context.Context, uid uuid.UUID) error
 
 	UploadProductPhotos(ctx context.Context, uid uuid.UUID, form *multipart.Form) error
+	DeleteProductPhotos(ctx context.Context, productUid uuid.UUID, photosUids ...uuid.UUID) error
 
 	UpdateProductCount(ctx context.Context, productUid uuid.UUID, stockQuantity int64) error
 	IncrementProductCount(ctx context.Context, productUid uuid.UUID, incValue int64) error
@@ -71,11 +72,17 @@ type RecipesService interface {
 	CreateRecipe(ctx context.Context, recipe entity.Recipe) (uuid.UUID, error)
 	GetRecipeByUid(ctx context.Context, uid uuid.UUID) (entity.Recipe, bool, error)
 	GetRecipesByNameLike(ctx context.Context, name string, qFilters entity.QueryFilters) ([]entity.Recipe, error)
-	GetRecipes(ctx context.Context, qFilters entity.QueryFilters) ([]entity.Recipe, error)
+	GetRecipes(ctx context.Context, qFilters entity.QueryFilters) (entity.RecipesWithTotal, error)
 	GetRecipesProducts(ctx context.Context, recipe_uid uuid.UUID) ([]entity.ProductWithExtra, error)
 	GetRecipeSteps(ctx context.Context, recipe_uid uuid.UUID) ([]entity.RecipeStep, error)
-	UpdateRecipe(ctx context.Context, recipe entity.Recipe) error
+	UpdateRecipe(ctx context.Context, recipe entity.Recipe) (uuid.UUID, error)
 	DeleteRecipe(ctx context.Context, uid uuid.UUID) error
+
+	UploadRecipePhotos(ctx context.Context, uid uuid.UUID, form *multipart.Form) error
+	DeleteRecipePhotos(ctx context.Context, uid uuid.UUID, photoNames ...string) error
+
+	AddRecipeSteps(ctx context.Context, uid uuid.UUID, rSteps []entity.RecipeStep) error
+	DeleteRecipeStep(ctx context.Context, uid uuid.UUID, step int) error
 }
 
 type OrdersService interface {

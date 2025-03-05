@@ -13,7 +13,21 @@ import (
 func (h *RecipesSubrouter) GetRecipes(w http.ResponseWriter, r *http.Request) {
 	ctx := context.Background()
 
-	recipes, err := h.RecipesService.GetRecipes(ctx, entity.QueryFilters{})
+	qFilters, err := entity.NewQueryFiltersParser().
+		WithRequired(
+			entity.QueryFieldPage,
+			entity.QueryFieldLimit,
+		).
+		WithAllowed(
+			entity.QueryFieldName,
+		).
+		ParseQuery(r.URL.Query())
+	if err != nil {
+		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError("parsing query params error", err.Error()))
+		return
+	}
+
+	recipes, err := h.RecipesService.GetRecipes(ctx, qFilters)
 
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusBadRequest, errorWrapper.NewError(
@@ -22,11 +36,16 @@ func (h *RecipesSubrouter) GetRecipes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := make([]httpEntity.Recipe, 0, len(recipes))
+	resp := httpEntity.RecipesWithTotal{}
 
-	for _, recipe := range recipes {
-		resp = append(resp, httpEntity.RecipeFromEntity(recipe))
+	httpRecipes := make([]httpEntity.Recipe, 0, len(recipes.Recipes))
+
+	for _, recipe := range recipes.Recipes {
+		httpRecipes = append(httpRecipes, httpEntity.RecipeFromEntity(recipe))
 	}
+
+	resp.Recipes = httpRecipes
+	resp.Total = recipes.Total
 
 	httpUtils.WriteResponseJson(w, resp)
 }

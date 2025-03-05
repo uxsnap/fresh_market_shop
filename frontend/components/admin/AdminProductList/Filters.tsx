@@ -16,8 +16,6 @@ export const Filters = ({ setFilters }: Props) => {
   });
 
   const handleFilters = useDebouncedCallback((filters: Filters) => {
-    console.log("here");
-
     setFilters(filters);
   }, 200);
 

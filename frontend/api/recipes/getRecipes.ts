@@ -1,8 +1,16 @@
-import { Category, Recipe } from "@/types";
+import { RecipesWithTotal } from "@/types";
 import client from "../client";
 
-export const getRecipes = () => {
-  return client.get<Recipe[]>("/recipes");
+type Args = {
+  page?: number;
+  limit?: number;
+  name?: string;
+};
+
+export const getRecipes = ({ page = 1, limit = 20, name = "" }: Args) => {
+  return client.get<RecipesWithTotal>("/recipes", {
+    params: { limit, page, name },
+  });
 };
 
 getRecipes.queryKey = "getRecipes";
