@@ -26,12 +26,8 @@ export const RecipeStep = ({
     >
       <Image className={styles.img} src={src} />
 
-      <Stack style={{ overflow: 'auto' }} className={styles.info}>
-        <Title order={4} c="accent.2">
-          Шаг {step} из {maxStep}
-        </Title>
-
-        <Text style={{ overflowY: "auto" }} fz={14} c="accent.0">
+      <Stack style={{ overflow: "auto" }} className={styles.info}>
+        <Text style={{ overflowY: "auto" }} fz={18} c="accent.0">
           {children}
         </Text>
       </Stack>

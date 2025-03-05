@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const ItemCardCarousel = ({ name, imgs, className }: Props) => {
-  const fallbackSrc = getFallbackImg(name);
+  const fallbackSrc = "";
 
   if (!imgs.length) {
     return (

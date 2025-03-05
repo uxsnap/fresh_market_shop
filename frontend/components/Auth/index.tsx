@@ -7,15 +7,18 @@ import {
   TextInput,
   Title,
   Text,
+  Box,
 } from "@mantine/core";
 import { Register } from "./components/Register";
 import { Login } from "./components/Login";
 import { useAuthStore } from "@/store/auth";
+import { Buttons } from "./components/Buttons";
+import { ForgotPass } from "./components/ForgotPass";
 
 const mapTypeToTitle: Record<AuthType, string> = {
   login: "Войдите для продолжения",
   reg: "Регистрация",
-  forgotPass: "Забыли пароль",
+  forgotPass: "Восстановление пароля",
   passRet: "Восстановление пароля",
 };
 
@@ -28,34 +31,7 @@ const mapTypeToComponent: Record<
     <Register onChange={onChange} close={() => onChange("")} />
   ),
   forgotPass: (onChange) => (
-    <>
-      <Flex gap={16} direction="column">
-        <TextInput size="md" label="Email" placeholder="Введите email" />
-      </Flex>
-
-      <Group mt={4} justify="space-between">
-        <Button
-          onClick={() => onChange("reg")}
-          p={0}
-          fz={10}
-          h={12}
-          size="xs"
-          variant="outline"
-        >
-          Регистрация
-        </Button>
-        <Button
-          onClick={() => onChange("login")}
-          p={0}
-          fz={10}
-          h={12}
-          size="xs"
-          variant="outline"
-        >
-          Вход в систему
-        </Button>
-      </Group>
-    </>
+    <ForgotPass onChange={onChange} close={() => onChange("")} />
   ),
   passRet: () => (
     <>
@@ -71,10 +47,9 @@ const mapTypToText: Record<AuthType, any> = {
   login: "",
   reg: "",
   forgotPass: (
-    <>
-      Введите email <br />
-      На него будет отправлен код для восстановления
-    </>
+    <Box mb={20}>
+      Введите email, на него будет отправлен код для восстановления
+    </Box>
   ),
   passRet: "",
 };

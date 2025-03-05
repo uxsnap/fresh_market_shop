@@ -21,7 +21,7 @@ export const SideMenu = () => {
   });
 
   const active =
-    data?.data.find((c) => c.uid === params.category_uid)?.name ?? "";
+    data?.data.find((c) => c.uid === params.category_uid)?.name ?? "Главная";
 
   const renderLoader = () => <SkeletLoader l={8} />;
 
@@ -42,7 +42,6 @@ export const SideMenu = () => {
           {name}
         </CategoryItem>
       ))}
-      ;
     </>
   );
 

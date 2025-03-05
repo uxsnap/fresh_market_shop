@@ -13,9 +13,7 @@ export const ItemCardExtended = memo(() => {
   const curItem = useProductStore((s) => s.curItem);
   const setCurItem = useProductStore((s) => s.setCurItem);
 
-  const handleClose = useCallback(() => {
-    return setCurItem();
-  }, []);
+  const handleClose = () => setCurItem();
 
   const { price, name, imgs = [], description, ccal } = curItem || {};
 
@@ -43,7 +41,7 @@ export const ItemCardExtended = memo(() => {
         <Modal.Body p={0}>
           <ItemCardCarousel
             className={styles.img}
-            imgs={imgs}
+            imgs={imgs.map((img) => img.path)}
             name={name ?? ""}
           />
 

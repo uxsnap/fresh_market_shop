@@ -30,8 +30,4 @@ button.burger {
 
 img.logo {
   cursor: pointer;
-
-  @media (max-width: $mantine-breakpoint-xs) {
-    display: none;
-  }
 }

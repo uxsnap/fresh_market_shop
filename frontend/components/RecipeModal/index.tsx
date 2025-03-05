@@ -38,7 +38,7 @@ export const RecipeModal = ({
       <Modal.Content className={styles.content}>
         <Modal.Header className={styles.header} px={20} py={12}>
           <Group w="100%" gap={16} wrap="nowrap">
-            <Title order={2} lineClamp={1} c="accent.0">
+            <Title order={2} c="accent.0">
               {name}
             </Title>
 
