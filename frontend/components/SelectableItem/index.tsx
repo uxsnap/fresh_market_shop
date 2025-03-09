@@ -50,7 +50,13 @@ export const SelectableItem = ({
         <Group wrap="nowrap" gap={16}>
           <Icon onClick={onMapOpen} fill="var(--mantine-color-accent-0)" />
 
-          <Text maw="70%" truncate="end" c="accent.0" fz={16} fw={500}>
+          <Text
+            className={styles.text}
+            truncate="end"
+            c="accent.0"
+            fz={16}
+            fw={500}
+          >
             {children}
           </Text>
         </Group>

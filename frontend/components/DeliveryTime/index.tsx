@@ -24,13 +24,6 @@ export const DeliveryTime = () => {
     enabled: !!logged && !!deliveryAddress,
   });
 
-  if (!deliveryAddress) {
-    return null;
-  }
-
-  const time = dayJs(data?.data.time);
-  const formatted = time.format("Hч mmм");
-
   useEffect(() => {
     if (!data?.data) {
       return;
@@ -38,6 +31,13 @@ export const DeliveryTime = () => {
 
     setDelivery(data.data);
   }, [data?.data]);
+
+  if (!deliveryAddress) {
+    return null;
+  }
+
+  const time = dayJs(data?.data.time);
+  const formatted = time.format("Hч mmм");
 
   return (
     <Stack gap={0} h={38} visibleFrom="sm">

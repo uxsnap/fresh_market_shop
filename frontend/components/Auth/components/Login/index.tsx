@@ -54,6 +54,8 @@ export const Login = ({ onChange, close }: Props) => {
       close();
       setLogged(true);
       mutateVerify();
+
+      router.push("/");
     },
     onError: () => {
       showInlineErrorNotification(

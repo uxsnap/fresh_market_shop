@@ -65,7 +65,10 @@ export const Avatar = ({ size = "default", upload = false }: Props) => {
       accept="image/png,image/jpeg,image/jpg,image/webp"
     >
       {(props) => (
-        <Box className={cn(styles.root, upload && styles.upload)}>
+        <Box
+          onClick={props.onClick}
+          className={cn(styles.root, upload && styles.upload)}
+        >
           <Group className={styles.uploadInfo}>
             <Plus size={20} fill="var(--mantine-color-accent-0)" />
             <Text span c="var(--mantine-color-accent-0)" fz={22} fw="bold">

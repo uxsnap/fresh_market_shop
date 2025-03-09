@@ -147,5 +147,13 @@ export const convertDurationToTime = (val: number): string => {
   return `${hours < 10 ? 0 : ""}${hours}:${minutes < 10 ? 0 : ""}${minutes}`;
 };
 
+export const capitalize = (str: string) => {
+  if (!str || !str.length) {
+    return "";
+  }
+
+  return str[0].toUpperCase() + str.slice(1);
+};
+
 export * from "./img";
 export * from "./card";

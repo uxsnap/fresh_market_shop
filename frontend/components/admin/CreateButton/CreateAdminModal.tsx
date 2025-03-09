@@ -1,10 +1,11 @@
 import { createAdminUser } from "@/api/auth/createAdmin";
 import { getAdmins } from "@/api/auth/getAdmins";
-import { showErrorNotification } from "@/utils";
+import { capitalize, showErrorNotification } from "@/utils";
 import { Button, Group, PasswordInput, Stack, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { isEmail, useForm } from "@mantine/form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { ChangeEvent } from "react";
 
 type Props = {
   onClose: () => void;
@@ -25,8 +26,7 @@ export const CreateAdminModal = ({ onClose }: Props) => {
         value.trim().length >= 1
           ? null
           : "Длина имени пользователя должна быть больше 1",
-      email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Неправильный формат email",
+      email: isEmail("Неправильный формат email"),
     },
   });
 
@@ -45,14 +45,32 @@ export const CreateAdminModal = ({ onClose }: Props) => {
     mutation.mutate(values);
   });
 
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.trimStart();
+
+    if (!val.includes(" ")) {
+      form.setFieldValue("name", capitalize(val));
+      return;
+    }
+
+    const splitted = val.split(" ").filter((v) => !!v);
+
+    form.setFieldValue(
+      "name",
+      `${capitalize(splitted[0])} ${capitalize(splitted[1])}`
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap={16}>
         <TextInput
           size="md"
-          label="Имя и фамилия"
+          label="Имя и Фамилия"
           placeholder="Введите имя и фамилию"
           {...form.getInputProps("name")}
+          onChange={onNameChange}
+          value={form.getValues().name}
         />
 
         <TextInput

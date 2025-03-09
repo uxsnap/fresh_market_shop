@@ -13,3 +13,11 @@
     pointer-events: none;
   }
 }
+
+.text {
+  max-width: 100%;
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    max-width: 70%;
+  }
+}

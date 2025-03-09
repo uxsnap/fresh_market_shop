@@ -42,6 +42,8 @@ export const Support = () => {
     mutationKey: [addTicket.queryKey],
     onSuccess: () => {
       setOpened(false);
+      form.reset();
+
       queryClient.invalidateQueries({
         queryKey: [getTickets.queryKey],
       });

@@ -1,11 +1,12 @@
 import { AuthType } from "@/types";
 import { Button, Flex, Group, PasswordInput, TextInput } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { isEmail, useForm } from "@mantine/form";
 import { Buttons } from "../Buttons";
 import { useMutation } from "@tanstack/react-query";
 import { registerUser } from "@/api/auth/register";
 import { useRouter } from "next/navigation";
-import { showInlineErrorNotification } from "@/utils";
+import { capitalize, showInlineErrorNotification } from "@/utils";
+import { ChangeEvent } from "react";
 
 type Props = {
   onChange: (type: AuthType) => void;
@@ -27,8 +28,7 @@ export const Register = ({ onChange, close }: Props) => {
         value.length >= 1
           ? null
           : "Длина имени пользователя должна быть больше 1",
-      email: (value) =>
-        /^\S+@\S+$/.test(value) ? null : "Неправильный формат email",
+      email: isEmail("Неправильный формат email"),
     },
   });
 
@@ -49,14 +49,32 @@ export const Register = ({ onChange, close }: Props) => {
     mutation.mutate(values);
   });
 
+  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value.trimStart();
+
+    if (!val.includes(" ")) {
+      form.setFieldValue("name", capitalize(val));
+      return;
+    }
+
+    const splitted = val.split(" ").filter((v) => !!v);
+
+    form.setFieldValue(
+      "name",
+      `${capitalize(splitted[0])} ${capitalize(splitted[1])}`
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <Flex gap={16} direction="column">
         <TextInput
           size="md"
-          label="Имя и фамилия"
+          label="Имя и Фамилия"
           placeholder="Введите имя и фамилию"
           {...form.getInputProps("name")}
+          onChange={onNameChange}
+          value={form.getValues().name}
         />
 
         <TextInput
