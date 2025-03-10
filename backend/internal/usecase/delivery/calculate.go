@@ -42,15 +42,11 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 		return 0, 0, errors.New("delivery address not found")
 	}
 
-	toLongRad, toLatRad, fromLongRad, fromLatRad := degToRad(deliveryAddress.Longitude), degToRad(deliveryAddress.Latitude), degToRad(fromLongitude), degToRad(fromLatitude)
-
-	dLong := fromLongRad - toLongRad
-	dist := math.Atan(math.Sqrt(math.Pow(math.Cos(toLatRad)*math.Sin(dLong), 2)+math.Pow(math.Cos(fromLatRad)*math.Sin(toLatRad)-math.Sin(fromLatRad)*math.Cos(toLatRad)*math.Cos(dLong), 2)) / (math.Sin(fromLatRad)*math.Sin(toLatRad) + math.Cos(fromLatRad)*math.Cos(toLatRad)*math.Cos(dLong)))
-	dist *= earthRadiusM
+	dist := calcDist(deliveryAddress.Longitude, deliveryAddress.Latitude, fromLongitude, fromLatitude)
 
 	t := dist / courierSpeed
 	deliveryTime = time.Duration(int64(t)) * time.Minute
-	deliveryTime += 5 * time.Minute // 5 минут на подмыться
+	deliveryTime *= 2 // с запасом
 
 	deliveryPrice = int64(dist/100*priceForHundredMetres) + int64(float64(orderPrice)*0.05)
 
@@ -97,13 +93,22 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 
 const (
 	earthRadiusM = 6372795.0
-	courierSpeed = 500.0 // метры в минуту
+	courierSpeed = 300.0 // метры в минуту
 	// это переедет в тарифы:
-	priceForHundredMetres = 50.0
+	priceForHundredMetres = 10.0
 	minDeliveryPrice      = 150
 	maxDeliveryPrice      = 350
 )
 
 func degToRad(deg float64) float64 {
 	return deg * math.Pi / 180
+}
+
+func calcDist(toLon, toLat, fromLon, fromLat float64) float64 {
+	toLongRad, toLatRad, fromLongRad, fromLatRad := degToRad(toLon), degToRad(toLat), degToRad(fromLon), degToRad(fromLat)
+
+	dLong := fromLongRad - toLongRad
+	dist := math.Atan(math.Sqrt(math.Pow(math.Cos(toLatRad)*math.Sin(dLong), 2)+math.Pow(math.Cos(fromLatRad)*math.Sin(toLatRad)-math.Sin(fromLatRad)*math.Cos(toLatRad)*math.Cos(dLong), 2)) / (math.Sin(fromLatRad)*math.Sin(toLatRad) + math.Cos(fromLatRad)*math.Cos(toLatRad)*math.Cos(dLong)))
+	dist *= earthRadiusM
+	return dist
 }
