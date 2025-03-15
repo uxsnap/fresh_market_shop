@@ -13,6 +13,10 @@ export const SupportItemList = memo(() => {
     queryKey: [getTickets.queryKey],
   });
 
+  if (!data?.data.length) {
+    return null;
+  }
+
   return (
     <ShadowBox
       p={12}

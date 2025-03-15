@@ -146,3 +146,29 @@ export const proxyDeleteAccount = async (req: NextRequest) => {
     return publicApiErrorResponse(error);
   }
 };
+
+export const proxySupportTickets = async () => {
+  try {
+    const { tokens } = await getAuthCookieTokensFromServer();
+
+    if (!tokens?.access_jwt) {
+      return deleteAuthCookies();
+    }
+
+    const parsed = parseJwt(tokens.access_jwt);
+
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API}/support/tickets`,
+      {
+        params: {
+          user_uid: parsed?.user_uid,
+        },
+        headers: { Authorization: `Bearer ${tokens.access_jwt}` },
+      }
+    );
+
+    return Response.json(response.data, { status: 200 });
+  } catch (error) {
+    return publicApiErrorResponse(error);
+  }
+};

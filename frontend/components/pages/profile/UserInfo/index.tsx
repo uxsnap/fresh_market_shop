@@ -113,9 +113,9 @@ export const UserInfo = () => {
     mutation.mutate(values as any);
   });
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
     logout();
-  }, [logout]);
+  };
 
   const handleDelete = useCallback(() => {
     mutateDelete();

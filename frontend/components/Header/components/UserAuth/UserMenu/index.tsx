@@ -4,27 +4,30 @@ import { useAuthStore } from "@/store/auth";
 import cn from "classnames";
 import { Box, Divider, LoadingOverlay, Popover, Stack } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import styles from "./UserMenu.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const UserMenu = () => {
   const setLogged = useAuthStore((s) => s.setLogged);
   const admin = useAuthStore((s) => s.admin);
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
       setLogged(false);
+      router.push("/");
     },
   });
 
-  const handleLogout = useCallback(() => {
+  const handleLogout = () => {
     mutate();
     setOpened(false);
-  }, [mutate]);
+  };
 
   return (
     <Box mah={38} maw={38} pos="relative">

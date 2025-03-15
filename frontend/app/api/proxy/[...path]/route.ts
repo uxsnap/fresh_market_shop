@@ -28,6 +28,7 @@ import {
   proxyAddDeliveryAddress,
   proxyDeleteAccount,
   proxyDeleteDeliveryAddress,
+  proxySupportTickets,
   proxyUser,
   proxyUserAddresses,
 } from "@/services/proxy/user";
@@ -52,6 +53,8 @@ export async function GET(req: NextRequest) {
       return proxyOrderHistory();
     case "/orders":
       return proxyGetOrder(req, params);
+    case "/support/tickets":
+      return proxySupportTickets();
   }
 
   return proxyDefault(req);
