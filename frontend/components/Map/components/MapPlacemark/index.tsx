@@ -19,7 +19,6 @@ type Props = {
 export const MapPlacemark = ({ onCoords }: Props) => {
   const form = useMapFormContext();
 
-  const deliveryAddress = useMapStore((s) => s.deliveryAddress);
   const mapAddress = useMapStore((s) => s.mapAddress);
   const mapInstance = useMapStore((s) => s.mapInstance);
   const handleCenterMove = useMapStore((s) => s.handleCenterMove);
@@ -61,17 +60,6 @@ export const MapPlacemark = ({ onCoords }: Props) => {
       mapAddress.longitude,
     ] as unknown as number[][]);
   }, [mapAddress]);
-
-  useEffect(() => {
-    if (!deliveryAddress) {
-      return;
-    }
-
-    handleCoords([
-      deliveryAddress.latitude,
-      deliveryAddress.longitude,
-    ] as unknown as number[][]);
-  }, [deliveryAddress]);
 
   form.watch("city", ({ value }) => {
     const coords = DEFAULT_COORDS_BY_CITY[value];

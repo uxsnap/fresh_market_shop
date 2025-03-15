@@ -1,6 +1,6 @@
 import { createFormContext } from "@mantine/form";
 
-type MapForm = {
+export type MapForm = {
   city: string;
   addressUid: string;
   apartment?: number;

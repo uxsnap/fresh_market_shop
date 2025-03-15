@@ -4,7 +4,7 @@ import styles from "./Map.module.css";
 
 import { MapFields } from "./components/MapFields";
 import { YmapsWrapper } from "./components/YmapsWrapper";
-import { MapFormProvider, useMapForm } from "./context";
+import { MapForm, MapFormProvider, useMapForm } from "./context";
 import { BottomCards } from "./components/BottomCards";
 import { ModalHeader } from "./components/ModalHeader";
 import { isNotEmpty } from "@mantine/form";
@@ -57,7 +57,19 @@ export const Map = () => {
   });
 
   const handleSubmit = form.onSubmit((values) => {
-    mutate(values);
+    const submitValues = Object.keys(values).reduce((acc, cur) => {
+      const key = cur as keyof MapForm;
+
+      if (!values[key]) {
+        return acc;
+      }
+
+      acc[cur] = values[key];
+
+      return acc;
+    }, {} as any);
+
+    mutate(submitValues);
   });
 
   return (

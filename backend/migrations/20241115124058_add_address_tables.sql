@@ -69,7 +69,9 @@ CREATE TABLE delivery_addresses (
   floor INT,
   code INT,
   created_at TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP NOT NULL
+  updated_at TIMESTAMP NOT NULL,
+
+  UNIQUE (address_uid, apartment, entrance, floor, code)
 );
 
 -- +goose StatementEnd

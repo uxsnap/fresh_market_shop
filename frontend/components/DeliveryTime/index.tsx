@@ -4,8 +4,8 @@ import { getDelivery } from "@/api/delivery/getDelivery";
 import { useCartStore } from "@/store";
 import { useAuthStore } from "@/store/auth";
 import { useMapStore } from "@/store/map";
-import { dayJs } from "@/utils";
-import { LoadingOverlay, Stack, Text } from "@mantine/core";
+import { formatDuration } from "@/utils";
+import { Stack, Text } from "@mantine/core";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -14,8 +14,8 @@ export const DeliveryTime = () => {
   const deliveryAddress = useMapStore((s) => s.deliveryAddress);
   const setDelivery = useCartStore((s) => s.setDelivery);
 
-  const { data, isFetching } = useQuery({
-    queryKey: [getDelivery.queryKey],
+  const { data } = useQuery({
+    queryKey: [getDelivery.queryKey, deliveryAddress],
     queryFn: () =>
       getDelivery({
         orderUid: "00000000-0000-0000-0000-000000000000",
@@ -32,24 +32,16 @@ export const DeliveryTime = () => {
     setDelivery(data.data);
   }, [data?.data]);
 
-  if (!deliveryAddress) {
+  if (!deliveryAddress || data?.data.time === undefined) {
     return null;
   }
 
-  const time = dayJs(data?.data.time);
-  const formatted = time.format("Hч mmм");
+  const time = formatDuration(data?.data.time);
 
   return (
-    <Stack gap={0} h={38} visibleFrom="sm">
-      <LoadingOverlay
-        visible={isFetching}
-        zIndex={1}
-        overlayProps={{ radius: "sm", blur: 2 }}
-        loaderProps={{ color: "primary.0", type: "bars" }}
-      />
-
+    <Stack pos="relative" gap={0} h={38} visibleFrom="sm">
       <Text style={{ whiteSpace: "nowrap" }} fw={500} size="md" c="accent.0">
-        Около {formatted}
+        Около {!time ? "5 минут" : time}
       </Text>
 
       <Text style={{ whiteSpace: "nowrap" }} fw={500} size="xs" c="accent.2">
