@@ -9,7 +9,12 @@ import { ShadowBox } from "@/components/ShadowBox";
 import { jwtError } from "@/constants";
 import { useAuthStore } from "@/store/auth";
 import { ErrorWrapper, User } from "@/types";
-import { getErrorBody, isDateNull, showSuccessNotification } from "@/utils";
+import {
+  getErrorBody,
+  isDateNull,
+  showErrorNotification,
+  showSuccessNotification,
+} from "@/utils";
 import { Box, Button, Group, Stack, TextInput } from "@mantine/core";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -89,6 +94,9 @@ export const UserInfo = () => {
       setAdmin(false);
       setLogged(false);
     },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
   });
 
   const { mutate: mutateDelete, isPending: isPendingDelete } = useMutation({
@@ -99,6 +107,9 @@ export const UserInfo = () => {
       setAdmin(false);
       router.push("/");
     },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
   });
 
   const mutation = useMutation({
@@ -106,6 +117,9 @@ export const UserInfo = () => {
     onSuccess: () => {
       form.resetDirty();
       showSuccessNotification("Пользователь успешно обновлен!");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
     },
   });
 

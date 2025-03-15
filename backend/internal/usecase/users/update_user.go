@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/mail"
-	"time"
 
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
@@ -27,11 +26,11 @@ func (uc *UseCaseUsers) UpdateUser(ctx context.Context, user entity.User) error 
 		)
 	}
 
-	if time.Since(savedUser.UpdatedAt).Minutes() < 15 {
-		return errorWrapper.NewError(
-			errorWrapper.UserInfoError, "данные пользователя можно обновлять раз в 15 минут",
-		)
-	}
+	// if time.Since(savedUser.UpdatedAt).Minutes() < 5 {
+	// 	return errorWrapper.NewError(
+	// 		errorWrapper.UserInfoError, "данные пользователя можно обновлять раз в 5 минут",
+	// 	)
+	// }
 
 	if len(user.Email) != 0 && user.Email != savedUser.Email {
 		if _, err = mail.ParseAddress(user.Email); err != nil {
