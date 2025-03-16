@@ -1,21 +1,28 @@
 "use client";
 
 import { Text, Stack, Group, Modal } from "@mantine/core";
-import { memo, useCallback } from "react";
+import { memo } from "react";
 
 import styles from "./ItemExtendedCard.module.css";
 import { ItemCardCarousel } from "../ItemCardCarousel";
 import { ItemCounter } from "../ItemCounter";
 import { ItemCardIcon } from "../ItemCardIcon";
 import { useProductStore } from "@/store/product";
+import { getFallbackImg } from "@/utils";
 
 export const ItemCardExtended = memo(() => {
   const curItem = useProductStore((s) => s.curItem);
   const setCurItem = useProductStore((s) => s.setCurItem);
 
+  console.log(curItem);
+
   const handleClose = () => setCurItem();
 
   const { price, name, imgs = [], description, ccal } = curItem || {};
+
+  const preparedImages = imgs.length
+    ? imgs.map((img) => img.path)
+    : [getFallbackImg(name ?? "Нет картинки")];
 
   return (
     <Modal.Root
@@ -41,7 +48,7 @@ export const ItemCardExtended = memo(() => {
         <Modal.Body p={0}>
           <ItemCardCarousel
             className={styles.img}
-            imgs={imgs.map((img) => img.path)}
+            imgs={preparedImages}
             name={name ?? ""}
           />
 

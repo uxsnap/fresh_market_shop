@@ -3,9 +3,8 @@
 import { BackToCatalog } from "@/components/BackToCatalog";
 import { PaymentBlock } from "@/components/PaymentBlock";
 import { CART_MAIN_HEIGHT } from "@/constants";
-import { useCartStore } from "@/store";
 import { Box, Group } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import styles from "./order.module.css";
 import { PayButton } from "@/components/pages/cart/PayButton";

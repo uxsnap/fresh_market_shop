@@ -11,6 +11,7 @@ type CartState = {
   removeCartItem: (itemId: string) => void;
   removeAllItems: () => void;
   getFullPrice: () => number;
+  getItemsPrice: () => number;
   getCount: (itemId: string) => number;
   delivery?: DeliveryData;
   setDelivery: (delivery: DeliveryData) => void;
@@ -66,17 +67,20 @@ export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
           return state;
         });
       },
-      getFullPrice() {
+      getItemsPrice() {
         const arr = Object.values(get().items);
 
         if (!arr.length) {
           return 0;
         }
 
-        return (
-          arr.reduce((acc, item) => acc + item.product.price * item.count, 0) +
-          (get().delivery?.price ?? 0)
+        return arr.reduce(
+          (acc, item) => acc + item.product.price * item.count,
+          0
         );
+      },
+      getFullPrice() {
+        return get().getItemsPrice() + (get().delivery?.price ?? 0);
       },
       getCount(itemId: string) {
         return get().items[itemId]?.count ?? 0;

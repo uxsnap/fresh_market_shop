@@ -3,6 +3,9 @@ import { DeliveryAddress, MapAddress } from "@/types";
 import { create } from "zustand";
 
 type MapState = {
+  city: string;
+  setCity: (v: string) => void;
+
   mapInstance: ymaps.Map | null;
   setMapInstance: (m: ymaps.Map) => void;
 
@@ -45,4 +48,7 @@ export const useMapStore = create<MapState>((set, get) => ({
       duration: 150,
     });
   },
+
+  city: "_",
+  setCity: (v: string) => set({ city: v }),
 }));

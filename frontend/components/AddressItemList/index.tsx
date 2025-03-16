@@ -9,7 +9,7 @@ import {
   showSuccessNotification,
 } from "@/utils";
 import { useMapStore } from "@/store/map";
-import { useCallback, useEffect } from "react";
+import { MouseEventHandler, useEffect } from "react";
 import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -59,9 +59,10 @@ export const AddressItemList = ({
     },
   });
 
-  const handleOpenMap = useCallback(() => {
+  const handleOpenMap: MouseEventHandler<HTMLButtonElement> = (e) => {
     setIsMapOpen(true);
-  }, []);
+    e.stopPropagation();
+  };
 
   useEffect(() => {
     if (data && data.data.length && !deliveryAddress) {

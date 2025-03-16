@@ -8,19 +8,14 @@ import { useMapStore } from "@/store/map";
 import { getStreetAndHouseNumber } from "@/utils";
 
 export const Street = () => {
-  const [curCity, setCurCity] = useState("");
-
   const searchValue = useMapStore((s) => s.searchValue);
   const setSearchValue = useMapStore((s) => s.setSearchValue);
+  const curCity = useMapStore((s) => s.city);
 
   const setMapAddress = useMapStore((s) => s.setMapAddress);
 
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
-
-  form.watch("city", ({ value }) => {
-    setCurCity(value);
-  });
 
   const { data } = useQuery({
     queryFn: () => {

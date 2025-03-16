@@ -4,20 +4,14 @@ import { useState } from "react";
 import { YMapsApi } from "@pbe/react-yandex-maps/typings/util/typing";
 import { useMapStore } from "@/store/map";
 import { getStreetInfoFromGeo } from "@/utils";
-import { useMapFormContext } from "../../context";
 import { MapPlacemark } from "../MapPlacemark";
 import { DEFAULT_MAP_ZOOM } from "@/constants";
-import { DEFAULT_CITY, DEFAULT_COORDS_BY_CITY } from "../../constants";
+import { DEFAULT_COORDS_BY_CITY } from "../../constants";
 
 export const YmapsWrapper = () => {
   const [map, setMap] = useState<YMapsApi>();
-  const [curCity, setCurCity] = useState(DEFAULT_CITY);
 
-  const form = useMapFormContext();
-
-  form.watch("city", ({ value }) => {
-    setCurCity(value);
-  });
+  const curCity = useMapStore((s) => s.city);
 
   const setMapInstance = useMapStore((s) => s.setMapInstance);
 

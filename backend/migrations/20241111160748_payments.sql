@@ -6,7 +6,9 @@ CREATE TABLE payment_cards (
     user_uid uuid,
     external_uid uuid,
     number varchar(4),
-    expired varchar(5)
+    expired varchar(5),
+
+    UNIQUE (number, expired)
 );
 
 CREATE TABLE payments (

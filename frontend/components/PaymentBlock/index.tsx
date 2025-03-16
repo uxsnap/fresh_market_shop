@@ -11,7 +11,8 @@ type Props = {
 };
 
 export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props) => {
-  const price = useCartStore((s) => s.getFullPrice());
+  const price = useCartStore((s) => s.getItemsPrice());
+  const fullPrice = useCartStore((s) => s.getFullPrice());
   const delivery = useCartStore((s) => s.delivery);
 
   const [curPrice, setCurPrice] = useState(0);
@@ -39,7 +40,7 @@ export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props
       </Stack>
 
       <Stack mt={16} gap={12}>
-        <TextWithPrice text="Всего" price={curPrice + 10} type="lg" />
+        <TextWithPrice text="Всего" price={fullPrice + 10} type="lg" />
 
         <Button h={50} fz={22} onClick={onClick} variant="accent">
           {buttonText}

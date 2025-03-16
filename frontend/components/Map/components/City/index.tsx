@@ -3,10 +3,12 @@ import { useMapFormContext } from "../../context";
 import { useQuery } from "@tanstack/react-query";
 import { getCities } from "@/api/address/getCities";
 import { Select } from "@mantine/core";
+import { useMapStore } from "@/store/map";
 
 export const City = () => {
   const [searchValue, setSearchValue] = useState("");
   const form = useMapFormContext();
+  const setCurCity = useMapStore((s) => s.setCity);
 
   const { data } = useQuery({
     queryFn: getCities,
@@ -19,6 +21,13 @@ export const City = () => {
     },
     staleTime: Infinity,
   });
+
+  const props = form.getInputProps("city");
+
+  const handleChange = (v: string) => {
+    props.onChange(v);
+    setCurCity(v);
+  };
 
   return (
     <Select
@@ -33,7 +42,9 @@ export const City = () => {
       allowDeselect={false}
       withAsterisk
       key={form.key("city")}
-      {...form.getInputProps("city")}
+      {...props}
+      value={props.defaultValue}
+      onChange={(v) => handleChange(v + "")}
     />
   );
 };

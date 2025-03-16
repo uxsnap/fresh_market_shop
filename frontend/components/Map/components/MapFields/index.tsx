@@ -9,7 +9,7 @@ import { Street } from "../Street";
 import { useMapStore } from "@/store/map";
 import { ModalHeader } from "../ModalHeader";
 
-export const MapFields = memo(() => {
+export const MapFields = () => {
   const isFieldsModalOpen = useMapStore((s) => s.isFieldsModalOpen);
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
@@ -59,4 +59,4 @@ export const MapFields = memo(() => {
       </Stack>
     </Wrapper>
   );
-});
+};

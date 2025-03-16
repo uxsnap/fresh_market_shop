@@ -4,7 +4,7 @@ import { Text, Group, Popover, useMatches, Box } from "@mantine/core";
 import { Location as LocationIcon } from "../icons/Location";
 
 import styles from "./Location.module.css";
-import { useEffect, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { Map } from "../Map";
 import { AddressItemList } from "../AddressItemList";
 import { useClickOutside } from "@mantine/hooks";
@@ -28,9 +28,10 @@ export const Location = () => {
     md: false,
   });
 
-  const handleOpen = () => {
+  const handleOpen: MouseEventHandler<HTMLDivElement> = (e) => {
     setOpened(!popupDisabled);
     setIsMapOpen(popupDisabled);
+    e.stopPropagation();
   };
 
   useEffect(() => {
