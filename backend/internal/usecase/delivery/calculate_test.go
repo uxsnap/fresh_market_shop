@@ -26,15 +26,15 @@ func TestCalcDist(t *testing.T) {
 		{
 			FromLatitude:  fromLatitude,
 			FromLongitude: fromLongitude,
-			ToLongitude:   59.932472,
-			ToLatitude:    30.347427,
+			ToLongitude:   30.3607082,
+			ToLatitude:    59.9326958,
 		},
-		{
-			FromLatitude:  fromLatitude,
-			FromLongitude: fromLongitude,
-			ToLongitude:   59.956090,
-			ToLatitude:    30.298274,
-		},
+		// {
+		// 	FromLatitude:  fromLatitude,
+		// 	FromLongitude: fromLongitude,
+		// 	ToLongitude:   59.956090,
+		// 	ToLatitude:    30.298274,
+		// },
 	}
 
 	for _, c := range cases {

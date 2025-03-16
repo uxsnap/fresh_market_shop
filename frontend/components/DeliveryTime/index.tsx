@@ -36,7 +36,7 @@ export const DeliveryTime = () => {
     return null;
   }
 
-  const time = formatDuration(data?.data.time);
+  const time = formatDuration(data?.data.time / 1000);
 
   return (
     <Stack pos="relative" gap={0} h={38} visibleFrom="sm">
