@@ -13,6 +13,7 @@ import { AxiosError } from "axios";
 import { ErrorWrapper } from "@/types";
 import { matches, useForm } from "@mantine/form";
 import { getPaymentCardsByUser } from "@/api/card/getPaymentCardsByUser";
+import { IMaskInput } from "react-imask";
 
 type Props = {
   opened: boolean;
@@ -84,10 +85,13 @@ export const CreditCardModal = ({ opened, onClose }: Props) => {
           <form onSubmit={handleSubmit}>
             <Stack gap={12}>
               <TextInput
+                component={IMaskInput}
                 required
                 maxLength={19}
                 size="md"
                 placeholder="1234 5678 1234 5678"
+                // @ts-ignore
+                mask="0000 0000 0000 0000"
                 label="Номер карты"
                 key={form.key("number")}
                 {...form.getInputProps("number")}
@@ -95,16 +99,20 @@ export const CreditCardModal = ({ opened, onClose }: Props) => {
 
               <Group wrap="nowrap" w="100%" gap={12}>
                 <TextInput
+                  component={IMaskInput}
                   required
                   maxLength={5}
                   size="md"
                   label="Дата окончания"
                   placeholder="MM/ГГ"
+                  // @ts-ignore
+                  mask="00/00"
                   w="100%"
                   key={form.key("expired")}
                   {...form.getInputProps("expired")}
                 />
                 <TextInput
+                  component={IMaskInput}
                   required
                   maxLength={3}
                   size="md"
