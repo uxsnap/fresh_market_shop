@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useMapFormContext } from "../../context";
 import { useQuery } from "@tanstack/react-query";
 import { getAddresses } from "@/api/address/getAddresses";
@@ -17,12 +17,14 @@ export const Street = () => {
   const [debounced] = useDebouncedValue(searchValue, 200);
   const form = useMapFormContext();
 
+  const fetchAddresses = () => {
+    const [name, houseNumber] = getStreetAndHouseNumber(debounced);
+    return getAddresses(curCity, name, houseNumber);
+  };
+
   const { data } = useQuery({
-    queryFn: () => {
-      const [name, houseNumber] = getStreetAndHouseNumber(debounced);
-      return getAddresses(curCity, name, houseNumber);
-    },
-    queryKey: [getAddresses.queryKey, debounced],
+    queryFn: fetchAddresses,
+    queryKey: [getAddresses.queryKey, curCity, debounced],
     enabled: !!debounced.length,
   });
 
@@ -31,6 +33,14 @@ export const Street = () => {
 
     setMapAddress(curMapActiveAddress);
   });
+
+  useEffect(() => {
+    if (!curCity || !data?.data.length) {
+      return;
+    }
+
+    form.setFieldValue("addressUid", data.data[0].uid);
+  }, [curCity]);
 
   const preparedData = useMemo(() => {
     return data?.data.map((a) => ({

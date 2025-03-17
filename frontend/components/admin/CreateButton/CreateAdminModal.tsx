@@ -1,7 +1,7 @@
 import { createAdminUser } from "@/api/auth/createAdmin";
 import { getAdmins } from "@/api/auth/getAdmins";
 import { capitalize, showErrorNotification } from "@/utils";
-import { Button, Group, PasswordInput, Stack, TextInput } from "@mantine/core";
+import { Button, Group, Stack, TextInput } from "@mantine/core";
 import { isEmail, useForm } from "@mantine/form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
@@ -79,9 +79,10 @@ export const CreateAdminModal = ({ onClose }: Props) => {
           placeholder="Введите email"
           {...form.getInputProps("email")}
         />
-        <PasswordInput
+        <TextInput
           size="md"
           label="Пароль"
+          type="password"
           placeholder="Введите пароль"
           {...form.getInputProps("password")}
         />

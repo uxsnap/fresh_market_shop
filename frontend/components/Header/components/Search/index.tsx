@@ -5,7 +5,7 @@ import { PopOver } from "@/components/PopOver";
 import { SkeletLoader } from "@/components/SkeletLoader";
 import { SmallCartItem } from "@/components/SmallCartItem";
 import { StyleProp, TextInput } from "@mantine/core";
-import { useDebouncedValue } from "@mantine/hooks";
+import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import cn from "classnames";
@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import styles from "./Search.module.css";
 import { useProductStore } from "@/store/product";
 import { convertProductToProductItem } from "@/utils";
+import { useSearchStore } from "@/store/search";
 
 type Props = {
   className?: string;
@@ -22,11 +23,15 @@ type Props = {
 };
 
 export const Search = ({ className, maw = 400 }: Props) => {
-  const [name, setName] = useState("");
+  const name = useSearchStore((s) => s.curName);
+  const setName = useSearchStore((s) => s.setCurName);
+
   const [debounced] = useDebouncedValue(name, 200);
 
   const router = useRouter();
   const setCurItem = useProductStore((s) => s.setCurItem);
+
+  const ref = useClickOutside(() => setName(""));
 
   const { data, isFetching, isFetched } = useQuery({
     queryKey: [search.queryKey, debounced],
@@ -70,7 +75,7 @@ export const Search = ({ className, maw = 400 }: Props) => {
   };
 
   return (
-    <div className={cn(styles.root, className)}>
+    <div ref={ref} className={cn(styles.root, className)}>
       <TextInput
         pos="relative"
         w="100%"

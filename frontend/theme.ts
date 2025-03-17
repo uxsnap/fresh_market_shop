@@ -157,26 +157,6 @@ export const theme = createTheme({
       },
     }),
 
-    PasswordInput: Input.extend({
-      classNames: {
-        input: classes.passInput,
-      },
-      vars: (_, props) => {
-        switch (props.size) {
-          case "md":
-            return {
-              wrapper: {
-                "--input-height": rem(42),
-                "--input-padding-x": rem(8),
-                "--input-fz": rem(18),
-              },
-            };
-          default:
-            return { wrapper: {} };
-        }
-      },
-    }),
-
     InputWrapper: Input.Wrapper.extend({
       classNames: {
         root: classes.inputWrapperRoot,

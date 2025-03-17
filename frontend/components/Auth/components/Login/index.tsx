@@ -1,5 +1,5 @@
 import { AuthType } from "@/types";
-import { Button, Flex, Group, PasswordInput, TextInput } from "@mantine/core";
+import { Button, Flex, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Buttons } from "../Buttons";
 import { loginUser } from "@/api/auth/login";
@@ -77,7 +77,8 @@ export const Login = ({ onChange, close }: Props) => {
           placeholder="Введите email"
           {...form.getInputProps("email")}
         />
-        <PasswordInput
+        <TextInput
+          type="password"
           size="md"
           label="Пароль"
           placeholder="Введите пароль"

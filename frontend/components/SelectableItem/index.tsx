@@ -4,9 +4,10 @@ import cn from "classnames";
 
 import styles from "./SelectableItem.module.css";
 import { CircleOk } from "../icons/CircleOk";
+import { MouseEventHandler } from "react";
 
 type SelectableItemIconProps = {
-  onClick?: () => void;
+  onClick?: (e: any) => void;
   fill: string;
 };
 
@@ -29,6 +30,16 @@ export const SelectableItem = ({
   onSelect,
   Icon,
 }: Props) => {
+  const handleDelete: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    onDelete?.();
+  };
+
+  const handleMapOpen: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    onMapOpen?.();
+  };
+
   return (
     <Paper
       onClick={onSelect}
@@ -48,7 +59,7 @@ export const SelectableItem = ({
         px={12}
       >
         <Group wrap="nowrap" gap={16}>
-          <Icon onClick={onMapOpen} fill="var(--mantine-color-accent-0)" />
+          <Icon onClick={handleMapOpen} fill="var(--mantine-color-accent-0)" />
 
           <Text
             className={styles.text}
@@ -71,7 +82,7 @@ export const SelectableItem = ({
           <CloseButton
             p={0}
             iconSize={24}
-            onClick={onDelete}
+            onClick={handleDelete}
             c="accent.0"
             size="lg"
           />

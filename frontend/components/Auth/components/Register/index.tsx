@@ -1,5 +1,5 @@
 import { AuthType } from "@/types";
-import { Button, Flex, Group, PasswordInput, TextInput } from "@mantine/core";
+import { Button, Flex, Group, TextInput } from "@mantine/core";
 import { isEmail, useForm } from "@mantine/form";
 import { Buttons } from "../Buttons";
 import { useMutation } from "@tanstack/react-query";
@@ -83,10 +83,10 @@ export const Register = ({ onChange, close }: Props) => {
           placeholder="Введите email"
           {...form.getInputProps("email")}
         />
-        <PasswordInput
-          type="password"
+        <TextInput
           size="md"
           label="Пароль"
+          type="password"
           placeholder="Введите пароль"
           {...form.getInputProps("password")}
         />
