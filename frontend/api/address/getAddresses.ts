@@ -5,10 +5,9 @@ export const getAddresses = (
   cityUid: string,
   name: string,
   house_number: string
-) => {
-  return client.get<MapAddress[]>(`/addresses/${cityUid}`, {
+) =>
+  client.get<MapAddress[]>(`/addresses/${cityUid}`, {
     params: { name, house_number },
   });
-};
 
 getAddresses.queryKey = "getAddresses";

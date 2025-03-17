@@ -4,7 +4,12 @@ import styles from "./Map.module.css";
 
 import { MapFields } from "./components/MapFields";
 import { YmapsWrapper } from "./components/YmapsWrapper";
-import { MapForm, MapFormProvider, useMapForm } from "./context";
+import {
+  MapForm,
+  MapFormInnerFields,
+  MapFormProvider,
+  useMapForm,
+} from "./context";
 import { BottomCards } from "./components/BottomCards";
 import { ModalHeader } from "./components/ModalHeader";
 import { isNotEmpty } from "@mantine/form";
@@ -22,6 +27,8 @@ export const Map = () => {
   const isMapOpen = useMapStore((s) => s.isMapOpen);
   const setIsMapOpen = useMapStore((s) => s.setIsMapOpen);
   const setMapAddress = useMapStore((s) => s.setMapAddress);
+
+  const getFields = useMapStore((s) => s.getFields);
 
   const handleClose = () => {
     close();
@@ -57,17 +64,22 @@ export const Map = () => {
   });
 
   const handleSubmit = form.onSubmit((values) => {
-    const submitValues = Object.keys(values).reduce((acc, cur) => {
-      const key = cur as keyof MapForm;
+    const submitValues: MapForm & MapFormInnerFields = {
+      addressUid: values.addressUid,
+      city: values.city,
+    };
 
-      if (!values[key]) {
-        return acc;
+    const otherFields = getFields();
+
+    for (const key in otherFields) {
+      const curKey = key as keyof MapFormInnerFields;
+
+      if (!otherFields[curKey]) {
+        continue;
       }
 
-      acc[cur] = values[key];
-
-      return acc;
-    }, {} as any);
+      submitValues[curKey] = otherFields[curKey];
+    }
 
     mutate(submitValues);
   });

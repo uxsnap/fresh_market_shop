@@ -1,13 +1,17 @@
 import { Group, NumberInput, Stack } from "@mantine/core";
 
 import { memo } from "react";
+import { useMapStore } from "@/store/map";
 import { useMapFormContext } from "../../context";
 
 export const AdditionalFieldsForm = memo(() => {
   const form = useMapFormContext();
 
+  const fields = useMapStore((s) => s.fields);
+  const setFields = useMapStore((s) => s.setFields);
+
   form.watch("addressUid", () => {
-    form.setValues({
+    setFields({
       apartment: undefined,
       entrance: undefined,
       floor: undefined,
@@ -29,8 +33,9 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Квартира"
           placeholder="Введите квартиру"
-          key={form.key("apartment")}
-          {...form.getInputProps("apartment")}
+          onChange={(v) =>
+            setFields({ ...fields, apartment: parseInt(v.toString(), 10) })
+          }
         />
 
         <NumberInput
@@ -44,8 +49,9 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Подъезд"
           placeholder="Введите подъезд"
-          key={form.key("entrance")}
-          {...form.getInputProps("entrance")}
+          onChange={(v) =>
+            setFields({ ...fields, entrance: parseInt(v.toString(), 10) })
+          }
         />
       </Stack>
 
@@ -61,8 +67,9 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Этаж"
           placeholder="Введите этаж"
-          key={form.key("floor")}
-          {...form.getInputProps("floor")}
+          onChange={(v) =>
+            setFields({ ...fields, floor: parseInt(v.toString(), 10) })
+          }
         />
 
         <NumberInput
@@ -76,8 +83,9 @@ export const AdditionalFieldsForm = memo(() => {
           size="md"
           label="Домофон"
           placeholder="Введите домофон"
-          key={form.key("code")}
-          {...form.getInputProps("code")}
+          onChange={(v) =>
+            setFields({ ...fields, code: parseInt(v.toString(), 10) })
+          }
         />
       </Stack>
     </Group>

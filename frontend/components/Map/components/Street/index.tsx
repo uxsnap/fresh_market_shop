@@ -40,7 +40,7 @@ export const Street = () => {
     }
 
     form.setFieldValue("addressUid", data.data[0].uid);
-  }, [curCity]);
+  }, [curCity, data?.data]);
 
   const preparedData = useMemo(() => {
     return data?.data.map((a) => ({
