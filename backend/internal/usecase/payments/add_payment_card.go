@@ -2,6 +2,7 @@ package useCasePayments
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 	"strings"
@@ -64,6 +65,7 @@ func (uc *UseCasePayments) AddUserPaymentCard(ctx context.Context, userFullCard 
 }
 
 func validateCardExpired(expired string) error {
+	fmt.Println(expired)
 	if len(expired) != 5 {
 		return errors.New("неправильный формат даты окончания действия карты")
 	}
@@ -86,9 +88,16 @@ func validateCardExpired(expired string) error {
 
 	bracketYearSuffix := time.Now().Add(10*365*24*time.Hour).Year() % 100
 
+	fmt.Println("YEAR SUFFIX: ", yearSuffix)
+	fmt.Println("BRACKET: ", bracketYearSuffix)
+
 	if yearSuffix > bracketYearSuffix {
 		log.Printf("неправильный формат даты окончания действия карты: недествительный год")
 		return errors.New("неправильный формат даты окончания действия карты: недествительный год: срок действия карты должен быть меньше 10 лет")
+	}
+	if yearSuffix < time.Now().Year()%100 {
+		log.Printf("неправильный формат даты окончания действия карты: недествительный год")
+		return errors.New("неправильный формат даты окончания действия карты: недествительный год: истек срок действия")
 	}
 
 	return nil
