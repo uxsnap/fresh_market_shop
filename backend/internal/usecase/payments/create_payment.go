@@ -47,7 +47,7 @@ func (uc *UseCasePayments) CreatePayment(ctx context.Context, payment entity.Pay
 		return uuid.UUID{}, errors.New("user not found")
 	}
 
-	_, cardExists, err := uc.GetUserPaymentCardByUid(ctx, payment.CardUid)
+	card, cardExists, err := uc.GetUserPaymentCardByUid(ctx, payment.CardUid)
 	if err != nil {
 		log.Printf("failed to create payment: failed to get card %s", payment.CardUid)
 		return uuid.UUID{}, errors.WithStack(err)
@@ -55,6 +55,10 @@ func (uc *UseCasePayments) CreatePayment(ctx context.Context, payment entity.Pay
 	if !cardExists {
 		log.Printf("failed to create payment: card %s not found", payment.CardUid)
 		return uuid.UUID{}, errors.New("card not found")
+	}
+	if err := validateCardExpired(card.Expired); err != nil {
+		log.Printf("failed to create payment: card %s expired is invalid: %v", payment.CardUid, err)
+		return uuid.UUID{}, errors.Errorf("card expired is invalid: %v", err)
 	}
 
 	payment.Uid = uuid.NewV4()
