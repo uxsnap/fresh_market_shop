@@ -36,7 +36,7 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
           <Image
             className={styles.logo}
             onClick={() => router.push("/")}
-            src="Logo.svg"
+            src={`${process.env.NEXT_PUBLIC_MAIN}/Logo.svg`}
             alt="_Logo"
           />
 
@@ -51,7 +51,9 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
 
           <Search className={styles.topSearch} />
 
-          <Location />
+          <div className={styles.topLocation}>
+            <Location />
+          </div>
 
           <DeliveryTime />
         </Group>
@@ -60,6 +62,10 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
           <CartButton />
         </UserAuth>
       </Group>
+
+      <div className={styles.bottomLocation}>
+        <Location className={styles.bottomLocationGroup} />
+      </div>
 
       <Search maw="100%" className={styles.bottomSearch} />
     </Stack>

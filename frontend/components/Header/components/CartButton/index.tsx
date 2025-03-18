@@ -32,7 +32,6 @@ export const CartButton = () => {
   return (
     <Button
       onClick={handleCartClick}
-      visibleFrom="sm"
       variant={curPrice ? "accent" : "accent-reverse"}
       h={38}
       leftSection={

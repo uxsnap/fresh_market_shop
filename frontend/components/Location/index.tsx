@@ -1,5 +1,6 @@
 "use client";
 
+import cn from "classnames";
 import { Text, Group, Popover, useMatches, Box } from "@mantine/core";
 import { Location as LocationIcon } from "../icons/Location";
 
@@ -12,7 +13,11 @@ import { getAddress } from "@/utils";
 import { useMapStore } from "@/store/map";
 import { useAuthStore } from "@/store/auth";
 
-export const Location = () => {
+type Props = {
+  className?: string;
+};
+
+export const Location = ({ className }: Props) => {
   const [opened, setOpened] = useState(false);
 
   const logged = useAuthStore((s) => s.logged);
@@ -65,7 +70,7 @@ export const Location = () => {
               <Group
                 wrap="nowrap"
                 ref={ref}
-                className={styles.group}
+                className={cn(styles.group, className)}
                 onClick={handleOpen}
               >
                 <LocationIcon />

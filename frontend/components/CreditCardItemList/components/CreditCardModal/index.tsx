@@ -97,7 +97,7 @@ export const CreditCardModal = ({ opened, onClose }: Props) => {
                 {...form.getInputProps("number")}
               />
 
-              <Group wrap="nowrap" w="100%" gap={12}>
+              <Group className={styles.group} wrap="nowrap" w="100%" gap={12}>
                 <TextInput
                   component={IMaskInput}
                   required

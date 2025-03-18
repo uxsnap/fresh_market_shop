@@ -68,7 +68,7 @@ const MainApp = ({ children }: PropsWithChildren) => {
 
   return (
     <AppShell
-      header={{ height: { base: 125, md: 78 } }}
+      header={{ height: { base: 178, md: 78 } }}
       navbar={{
         width: isAdmin ? 0 : 300,
         breakpoint: "md",

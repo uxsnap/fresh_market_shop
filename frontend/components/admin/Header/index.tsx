@@ -22,7 +22,7 @@ export const AdminHeader = memo(() => {
           <Image
             className={styles.logo}
             onClick={() => router.push("/")}
-            src="Logo.svg"
+            src={`${process.env.NEXT_PUBLIC_MAIN}/Logo.svg`}
             alt="_Logo"
           />
 

@@ -39,7 +39,7 @@ export const DeliveryTime = () => {
   const time = formatDuration(data?.data.time / 1000);
 
   return (
-    <Stack pos="relative" gap={0} h={38} visibleFrom="sm">
+    <Stack pos="relative" gap={0} h={38}>
       <Text style={{ whiteSpace: "nowrap" }} fw={500} size="md" c="accent.0">
         Около {!time ? "5 минут" : time}
       </Text>

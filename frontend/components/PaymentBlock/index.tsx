@@ -4,6 +4,7 @@ import { TextWithPrice } from "../TextWithPrice";
 import styles from "./PaymentBlock.module.css";
 import { useCartStore } from "@/store";
 import { useEffect, useState } from "react";
+import { formatDuration } from "@/utils";
 
 type Props = {
   buttonText?: string;
@@ -21,15 +22,27 @@ export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props
     setCurPrice(price);
   }, [price]);
 
+  const calculateDelivery = () => {
+    if (!delivery) {
+      return null;
+    }
+
+    const time = formatDuration(delivery.time / 1000);
+
+    return (
+      <Text mb={8} fw="bold" fz={14} c="accent.2">
+        Доставка около {!time ? "5 минут" : time}
+      </Text>
+    );
+  };
+
   return (
     <Stack visibleFrom="md" miw="100%" gap={0}>
       <Title order={2} c="accent.0">
         Итого
       </Title>
 
-      <Text mb={8} fw="bold" fz={14} c="accent.2">
-        Доставка 1-2 часа
-      </Text>
+      {calculateDelivery()}
 
       <Stack className={styles.top} pb={12} gap={12}>
         {delivery && (

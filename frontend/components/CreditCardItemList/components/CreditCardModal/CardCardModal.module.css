@@ -11,6 +11,10 @@
   min-width: 476px;
 
   @media (max-width: $mantine-breakpoint-sm) {
-    display: none;
+    min-width: 100%;
+
+    .group {
+      flex-direction: column;
+    }
   }
 }
