@@ -3,6 +3,9 @@ package useCasePayments
 import (
 	"context"
 	"log"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
@@ -20,10 +23,12 @@ func (uc *UseCasePayments) AddUserPaymentCard(ctx context.Context, userFullCard 
 		log.Printf("failed to add user payment card: invalid card number")
 		return uuid.UUID{}, errors.New("неправильный формат номера карты")
 	}
-	if len(userFullCard.Expired) != 5 {
-		log.Printf("failed to add user payment card: invalid card expired date")
-		return uuid.UUID{}, errors.New("неправильный формат даты окончания")
+
+	if err := validateCardExpired(userFullCard.Expired); err != nil {
+		log.Printf("failed to add user payment card: %v", err)
+		return uuid.UUID{}, err
 	}
+
 	if len(userFullCard.CVV) != 3 {
 		log.Printf("failed to add user payment card: invalid card cvv")
 		return uuid.UUID{}, errors.New("неправильный формат СVV")
@@ -56,4 +61,35 @@ func (uc *UseCasePayments) AddUserPaymentCard(ctx context.Context, userFullCard 
 	}
 
 	return userFullCard.Uid, nil
+}
+
+func validateCardExpired(expired string) error {
+	if len(expired) != 5 {
+		return errors.New("неправильный формат даты окончания действия карты")
+	}
+
+	expiredParts := strings.Split(expired, "/")
+	if len(expiredParts) != 2 {
+		return errors.New("неправильный формат даты окончания действия карты")
+	}
+
+	month, err := strconv.Atoi(expiredParts[0])
+	if err != nil || month <= 0 || month > 12 {
+		log.Printf("неправильный формат даты окончания действия карты: недествительный месяц: %v", err)
+		return errors.New("неправильный формат даты окончания действия карты: недествительный месяц")
+	}
+	yearSuffix, err := strconv.Atoi(expiredParts[1])
+	if err != nil {
+		log.Printf("неправильный формат даты окончания действия карты: недествительный год: %v", err)
+		return errors.New("неправильный формат даты окончания действия карты: недествительный год")
+	}
+
+	bracketYearSuffix := time.Now().Add(10*365*24*time.Hour).Year() % 100
+
+	if yearSuffix > bracketYearSuffix {
+		log.Printf("неправильный формат даты окончания действия карты: недествительный год")
+		return errors.New("неправильный формат даты окончания действия карты: недествительный год: срок действия карты должен быть меньше 10 лет")
+	}
+
+	return nil
 }
