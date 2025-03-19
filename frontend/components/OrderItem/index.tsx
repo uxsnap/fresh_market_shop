@@ -1,6 +1,6 @@
 import { Group, Stack, Title, Text, Image } from "@mantine/core";
 import { OrderStatus, OrderWithProducts } from "@/types";
-import { dayJs } from "@/utils";
+import { dayJs, getFallbackImg } from "@/utils";
 import { useRouter } from "next/navigation";
 
 import styles from "./OrderItem.module.css";
@@ -49,6 +49,7 @@ export const OrderItem = ({ order, products }: Props) => {
             radius={8}
             key={product.productUid}
             mah={60}
+            fallbackSrc={getFallbackImg(product.name)}
             src={product.photos[0]?.path ?? ""}
           />
         ))}

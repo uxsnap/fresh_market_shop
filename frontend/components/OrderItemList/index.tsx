@@ -4,12 +4,23 @@ import { Box, LoadingOverlay, Stack } from "@mantine/core";
 import { OrderItem } from "../OrderItem";
 import { useQuery } from "@tanstack/react-query";
 import { getOrdersHistory } from "@/api/order/getOrderHistory";
+import { useEffect } from "react";
+import {
+  getErrorBody,
+  showErrorNotification,
+  showInlineErrorNotification,
+} from "@/utils";
+import { AxiosError } from "axios";
 
 export const OrderItemList = () => {
-  const { data, isFetching } = useQuery({
+  const { data, isFetching, error } = useQuery({
     queryFn: getOrdersHistory,
     queryKey: [getOrdersHistory.queryKey],
   });
+
+  useEffect(() => {
+    showErrorNotification(error as AxiosError<any>);
+  }, [error]);
 
   return (
     <Box>
