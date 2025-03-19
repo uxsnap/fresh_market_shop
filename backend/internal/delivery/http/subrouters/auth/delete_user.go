@@ -7,6 +7,7 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	httpUtils "github.com/uxsnap/fresh_market_shop/backend/internal/delivery/http/utils"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 	errorWrapper "github.com/uxsnap/fresh_market_shop/backend/internal/error_wrapper"
 )
 
@@ -28,6 +29,26 @@ func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := context.Background()
+
+	// проверить есть ли оплаченные недставленные заказы
+	orders, err := h.OrdersService.GetOrderHistory(ctx, req.Uid, entity.QueryFilters{})
+	if err != nil {
+		log.Printf("failed to check active orders: %v", err)
+		httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError(
+			errorWrapper.JsonParsingError, "не удалось проверить наличие активных заказов",
+		))
+		return
+	}
+
+	for _, order := range orders {
+		if order.Status == entity.OrderStatusPaid {
+			log.Printf("user have paid, not deliveried order : %v", err)
+			httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError(
+				errorWrapper.JsonParsingError, "есть оплаченные, недоставленные заказы. Нельзя удалить аккаунт пока заказы не будут доставлены",
+			))
+			return
+		}
+	}
 
 	if err := h.AuthService.DeleteAuthUser(ctx, tokenCookie, req.Uid); err != nil {
 		log.Printf("failed to delete user %s: %v", req.Uid, err)
