@@ -61,7 +61,7 @@ export const publicApiErrorResponse = (error: unknown) => {
 };
 
 export const getErrorBody = (error: AxiosError<{ error: ErrorWrapper }>) => {
-  return error.response?.data?.error;
+  return error?.response?.data?.error;
 };
 
 export const showInlineErrorNotification = (message: string) => {

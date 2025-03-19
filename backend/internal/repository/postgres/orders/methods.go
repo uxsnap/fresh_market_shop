@@ -97,7 +97,9 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 	sqlSelectPart = append(
 		sqlSelectPart,
 		fmt.Sprintf(` 
-			(select jsonb_agg(jsonb_build_object('orderUid', op.order_uid, 'productUid', op.product_uid, 'count', op.count, 'photos', (select jsonb_agg(jsonb_build_object('id',pp.id,'product_uid',pp.product_uid,'img_path',pp.img_path)) from %v pp where pp.product_uid = op.product_uid)))                  
+			(select jsonb_agg(jsonb_build_object('orderUid', op.order_uid, 'productUid', op.product_uid, 'count', op.count, 
+			'name', (SELECT p.name FROM products p WHERE p.uid = op.product_uid),
+			'photos', (select jsonb_agg(jsonb_build_object('id',pp.id,'product_uid',pp.product_uid,'img_path',pp.img_path)) from %v pp where pp.product_uid = op.product_uid)))                  
 				from %v op where o.uid = op.order_uid)`,
 			productPhotoRow.Table(), orderProductsRow.Table(),
 		),

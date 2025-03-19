@@ -20,6 +20,7 @@ type OrderProductsRow struct {
 	OrderUid   pgtype.UUID
 	ProductUid pgtype.UUID
 	Count      int64
+	Name       string
 	Photos     []ProductPhotoRow
 }
 
@@ -38,6 +39,7 @@ func (o *OrderProductsRow) FromEntity(op entity.OrderProducts) *OrderProductsRow
 	}
 
 	o.Count = op.Count
+	o.Name = op.Name
 
 	return o
 }
@@ -47,6 +49,7 @@ func (o *OrderProductsRow) ToEntity() entity.OrderProducts {
 		OrderUid:   o.OrderUid.Bytes,
 		ProductUid: o.ProductUid.Bytes,
 		Count:      o.Count,
+		Name:       o.Name,
 		Photos:     []entity.ProductPhoto{},
 	}
 
@@ -66,7 +69,7 @@ func (op *OrderProductsRow) New() *OrderProductsRow {
 }
 
 func (o *OrderProductsRow) Scan(row pgx.Row) error {
-	return row.Scan(&o.OrderUid, &o.ProductUid, &o.Count)
+	return row.Scan(&o.OrderUid, &o.ProductUid, &o.Count, &o.Name)
 }
 
 type OrderProductsRows struct {
@@ -92,6 +95,7 @@ func (p *OrderProductsRow) ValuesForScan() []interface{} {
 		&p.OrderUid,
 		&p.ProductUid,
 		&p.Count,
+		&p.Name,
 	}
 }
 

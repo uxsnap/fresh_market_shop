@@ -56,7 +56,7 @@ export const PayButton = () => {
 
           <Group gap={8} align="center">
             <Text fw="bold" fz={18}>
-              {curPrice} ₽
+              {curPrice + 10} ₽
             </Text>
             <Delivery size={24} fill="var(--mantine-color-bg-2)" />
           </Group>

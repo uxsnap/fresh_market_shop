@@ -169,6 +169,7 @@ export type OrderProduct = {
   productUid: string;
   count: number;
   photos: Photo[];
+  name: string;
 };
 
 export type OrderStatus = "new" | "paid" | "in_progress" | "done";
