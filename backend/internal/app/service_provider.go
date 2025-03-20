@@ -29,12 +29,14 @@ import (
 	ucRecipes "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/recipes"
 	ucSupport "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/support"
 	ucUsers "github.com/uxsnap/fresh_market_shop/backend/internal/usecase/users"
+	"github.com/uxsnap/fresh_market_shop/backend/internal/worker"
 )
 
 type serviceProvider struct {
 	configPG          *config.ConfigPG
 	configHTTP        *config.ConfigHTTP
 	configExternalApi *config.ConfigExternalApi
+	configEnv         *config.ConfigEnv
 
 	pgClient   DBclient.ClientDB
 	authClient *clientAuthService.AuthClient
@@ -63,6 +65,8 @@ type serviceProvider struct {
 	txManager *transaction.Manager
 
 	handlerHTTP *deliveryHttp.Handler
+
+	wrkrOrdersCleaner *worker.WorkerOrdersCleaner
 }
 
 func newServiceProvider() *serviceProvider {
@@ -298,4 +302,24 @@ func (sp *serviceProvider) HandlerHTTP(ctx context.Context) *deliveryHttp.Handle
 		)
 	}
 	return sp.handlerHTTP
+}
+
+func (sp *serviceProvider) ConfigEnv(ctx context.Context) *config.ConfigEnv {
+	if sp.configEnv == nil {
+		sp.configEnv = config.NewConfigEnv()
+	}
+	return sp.configEnv
+}
+
+func (sp *serviceProvider) WorkerOrdersCleaner(ctx context.Context) *worker.WorkerOrdersCleaner {
+	if sp.wrkrOrdersCleaner == nil {
+		sp.wrkrOrdersCleaner = worker.NewWorkerOrdersCleaner(
+			sp.ConfigEnv(ctx),
+			sp.OrdersRepository(ctx),
+			sp.ProductsCountRepository(ctx),
+			sp.OrderProductsRepository(ctx),
+			sp.TxManager(ctx),
+		)
+	}
+	return sp.wrkrOrdersCleaner
 }

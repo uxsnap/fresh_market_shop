@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/Masterminds/squirrel"
+	"github.com/jackc/pgtype"
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
@@ -113,6 +114,23 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 		sql = sql.Where(squirrel.Eq{"o.user_uid": userUid})
 	}
 
+	if !uuid.Equal(qFilters.OrderUid, uuid.UUID{}) {
+		sql = sql.Where(squirrel.Eq{"o.uid": qFilters.OrderUid})
+	}
+
+	if len(qFilters.OrderStatusNotIn) != 0 {
+		sql = sql.Where(squirrel.NotEq{"o.status": qFilters.OrderStatusNotIn})
+	}
+
+	if qFilters.UpdatedBefore.Unix() != 0 {
+		sql = sql.Where(squirrel.LtOrEq{
+			"o.updated_at": pgtype.Timestamp{
+				Time:   qFilters.UpdatedBefore,
+				Status: pgtype.Present,
+			},
+		})
+	}
+
 	if qFilters.Limit != 0 {
 		sql = sql.Limit(qFilters.Limit)
 	}
@@ -156,4 +174,16 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 	}
 
 	return res, nil
+}
+
+func (r *OrdersRepository) DeleteOrder(ctx context.Context, orderUid uuid.UUID) error {
+	log.Printf("ordersRepository.DeleteOrder: %s", orderUid)
+
+	orderRow := pgEntity.NewOrderRow().FromEntity(entity.Order{Uid: orderUid})
+
+	if err := r.Delete(ctx, orderRow, orderRow.ConditionUidEqual()); err != nil {
+		log.Printf("ordersRepository.DeleteOrder: failed to delete order %s", orderUid)
+		return errors.WithStack(err)
+	}
+	return nil
 }

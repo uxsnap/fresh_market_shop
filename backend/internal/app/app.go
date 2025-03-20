@@ -20,6 +20,7 @@ func New() *App {
 
 func (a *App) Run(ctx context.Context) {
 	a.RunHTTPServer(ctx)
+	a.runWorkers(ctx)
 	<-ctx.Done()
 }
 
@@ -62,4 +63,8 @@ func (a *App) RunHTTPServer(ctx context.Context) {
 			return
 		}
 	}()
+}
+
+func (a *App) runWorkers(ctx context.Context) {
+	a.serviceProvider.WorkerOrdersCleaner(ctx).Run(ctx)
 }

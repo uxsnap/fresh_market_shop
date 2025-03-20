@@ -48,6 +48,10 @@ type QueryFilters struct {
 	SolverUid uuid.UUID
 	FromEmail string
 	Status    string
+
+	//internal (dont access from api, only internal usage)
+	OrderStatusNotIn []string
+	UpdatedBefore    time.Time
 }
 
 const defaultLimit = 10
