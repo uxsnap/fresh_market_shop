@@ -53,6 +53,7 @@ export const CreditCardModal = ({ opened, onClose }: Props) => {
       queryClient.invalidateQueries({
         queryKey: [getPaymentCardsByUser.queryKey],
       });
+      form.reset();
       showSuccessNotification("Карта успешно добавлена!");
     },
     onError: (error: AxiosError<{ error: ErrorWrapper }, any>) => {

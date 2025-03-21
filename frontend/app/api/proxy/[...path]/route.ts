@@ -121,3 +121,7 @@ export async function PUT(req: NextRequest) {
       return proxyDefault(req, body);
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  return proxyDefault(req);
+}

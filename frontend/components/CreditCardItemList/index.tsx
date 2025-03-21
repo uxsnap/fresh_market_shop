@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, LoadingOverlay, Stack } from "@mantine/core";
 import { Plus } from "../icons/Plus";
 import { useState } from "react";
@@ -16,12 +18,12 @@ export const CreditCardItemList = () => {
 
   const queryClient = useQueryClient();
 
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryFn: getPaymentCardsByUser,
     queryKey: [getPaymentCardsByUser.queryKey],
   });
 
-  const { mutate, isPending: isDeleting } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: deletePaymentCard,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -48,7 +50,7 @@ export const CreditCardItemList = () => {
       </Button>
 
       <LoadingOverlay
-        visible={isFetching && !isDeleting}
+        visible={isLoading}
         zIndex={1}
         overlayProps={{ radius: "sm", blur: 2 }}
         loaderProps={{ color: "primary.0", type: "bars" }}
