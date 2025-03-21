@@ -21,7 +21,6 @@ export const SupportItemList = memo(() => {
     <ShadowBox
       p={12}
       w="100%"
-      mih={312}
       mah={312}
       style={{ overflowY: "auto" }}
       pos="relative"

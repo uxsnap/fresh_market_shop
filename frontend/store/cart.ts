@@ -18,93 +18,86 @@ type CartState = {
 };
 
 export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
-  persist(
-    immer((set, get) => ({
-      items: {},
-      incCartItem: (itemId: string) => {
-        return set((state) => {
-          const item = state.items[itemId];
+  immer((set, get) => ({
+    items: {},
+    incCartItem: (itemId: string) => {
+      return set((state) => {
+        const item = state.items[itemId];
 
-          if (!item) {
-            return state;
-          }
-
-          item!.count += 1;
-
+        if (!item) {
           return state;
-        });
-      },
-      decCartItem: (itemId: string) => {
-        return set((state) => {
-          const item = state.items[itemId];
+        }
 
-          if (!item) {
-            return state;
-          }
+        item!.count += 1;
 
-          if (item.count === 1) {
-            delete state.items[itemId];
+        return state;
+      });
+    },
+    decCartItem: (itemId: string) => {
+      return set((state) => {
+        const item = state.items[itemId];
 
-            return state;
-          }
-
-          item!.count -= 1;
-
+        if (!item) {
           return state;
-        });
-      },
-      addCartItem: (product: ProductItem) => {
-        return set((state) => {
-          state.items[product.id] = { product, count: 1 };
+        }
 
-          return state;
-        });
-      },
-      removeCartItem: (itemId: string) => {
-        return set((state) => {
+        if (item.count === 1) {
           delete state.items[itemId];
 
           return state;
-        });
-      },
-      getItemsPrice() {
-        const arr = Object.values(get().items);
-
-        if (!arr.length) {
-          return 0;
         }
 
-        return arr.reduce(
-          (acc, item) => acc + item.product.price * item.count,
-          0
-        );
-      },
-      getFullPrice() {
-        return get().getItemsPrice() + (get().delivery?.price ?? 0);
-      },
-      getCount(itemId: string) {
-        return get().items[itemId]?.count ?? 0;
-      },
+        item!.count -= 1;
 
-      setDelivery: (delivery: DeliveryData) => {
-        return set((state) => {
-          state.delivery = delivery;
+        return state;
+      });
+    },
+    addCartItem: (product: ProductItem) => {
+      return set((state) => {
+        state.items[product.id] = { product, count: 1 };
 
-          return state;
-        });
-      },
-      removeAllItems() {
-        return set((state) => {
-          state.items = {};
+        return state;
+      });
+    },
+    removeCartItem: (itemId: string) => {
+      return set((state) => {
+        delete state.items[itemId];
 
-          return state;
-        });
-      },
-    })),
-    {
-      version: 1,
-      name: `${process.env.NEXT_PUBLIC_APP_NAME}_cart-storage`,
-      storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+        return state;
+      });
+    },
+    getItemsPrice() {
+      const arr = Object.values(get().items);
+
+      if (!arr.length) {
+        return 0;
+      }
+
+      return arr.reduce(
+        (acc, item) => acc + item.product.price * item.count,
+        0
+      );
+    },
+    getFullPrice() {
+      return get().getItemsPrice() + (get().delivery?.price ?? 0);
+    },
+    getCount(itemId: string) {
+      return get().items[itemId]?.count ?? 0;
+    },
+
+    setDelivery: (delivery: DeliveryData) => {
+      return set((state) => {
+        state.delivery = delivery;
+
+        return state;
+      });
+    },
+    removeAllItems() {
+      return set((state) => {
+        state.items = {};
+
+        return state;
+      });
+    },
+  }))
 );

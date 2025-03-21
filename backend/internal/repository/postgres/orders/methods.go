@@ -122,7 +122,7 @@ func (r *OrdersRepository) GetOrderWithProducts(ctx context.Context, userUid uui
 		sql = sql.Where(squirrel.NotEq{"o.status": qFilters.OrderStatusNotIn})
 	}
 
-	if qFilters.UpdatedBefore.Unix() != 0 {
+	if qFilters.UpdatedBefore.Unix() >= 0 {
 		sql = sql.Where(squirrel.LtOrEq{
 			"o.updated_at": pgtype.Timestamp{
 				Time:   qFilters.UpdatedBefore,

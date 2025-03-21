@@ -38,7 +38,7 @@ export const CartButton = () => {
         <Cart fill={curPrice ? "white" : "var(--mantine-color-accent-0)"} />
       }
     >
-      {curPrice ? `${curPrice} руб.` : "Корзина"}
+      {curPrice ? `${curPrice + 10} руб.` : "Корзина"}
     </Button>
   );
 };
