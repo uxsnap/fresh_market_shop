@@ -89,8 +89,8 @@ export const AddressItemList = ({
               disabled={isPending && address.uid === deletionUid}
               onDelete={() => mutate(address.uid)}
               onSelect={() => setDeliveryAddress(address)}
-              active={address.addressUid === deliveryAddress?.addressUid}
-              key={address.addressUid}
+              active={address.uid === deliveryAddress?.uid}
+              key={address.uid}
             >
               {getAddress(address)}
             </AddressItem>
