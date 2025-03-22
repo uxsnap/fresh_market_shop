@@ -9,9 +9,14 @@ import { formatDuration } from "@/utils";
 type Props = {
   buttonText?: string;
   onClick?: () => void;
+  disabled?: boolean;
 };
 
-export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props) => {
+export const PaymentBlock = ({
+  buttonText = "Оплатить",
+  onClick,
+  disabled = false,
+}: Props) => {
   const price = useCartStore((s) => s.getItemsPrice());
   const fullPrice = useCartStore((s) => s.getFullPrice());
   const delivery = useCartStore((s) => s.delivery);
@@ -55,7 +60,13 @@ export const PaymentBlock = ({ buttonText = "Оплатить", onClick }: Props
       <Stack mt={16} gap={12}>
         <TextWithPrice text="Всего" price={fullPrice + 10} type="lg" />
 
-        <Button h={50} fz={22} onClick={onClick} variant="accent">
+        <Button
+          disabled={disabled}
+          h={50}
+          fz={22}
+          onClick={onClick}
+          variant="accent"
+        >
           {buttonText}
         </Button>
       </Stack>

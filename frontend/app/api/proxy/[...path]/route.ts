@@ -4,7 +4,11 @@ import {
   proxyLogout,
   proxyVerify,
 } from "@/services/proxy";
-import { proxyGetOrder, proxyOrderHistory } from "@/services/proxy/order";
+import {
+  proxyGetOrder,
+  proxyMakePayment,
+  proxyOrderHistory,
+} from "@/services/proxy/order";
 import {
   proxyAddPaymentCard,
   proxyGetPaymentCardsByUser,
@@ -101,6 +105,8 @@ export async function POST(req: NextRequest) {
       return proxyDeleteRecipeStep(req);
     case "/recipes/steps":
       return proxyAddRecipeSteps(req);
+    case "/payment":
+      return proxyMakePayment(req);
     default:
       const body = await req.json();
       return proxyDefault(req, body);

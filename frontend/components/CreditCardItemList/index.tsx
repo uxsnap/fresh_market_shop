@@ -11,10 +11,13 @@ import { deletePaymentCard } from "@/api/card/deletePaymentCard";
 import { showErrorNotification, showSuccessNotification } from "@/utils";
 import { ErrorWrapper } from "@/types";
 import { AxiosError } from "axios";
+import { useOrderStore } from "@/store/order";
 
 export const CreditCardItemList = () => {
-  const [active, setActive] = useState(0);
   const [opened, setOpened] = useState(false);
+
+  const creditCard = useOrderStore((s) => s.creditCard);
+  const setCreditCard = useOrderStore((s) => s.setCreditCard);
 
   const queryClient = useQueryClient();
 
@@ -59,8 +62,8 @@ export const CreditCardItemList = () => {
       {(data?.data ?? []).map((card, ind) => (
         <CreditCardItem
           onDelete={() => mutate(card.uid)}
-          onSelect={() => setActive(ind)}
-          active={ind === active}
+          onSelect={() => setCreditCard(card)}
+          active={creditCard?.uid === card.uid}
           key={ind}
         >
           {card.number}

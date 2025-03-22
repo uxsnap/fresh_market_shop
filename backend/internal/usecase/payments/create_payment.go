@@ -33,7 +33,7 @@ func (uc *UseCasePayments) CreatePayment(ctx context.Context, payment entity.Pay
 		log.Printf("failed to create payment: currency is empty")
 		return uuid.UUID{}, errors.New("currency is empty")
 	}
-	if payment.PaymentTime.Unix() == 0 {
+	if payment.PaymentTime.Unix() <= 0 {
 		payment.PaymentTime = time.Now().UTC()
 	}
 

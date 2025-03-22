@@ -11,12 +11,17 @@ import { PayButton } from "@/components/pages/cart/PayButton";
 import { useParams, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { OrderMain } from "@/components/pages/order/OrderMain";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getOrder } from "@/api/order/getOrder";
+import { makePayment } from "@/api/order/makePayment";
+import { useCartStore } from "@/store";
+import { useOrderStore } from "@/store/order";
 
 export default function OrderPage() {
   const router = useRouter();
   const logged = useAuthStore((s) => s.logged);
+  const delivery = useCartStore((s) => s.delivery);
+  const creditCard = useOrderStore((s) => s.creditCard);
 
   const { id } = useParams();
 
@@ -35,6 +40,27 @@ export default function OrderPage() {
     queryKey: [getOrder.queryKey],
   });
 
+  const { mutate } = useMutation({
+    mutationFn: makePayment,
+    mutationKey: [makePayment.queryKey],
+  });
+
+  const handlePayment = () => {
+    if (!creditCard || !data?.data || !id) {
+      return;
+    }
+
+    // TODO: Continue here, need to check the sum that sends
+    mutate({
+      orderUid: id + "",
+      cardUid: creditCard?.uid,
+      sum: data?.data.sum,
+      currency: "RUB",
+    });
+  };
+
+  const isDisabled = !delivery || !creditCard;
+
   return (
     <>
       <Box className={styles.root}>
@@ -51,7 +77,11 @@ export default function OrderPage() {
             <OrderMain />
 
             <Box className={styles.paymentBlock} w="100%">
-              <PaymentBlock buttonText="Оплатить" />
+              <PaymentBlock
+                onClick={handlePayment}
+                disabled={isDisabled}
+                buttonText="Оплатить"
+              />
             </Box>
           </Group>
         </Box>
