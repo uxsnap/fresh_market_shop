@@ -10,22 +10,24 @@ type Props = {
   buttonText?: string;
   onClick?: () => void;
   disabled?: boolean;
+  price?: number;
 };
 
 export const PaymentBlock = ({
   buttonText = "Оплатить",
   onClick,
   disabled = false,
+  price,
 }: Props) => {
-  const price = useCartStore((s) => s.getItemsPrice());
+  const storePrice = useCartStore((s) => s.getItemsPrice());
   const fullPrice = useCartStore((s) => s.getFullPrice());
   const delivery = useCartStore((s) => s.delivery);
 
   const [curPrice, setCurPrice] = useState(0);
 
   useEffect(() => {
-    setCurPrice(price);
-  }, [price]);
+    setCurPrice(price !== undefined ? price : storePrice);
+  }, [price, storePrice]);
 
   const calculateDelivery = () => {
     if (!delivery) {
@@ -58,7 +60,11 @@ export const PaymentBlock = ({
       </Stack>
 
       <Stack mt={16} gap={12}>
-        <TextWithPrice text="Всего" price={fullPrice + 10} type="lg" />
+        <TextWithPrice
+          text="Всего"
+          price={curPrice + (delivery?.price ?? 0) + 10}
+          type="lg"
+        />
 
         <Button
           disabled={disabled}

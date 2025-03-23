@@ -16,6 +16,8 @@ import { getOrder } from "@/api/order/getOrder";
 import { makePayment } from "@/api/order/makePayment";
 import { useCartStore } from "@/store";
 import { useOrderStore } from "@/store/order";
+import { showErrorNotification } from "@/utils";
+import { AxiosError } from "axios";
 
 export default function OrderPage() {
   const router = useRouter();
@@ -35,7 +37,9 @@ export default function OrderPage() {
     }
   }, [logged]);
 
-  const { data, isFetching } = useQuery({
+  useEffect(() => {});
+
+  const { data } = useQuery({
     queryFn: () => getOrder(id + ""),
     queryKey: [getOrder.queryKey],
   });
@@ -43,14 +47,21 @@ export default function OrderPage() {
   const { mutate } = useMutation({
     mutationFn: makePayment,
     mutationKey: [makePayment.queryKey],
+    onSuccess: () => {
+      router.push("/payment_complete");
+    },
+    onError: (error: AxiosError<any>) => {
+      showErrorNotification(error);
+    },
   });
 
+  const isDisabled = !delivery || !creditCard || !data?.data || !id;
+
   const handlePayment = () => {
-    if (!creditCard || !data?.data || !id) {
+    if (isDisabled) {
       return;
     }
 
-    // TODO: Continue here, need to check the sum that sends
     mutate({
       orderUid: id + "",
       cardUid: creditCard?.uid,
@@ -58,8 +69,6 @@ export default function OrderPage() {
       currency: "RUB",
     });
   };
-
-  const isDisabled = !delivery || !creditCard;
 
   return (
     <>
@@ -81,6 +90,7 @@ export default function OrderPage() {
                 onClick={handlePayment}
                 disabled={isDisabled}
                 buttonText="Оплатить"
+                price={data?.data.sum}
               />
             </Box>
           </Group>

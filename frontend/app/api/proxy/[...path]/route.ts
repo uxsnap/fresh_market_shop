@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
       return proxyDeleteRecipeStep(req);
     case "/recipes/steps":
       return proxyAddRecipeSteps(req);
-    case "/payment":
+    case "/payments":
       return proxyMakePayment(req);
     default:
       const body = await req.json();

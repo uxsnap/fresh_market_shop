@@ -1,0 +1,10 @@
+.root {
+  padding: 0 8px;
+  padding-top: 22px;
+  margin: 0 auto;
+  max-width: 1520px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    padding: 0;
+  }
+}

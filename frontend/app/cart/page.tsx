@@ -19,7 +19,6 @@ import { showErrorNotification } from "@/utils";
 import { AxiosError } from "axios";
 import { useAuthStore } from "@/store/auth";
 
-// TODO: Figure out right height proportions (CART_MAIN_HEIGHT)
 export default function CartPage() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
@@ -45,6 +44,9 @@ export default function CartPage() {
   const mutation = useMutation({
     mutationFn: makeOrder,
     mutationKey: [makeOrder.queryKey],
+    onSettled: () => {
+      removeAllItems();
+    },
     onSuccess: (data) => {
       router.push(`/order/${data.data.uid}`);
     },

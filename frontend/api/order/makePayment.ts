@@ -1,7 +1,6 @@
 import client from "../client";
 
 type Body = {
-  // userUid: string;
   orderUid: string;
   cardUid: string;
   sum: number;
