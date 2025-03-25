@@ -20,7 +20,6 @@ export const PaymentBlock = ({
   price,
 }: Props) => {
   const storePrice = useCartStore((s) => s.getItemsPrice());
-  const fullPrice = useCartStore((s) => s.getFullPrice());
   const delivery = useCartStore((s) => s.delivery);
 
   const [curPrice, setCurPrice] = useState(0);

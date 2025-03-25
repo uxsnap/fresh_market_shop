@@ -13,6 +13,7 @@ import { Bean } from "../icons/Bean";
 import { MainIcon } from "../icons/MainIcon";
 
 import styles from "./CategoryItem.module.css";
+import { MouseEventHandler } from "react";
 
 const mapNameToIcon: Record<string, React.FC> = {
   Главная: MainIcon,
@@ -30,7 +31,7 @@ const mapNameToIcon: Record<string, React.FC> = {
 
 type Props = {
   children: string;
-  onClick: () => void;
+  onClick: MouseEventHandler<HTMLDivElement>;
   active?: boolean;
 };
 

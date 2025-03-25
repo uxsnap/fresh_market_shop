@@ -7,7 +7,6 @@ import { SmallCartItem } from "@/components/SmallCartItem";
 import { StyleProp, TextInput } from "@mantine/core";
 import { useClickOutside, useDebouncedValue } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import cn from "classnames";
 import { Text } from "@mantine/core";
 import { useRouter } from "next/navigation";
@@ -16,6 +15,7 @@ import styles from "./Search.module.css";
 import { useProductStore } from "@/store/product";
 import { convertProductToProductItem } from "@/utils";
 import { useSearchStore } from "@/store/search";
+import { ProductWithPhotos } from "@/types";
 
 type Props = {
   className?: string;
@@ -31,8 +31,6 @@ export const Search = ({ className, maw = 400 }: Props) => {
   const router = useRouter();
   const setCurItem = useProductStore((s) => s.setCurItem);
 
-  const ref = useClickOutside(() => setName(""));
-
   const { data, isFetching, isFetched } = useQuery({
     queryKey: [search.queryKey, debounced],
     queryFn: () => search(debounced),
@@ -40,7 +38,14 @@ export const Search = ({ className, maw = 400 }: Props) => {
     retry: 0,
   });
 
+  const ref = useClickOutside(() => setName(""));
+
   const renderLoader = () => <SkeletLoader h={40} l={4} />;
+
+  const handleAddProduct = (item: ProductWithPhotos) => {
+    setCurItem(convertProductToProductItem(item));
+    setName("");
+  };
 
   const renderData = () => {
     const { products = [], categories = [] } = data?.data ?? {};
@@ -53,25 +58,31 @@ export const Search = ({ className, maw = 400 }: Props) => {
       );
     }
 
-    return [
-      ...categories?.map((category) => (
-        <CategoryItem
-          key={category.uid}
-          onClick={() => router.push(`/products/${category.uid}`)}
-        >
-          {category.name}
-        </CategoryItem>
-      )),
-      ...products.map((item) => (
-        <SmallCartItem
-          onClick={() => setCurItem(convertProductToProductItem(item))}
-          key={item.product.uid}
-          img={item.photos?.[0].path}
-        >
-          {item.product.name}
-        </SmallCartItem>
-      )),
-    ];
+    return (
+      <div>
+        {categories?.map((category) => (
+          <CategoryItem
+            key={category.uid}
+            onClick={() => {
+              router.push(`/products/${category.uid}`);
+              setName("");
+            }}
+          >
+            {category.name}
+          </CategoryItem>
+        ))}
+
+        {products.map((item) => (
+          <SmallCartItem
+            onClick={() => handleAddProduct(item)}
+            key={item.product.uid}
+            img={item.photos?.[0].path}
+          >
+            {item.product.name}
+          </SmallCartItem>
+        ))}
+      </div>
+    );
   };
 
   return (

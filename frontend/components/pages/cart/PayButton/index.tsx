@@ -5,14 +5,16 @@ import { useCartStore } from "@/store";
 import { Box, Button, Group, Text } from "@mantine/core";
 
 import styles from "./PayButton.module.css";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { makeOrder } from "@/api/order/makeOrder";
 import { useRouter } from "next/navigation";
 import { showErrorNotification } from "@/utils";
 import { AxiosError } from "axios";
 
-export const PayButton = () => {
+export const PayButton = ({
+  children = "Оформить заказ",
+}: PropsWithChildren) => {
   const [curPrice, setCurPrice] = useState<number>(0);
   const router = useRouter();
 
@@ -51,7 +53,7 @@ export const PayButton = () => {
       <Button onClick={handleCreateOrder} w="100%" variant="accent" h={40}>
         <Group gap={16} align="center">
           <Text fw="bold" fz={18}>
-            Оформить заказ
+            {children}
           </Text>
 
           <Group gap={8} align="center">

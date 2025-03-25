@@ -93,8 +93,6 @@ export const useCartStore: UseBoundStore<StoreApi<CartState>> = create(
     },
     removeAllItems() {
       return set((state) => {
-        console.log("here");
-
         state.items = {};
 
         return state;

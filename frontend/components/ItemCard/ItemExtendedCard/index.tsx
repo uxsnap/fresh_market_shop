@@ -14,8 +14,6 @@ export const ItemCardExtended = memo(() => {
   const curItem = useProductStore((s) => s.curItem);
   const setCurItem = useProductStore((s) => s.setCurItem);
 
-  console.log(curItem);
-
   const handleClose = () => setCurItem();
 
   const { price, name, imgs = [], description, ccal } = curItem || {};

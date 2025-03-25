@@ -47,3 +47,9 @@ button.burger {
 img.logo {
   cursor: pointer;
 }
+
+.deliveryTime {
+  @media (max-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}

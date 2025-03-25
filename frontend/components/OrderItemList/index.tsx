@@ -5,11 +5,7 @@ import { OrderItem } from "../OrderItem";
 import { useQuery } from "@tanstack/react-query";
 import { getOrdersHistory } from "@/api/order/getOrderHistory";
 import { useEffect } from "react";
-import {
-  getErrorBody,
-  showErrorNotification,
-  showInlineErrorNotification,
-} from "@/utils";
+import { showErrorNotification } from "@/utils";
 import { AxiosError } from "axios";
 
 export const OrderItemList = () => {
@@ -19,7 +15,9 @@ export const OrderItemList = () => {
   });
 
   useEffect(() => {
-    showErrorNotification(error as AxiosError<any>);
+    if (error) {
+      showErrorNotification(error as AxiosError<any>);
+    }
   }, [error]);
 
   return (

@@ -30,7 +30,7 @@ export const Avatar = ({ size = "default", upload = false }: Props) => {
   const resetRef = useRef<() => void>(null);
   const clearFile = () => resetRef.current?.();
 
-  const { data, refetch, isFetching } = useQuery({
+  const { data, refetch, isFetching, error } = useQuery({
     queryFn: getPhoto,
     queryKey: [getPhoto.queryKey],
     retry: false,

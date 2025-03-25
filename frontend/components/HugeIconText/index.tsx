@@ -14,9 +14,9 @@ type Props = {
 };
 
 const mapTypeToIcon = {
-  sad: <SadFace fill="var(--mantine-color-danger-0)" size={200} />,
-  ok: <Ok fill="var(--mantine-color-primary-0)" size={200} />,
-  email: <MailSent fill="var(--mantine-color-secondary-1)" size={200}  />
+  sad: <SadFace fill="var(--mantine-color-danger-0)" />,
+  ok: <Ok fill="var(--mantine-color-primary-0)" />,
+  email: <MailSent fill="var(--mantine-color-secondary-1)" />,
 };
 
 export const HugeIconText = ({ type, children, subText, center }: Props) => {
@@ -26,12 +26,12 @@ export const HugeIconText = ({ type, children, subText, center }: Props) => {
     <Stack className={cn(center && styles.center)} gap={8} align="center">
       <div className={styles.icon}>{Icon}</div>
 
-      <Text className={styles.text} c="accent.0" fw="bold" fz={32}>
+      <Text className={styles.text} c="accent.0" fw="bold">
         {children}
       </Text>
 
       {subText && (
-        <Text className={styles.text} fw="bold" c="accent.2" fz={22}>
+        <Text className={styles.text} fw="bold" c="accent.2">
           {subText}
         </Text>
       )}

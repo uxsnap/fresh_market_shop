@@ -1,4 +1,4 @@
-import { Burger, Group, Stack, Image } from "@mantine/core";
+import { Burger, Group, Stack, Image, useMatches } from "@mantine/core";
 import { Location } from "../Location";
 import styles from "./Header.module.css";
 import { CartButton } from "./components/CartButton";
@@ -20,6 +20,11 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
   const handleNavbar = () => {
     onNavbar();
   };
+
+  const isVisible = useMatches({
+    base: true,
+    md: false,
+  });
 
   return (
     <Stack justify="center" className={styles.root}>
@@ -49,13 +54,15 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
             aria-label="Toggle navigation"
           />
 
-          <Search className={styles.topSearch} />
+          {!isVisible && <Search className={styles.topSearch} />}
 
           <div className={styles.topLocation}>
             <Location />
           </div>
 
-          <DeliveryTime />
+          <div className={styles.deliveryTime}>
+            <DeliveryTime />
+          </div>
         </Group>
 
         <UserAuth>
@@ -67,7 +74,7 @@ export const Header = memo(({ opened, onNavbar }: Props) => {
         <Location className={styles.bottomLocationGroup} />
       </div>
 
-      <Search maw="100%" className={styles.bottomSearch} />
+      {isVisible && <Search maw="100%" className={styles.bottomSearch} />}
     </Stack>
   );
 });

@@ -1,13 +1,25 @@
 .icon {
   width: 200px;
 
-  @media (max-width: $mantine-breakpoint-xs) {
+  @media (max-width: $mantine-breakpoint-md) {
     width: 160px;
+    height: 160px;
+
+    svg {
+      width: 160px;
+      height: 160px;
+    }
   }
 }
 
 .text {
   text-align: center;
+
+  font-size: 32px;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    font-size: 22px;
+  }
 }
 
 .center {

@@ -12,8 +12,18 @@ type Props = {
 export const SmallCartItem = ({ children, img, onClick }: Props) => {
   const fallbackSrc = getFallbackImg(children);
 
+  const handleClick = () => {
+    onClick();
+  };
+
   return (
-    <Group onClick={onClick} className={styles.root} px={8} align="center" gap={8}>
+    <Group
+      onClick={handleClick}
+      className={styles.root}
+      px={8}
+      align="center"
+      gap={8}
+    >
       <Image
         radius={8}
         h={40}

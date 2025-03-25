@@ -97,7 +97,7 @@ export default function OrderPage() {
         </Box>
       </Box>
 
-      <PayButton />
+      <PayButton>Оплатить</PayButton>
     </>
   );
 }
