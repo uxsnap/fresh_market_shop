@@ -24,6 +24,7 @@ export default function OrderPage() {
   const logged = useAuthStore((s) => s.logged);
   const delivery = useCartStore((s) => s.delivery);
   const creditCard = useOrderStore((s) => s.creditCard);
+  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const { id } = useParams();
 
@@ -35,9 +36,9 @@ export default function OrderPage() {
     if (!logged) {
       router.push("/");
     }
-  }, [logged]);
 
-  useEffect(() => {});
+    removeAllItems();
+  }, [logged]);
 
   const { data } = useQuery({
     queryFn: () => getOrder(id + ""),

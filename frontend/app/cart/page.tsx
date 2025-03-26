@@ -23,7 +23,6 @@ export default function CartPage() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
   const logged = useAuthStore((s) => s.logged);
-  const removeAllItems = useCartStore((s) => s.removeAllItems);
 
   const [empty, setEmpty] = useState(false);
 
@@ -44,9 +43,6 @@ export default function CartPage() {
   const mutation = useMutation({
     mutationFn: makeOrder,
     mutationKey: [makeOrder.queryKey],
-    onSettled: () => {
-      removeAllItems();
-    },
     onSuccess: (data) => {
       router.push(`/order/${data.data.uid}`);
     },
