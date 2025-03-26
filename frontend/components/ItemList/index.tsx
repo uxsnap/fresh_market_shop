@@ -38,7 +38,12 @@ const Wrapper = ({
 
   return (
     <Box miw="100%">
-      <Flex wrap={scroll ? "nowrap" : "wrap"} gap={12} align="flex-start">
+      <Flex
+        className={styles.wrapper}
+        wrap={scroll ? "nowrap" : "wrap"}
+        gap={12}
+        align="flex-start"
+      >
         {children}
       </Flex>
     </Box>

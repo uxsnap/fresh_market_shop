@@ -5,3 +5,13 @@
     min-height: 220px;
   }
 }
+
+.wrapper {
+  justify-content: center;
+
+  @media (max-width: $mantine-breakpoint-md) {
+    > div {
+      flex-grow: 1;
+    }
+  }
+}
