@@ -9,7 +9,11 @@ import { CategoryItem } from "../CategoryItem";
 import { SkeletLoader } from "../SkeletLoader";
 import { useParams, useRouter } from "next/navigation";
 
-export const SideMenu = () => {
+type Props = {
+  onNavbar: () => void;
+};
+
+export const SideMenu = ({ onNavbar }: Props) => {
   const router = useRouter();
   const params = useParams<{ category_uid?: string }>();
 
@@ -20,6 +24,11 @@ export const SideMenu = () => {
     staleTime: Infinity,
   });
 
+  const handleRoute = (route: string) => {
+    router.push(route);
+    onNavbar();
+  };
+
   const active =
     data?.data.find((c) => c.uid === params.category_uid)?.name ?? "Главная";
 
@@ -29,14 +38,14 @@ export const SideMenu = () => {
     <>
       <CategoryItem
         active={active === "Главная"}
-        onClick={() => router.push(`/`)}
+        onClick={() => handleRoute(`/`)}
       >
         Главная
       </CategoryItem>
       {data?.data.map(({ uid, name }) => (
         <CategoryItem
           active={active === name}
-          onClick={() => router.push(`/products/${uid}`)}
+          onClick={() => handleRoute(`/products/${uid}`)}
           key={uid}
         >
           {name}

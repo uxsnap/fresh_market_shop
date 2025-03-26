@@ -89,7 +89,7 @@ const MainApp = ({ children }: PropsWithChildren) => {
 
       {!isAdmin && (
         <AppShell.Navbar zIndex={1} px={12} py={20}>
-          <SideMenu />
+          <SideMenu onNavbar={handleToggle} />
         </AppShell.Navbar>
       )}
 
