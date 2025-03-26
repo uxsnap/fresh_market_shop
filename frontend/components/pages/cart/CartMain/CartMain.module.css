@@ -11,3 +11,9 @@
     max-width: 100%;
   }
 }
+
+.delivery {
+  @media (min-width: $mantine-breakpoint-md) {
+    display: none;
+  }
+}

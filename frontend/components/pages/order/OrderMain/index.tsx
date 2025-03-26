@@ -32,7 +32,7 @@ export const OrderMain = () => {
         Оформление заказа
       </Title>
 
-      <Group mt={8} align="center" gap={12}>
+      <Group mt={8} align="center" gap={12} className={styles.delivery}>
         <Delivery size={24} fill="var(--mantine-color-accent-1)" />
 
         {calculateDelivery()}

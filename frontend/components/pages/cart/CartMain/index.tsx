@@ -48,7 +48,7 @@ export const CartMain = ({ empty = true }: Props) => {
           </Title>
 
           {!empty && (
-            <Group align="center" gap={12}>
+            <Group align="center" gap={12} className={styles.delivery}>
               <Delivery size={24} fill="var(--mantine-color-accent-1)" />
 
               {calculateDelivery()}

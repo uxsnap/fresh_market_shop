@@ -19,3 +19,9 @@
     margin-top: 12px;
   }
 }
+
+.delivery {
+  @media (min-width: $mantine-breakpoint-md) {
+    display: none;
+  }
+}

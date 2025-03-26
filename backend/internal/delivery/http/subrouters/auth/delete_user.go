@@ -41,7 +41,7 @@ func (h *AuthSubrouter) DeleteAuthUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, order := range orders {
-		if order.Status == entity.OrderStatusPaid {
+		if order.Status != entity.OrderStatusPaid && order.Status != entity.OrderStatusDone {
 			log.Printf("user have paid, not deliveried order : %v", err)
 			httpUtils.WriteErrorResponse(w, http.StatusUnauthorized, errorWrapper.NewError(
 				errorWrapper.JsonParsingError, "есть оплаченные, недоставленные заказы. Нельзя удалить аккаунт пока заказы не будут доставлены",
