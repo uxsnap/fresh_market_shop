@@ -38,13 +38,14 @@ func (h *DeliverySubrouter) CalculateDelivery(w http.ResponseWriter, r *http.Req
 		orderPrice = order.Sum
 	}
 
-	deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, orderPrice, req.DeliveryAddressUid)
+	deliveryUid, deliveryPrice, deliveryTime, err := h.DeliveryService.CalculateDelivery(ctx, userInfo.UserUid, req.OrderUid, orderPrice, req.DeliveryAddressUid)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, errorWrapper.NewError(errorWrapper.InternalError, err.Error()))
 		return
 	}
 
 	httpUtils.WriteResponseJson(w, CalculateDeliveryResponse{
+		Uid:   deliveryUid,
 		Price: deliveryPrice,
 		Time:  int64(deliveryTime),
 	})
@@ -56,6 +57,7 @@ type CalculateDeliveryRequest struct {
 }
 
 type CalculateDeliveryResponse struct {
-	Price int64 `json:"price"`
-	Time  int64 `json:"time"`
+	Uid   uuid.UUID `json:"uid"`
+	Price int64     `json:"price"`
+	Time  int64     `json:"time"`
 }

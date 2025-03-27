@@ -46,7 +46,7 @@ export const OrderMain = () => {
 
           <CreditCardItemList />
 
-          <Addresses />
+          <Addresses offsetScrollbars={false} />
         </Stack>
       </Stack>
     </Box>

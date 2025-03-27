@@ -44,8 +44,9 @@ func (r *OrdersRepository) UpdateOrder(ctx context.Context, order entity.Order) 
 	log.Printf("productsRepository.UpdateOrder (uid: %s)", order.Uid)
 
 	p := pgEntity.NewOrderRow().FromEntity(order)
+
 	if err := r.Update(ctx, p, p.ConditionUidEqual()); err != nil {
-		log.Printf("failed to create order %s: %v", order.Uid, err)
+		log.Printf("failed to update order %s: %v", order.Uid, err)
 		return errorWrapper.NewError(errorWrapper.OrderUpdateError, "не удалось обновить заказ")
 	}
 	return nil

@@ -10,7 +10,7 @@ import (
 	"github.com/uxsnap/fresh_market_shop/backend/internal/entity"
 )
 
-func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID) (uuid.UUID, error) {
+func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID, deliveryUid uuid.UUID) (uuid.UUID, error) {
 	log.Printf("usecasePayments.PayOrder: order uid %s, card uid %s", orderUid, cardUid)
 
 	order, isFound, err := uc.ordersRepository.GetOrder(ctx, entity.QueryFilters{
@@ -30,7 +30,7 @@ func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderU
 		return uuid.UUID{}, errors.New("cant pay order of another user")
 	}
 
-	delivery, isFound, err := uc.deliveryService.GetDeliveryByOrderUid(ctx, orderUid)
+	delivery, isFound, err := uc.deliveryService.GetDeliveryByUid(ctx, deliveryUid)
 	if err != nil {
 		log.Printf("failed to get delivery by uid %s: %v", orderUid, err)
 		return uuid.UUID{}, errors.WithStack(err)
@@ -50,6 +50,7 @@ func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderU
 		Currency: "RUB",
 	}
 	order.Status = entity.OrderStatusPaid
+	order.Sum = order.Sum + 10 + delivery.Price
 	order.UpdatedAt = time.Now().UTC()
 
 	var uid uuid.UUID
@@ -60,6 +61,7 @@ func (uc *UseCaseOrders) PayOrder(ctx context.Context, userUid uuid.UUID, orderU
 			log.Printf("failed to update order status %s: %v", orderUid, err)
 			return errors.WithStack(err)
 		}
+
 		if err = uc.deliveryService.UpdateDelivery(ctx, delivery); err != nil {
 			log.Printf("failed to update delivery status: %v", err)
 			return errors.WithStack(err)

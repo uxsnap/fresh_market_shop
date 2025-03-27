@@ -132,32 +132,34 @@ func (w *WorkerOrdersCleaner) clean(ctx context.Context) error {
 				return nil
 			}
 
-			// удалить продукты  заказа
-			if err := w.orderProductsRepo.DeleteOrderProducts(ctx, infos[0].Order.Uid); err != nil {
-				log.Printf("workerOrdersCleaner: failed to delete order %s products: %v", orderInfo.Uid, err)
-				return err
-			}
+			// // удалить продукты  заказа
+			// if err := w.orderProductsRepo.DeleteOrderProducts(ctx, infos[0].Order.Uid); err != nil {
+			// 	log.Printf("workerOrdersCleaner: failed to delete order %s products: %v", orderInfo.Uid, err)
+			// 	return err
+			// }
 
-			// обновить счетчики
-			pCounts := make([]entity.ProductCount, 0, len(infos[0].Products))
-			for _, p := range infos[0].Products {
-				pCounts = append(pCounts, entity.ProductCount{
-					ProductUid: p.ProductUid,
-					Count:      -p.Count, // минус потому что в UpdateCount вычитание / нахуя названо Update тогда я хз
-				})
-			}
-			if err := w.productCountsRepo.UpdateCount(ctx, entity.ProductsCounts{
-				Products: pCounts,
-			}); err != nil {
-				log.Printf("workerOrdersCleaner: failed to return counts from order %s products: %v", orderInfo.Uid, err)
-				return err
-			}
+			// // обновить счетчики
+			// pCounts := make([]entity.ProductCount, 0, len(infos[0].Products))
+			// for _, p := range infos[0].Products {
+			// 	pCounts = append(pCounts, entity.ProductCount{
+			// 		ProductUid: p.ProductUid,
+			// 		Count:      -p.Count, // минус потому что в UpdateCount вычитание / нахуя названо Update тогда я хз
+			// 	})
+			// }
+			// if err := w.productCountsRepo.UpdateCount(ctx, entity.ProductsCounts{
+			// 	Products: pCounts,
+			// }); err != nil {
+			// 	log.Printf("workerOrdersCleaner: failed to return counts from order %s products: %v", orderInfo.Uid, err)
+			// 	return err
+			// }
 
-			// удалить заказ
-			if err := w.ordersRepo.DeleteOrder(ctx, infos[0].Order.Uid); err != nil {
-				log.Printf("workerOrdersCleaner: failed to delete order %s: %v", orderInfo.Uid, err)
-				return err
-			}
+			// // удалить заказ
+			// if err := w.ordersRepo.DeleteOrder(ctx, infos[0].Order.Uid); err != nil {
+			// 	log.Printf("workerOrdersCleaner: failed to delete order %s: %v", orderInfo.Uid, err)
+			// 	return err
+			// }
+			// return nil
+
 			return nil
 		}); err != nil {
 			log.Printf("failed to clean unused order %s: %v", orderInfo.Uid, err)

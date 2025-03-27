@@ -88,7 +88,7 @@ type RecipesService interface {
 type OrdersService interface {
 	CreateOrder(ctx context.Context, userUid uuid.UUID, productsCounts entity.ProductsCounts) (uuid.UUID, error)
 	GetOrder(ctx context.Context, qFilters entity.QueryFilters) (entity.Order, bool, error)
-	PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID) (uuid.UUID, error)
+	PayOrder(ctx context.Context, userUid uuid.UUID, orderUid uuid.UUID, cardUid uuid.UUID, deliveryUid uuid.UUID) (uuid.UUID, error)
 	GetOrderedProducts(ctx context.Context, qFilters entity.QueryFilters) ([]entity.ProductWithExtra, error)
 	GetOrderHistory(ctx context.Context, userUid uuid.UUID, qFilters entity.QueryFilters) ([]entity.OrderWithProducts, error)
 }
@@ -101,7 +101,7 @@ type DeliveryService interface {
 		orderUid uuid.UUID,
 		orderPrice int64,
 		deliveryAddressUid uuid.UUID,
-	) (deliveryPrice int64, deliveryTime time.Duration, err error)
+	) (deliveryUid uuid.UUID, deliveryPrice int64, deliveryTime time.Duration, err error)
 	GetDeliveryTimeAndPriceForOrder(ctx context.Context, orderUid uuid.UUID) (deliveryTime int64, deliveryPrice int64, err error)
 	GetDeliveryByOrderUid(ctx context.Context, orderUid uuid.UUID) (entity.Delivery, bool, error)
 	GetDeliveryByUid(ctx context.Context, uid uuid.UUID) (entity.Delivery, bool, error)

@@ -66,8 +66,7 @@ export default function OrderPage() {
     mutate({
       orderUid: id + "",
       cardUid: creditCard?.uid,
-      sum: data?.data.sum,
-      currency: "RUB",
+      deliveryUid: delivery.uid,
     });
   };
 

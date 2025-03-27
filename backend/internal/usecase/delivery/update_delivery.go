@@ -17,10 +17,6 @@ func (uc *UseCaseDelivery) UpdateDelivery(ctx context.Context, delivery entity.D
 		log.Printf("invalid delivery: uid is empty")
 		return errors.New("uid is empty")
 	}
-	if uuid.Equal(delivery.OrderUid, uuid.UUID{}) {
-		log.Printf("invalid delivery: order uid is empty")
-		return errors.New("order uid is empty")
-	}
 	if delivery.FromLatitude == 0.0 || delivery.FromLongitude == 0.0 {
 		log.Printf("invalid delivery: invalid store coordinates")
 		return errors.New("invalid store coordinates")

@@ -3,12 +3,11 @@ import client from "../client";
 type Body = {
   orderUid: string;
   cardUid: string;
-  sum: number;
-  currency: string;
+  deliveryUid: string;
 };
 
 export const makePayment = (body: Body) => {
-  return client.post("/payments", body);
+  return client.post("/orders/pay", body);
 };
 
 makePayment.queryKey = "makePayment";

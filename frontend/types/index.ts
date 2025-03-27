@@ -222,6 +222,7 @@ export enum AdminTab {
 }
 
 export type DeliveryData = {
+  uid: string;
   price: number;
   time: number;
 };

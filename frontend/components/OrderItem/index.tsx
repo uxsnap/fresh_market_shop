@@ -2,6 +2,7 @@ import { Group, Stack, Title, Text, Image } from "@mantine/core";
 import { OrderStatus, OrderWithProducts } from "@/types";
 import { dayJs, getFallbackImg } from "@/utils";
 import { useRouter } from "next/navigation";
+import cn from "classnames";
 
 import styles from "./OrderItem.module.css";
 
@@ -23,8 +24,15 @@ export const OrderItem = ({ order, products }: Props) => {
         <Group gap={12}>
           <Stack gap={0}>
             <Title
-              className={styles.title}
-              onClick={() => router.push(`/order/${order.uid}`)}
+              className={cn(
+                styles.title,
+                order.status !== "paid" && styles.hovered
+              )}
+              onClick={() => {
+                if (order.status !== "paid") {
+                  router.push(`/order/${order.uid}`);
+                }
+              }}
               order={4}
               c="accent.0"
             >

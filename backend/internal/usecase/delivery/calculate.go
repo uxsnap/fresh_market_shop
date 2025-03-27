@@ -19,27 +19,27 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 	orderUid uuid.UUID,
 	orderPrice int64,
 	deliveryAddressUid uuid.UUID,
-) (deliveryPrice int64, deliveryTime time.Duration, err error) {
+) (deliveryUid uuid.UUID, deliveryPrice int64, deliveryTime time.Duration, err error) {
 	log.Printf("usecaseDelivery.CalculateDelivery: order uid %s", orderUid)
 
 	user, isFound, err := uc.usersService.GetUser(ctx, userUid)
 	if err != nil {
 		log.Printf("failed to get user by uid %s: %v", userUid, err)
-		return 0, 0, errors.WithStack(err)
+		return uuid.Nil, 0, 0, errors.WithStack(err)
 	}
 	if !isFound {
 		log.Printf("user with uid %s not found", userUid)
-		return 0, 0, errors.New("user not found")
+		return uuid.Nil, 0, 0, errors.New("user not found")
 	}
 
 	deliveryAddress, isFound, err := uc.usersService.GetDeliveryAddress(ctx, deliveryAddressUid)
 	if err != nil {
 		log.Printf("failed to get delivery address by uid %s: %v", deliveryAddressUid, err)
-		return 0, 0, errors.WithStack(err)
+		return uuid.Nil, 0, 0, errors.WithStack(err)
 	}
 	if !isFound {
 		log.Printf("delivery address with uid %s not found", deliveryAddressUid)
-		return 0, 0, errors.New("delivery address not found")
+		return uuid.Nil, 0, 0, errors.New("delivery address not found")
 	}
 
 	dist := calcDist(deliveryAddress.Longitude, deliveryAddress.Latitude, fromLongitude, fromLatitude)
@@ -85,10 +85,10 @@ func (uc *UseCaseDelivery) CalculateDelivery(
 
 	if err := uc.deliveryRepository.CreateDelivery(ctx, delivery); err != nil {
 		log.Printf("failed to create delivery: %v", err)
-		return 0, 0, errors.WithStack(err)
+		return uuid.Nil, 0, 0, errors.WithStack(err)
 	}
 
-	return deliveryPrice, deliveryTime, nil
+	return delivery.Uid, deliveryPrice, deliveryTime, nil
 }
 
 const (

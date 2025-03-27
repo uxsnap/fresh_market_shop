@@ -22,7 +22,7 @@ func (h *OrdersSubrouter) PayOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uid, err := h.OrdersService.PayOrder(ctx, userInfo.UserUid, req.OrderUid, req.CardUid)
+	uid, err := h.OrdersService.PayOrder(ctx, userInfo.UserUid, req.OrderUid, req.CardUid, req.DeliveryUid)
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
 		return
@@ -32,6 +32,7 @@ func (h *OrdersSubrouter) PayOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 type PayOrderRequest struct {
-	OrderUid uuid.UUID `json:"orderUid"`
-	CardUid  uuid.UUID `json:"cardUid"`
+	OrderUid    uuid.UUID `json:"orderUid"`
+	CardUid     uuid.UUID `json:"cardUid"`
+	DeliveryUid uuid.UUID `json:"deliveryUid"`
 }

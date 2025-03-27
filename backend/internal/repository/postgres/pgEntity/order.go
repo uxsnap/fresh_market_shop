@@ -46,6 +46,7 @@ func (p *OrderRow) FromEntity(order entity.Order) *OrderRow {
 
 	p.Status = string(order.Status)
 	p.Sum = order.Sum
+	p.Num = order.Num
 
 	if order.CreatedAt.Unix() <= 0 {
 		p.CreatedAt = pgtype.Timestamp{
