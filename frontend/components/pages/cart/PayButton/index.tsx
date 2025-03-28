@@ -11,14 +11,23 @@ import { makeOrder } from "@/api/order/makeOrder";
 import { useRouter } from "next/navigation";
 import { showErrorNotification } from "@/utils";
 import { AxiosError } from "axios";
+import { PaymentBlock } from "@/components/PaymentBlock";
+
+type Props = {
+  showPaymentBlock?: boolean;
+  price?: number;
+  onClick?: () => void;
+};
 
 export const PayButton = ({
+  showPaymentBlock = false,
   children = "Оформить заказ",
-}: PropsWithChildren) => {
+  price,
+  onClick,
+}: PropsWithChildren<Props>) => {
   const [curPrice, setCurPrice] = useState<number>(0);
   const router = useRouter();
 
-  const price = useCartStore((s) => s.getFullPrice());
   const items = useCartStore((s) => s.items);
 
   const mutation = useMutation({
@@ -32,7 +41,9 @@ export const PayButton = ({
   });
 
   useEffect(() => {
-    setCurPrice(price);
+    if (price) {
+      setCurPrice(price);
+    }
   }, [price]);
 
   const handleCreateOrder = () => {
@@ -50,20 +61,32 @@ export const PayButton = ({
 
   return (
     <Box hiddenFrom="md" className={styles.root}>
-      <Button onClick={handleCreateOrder} w="100%" variant="accent" h={40}>
-        <Group gap={16} align="center">
-          <Text fw="bold" fz={18}>
-            {children}
-          </Text>
+      {showPaymentBlock && (
+        <Box className={styles.paymentBlock} w="100%">
+          <PaymentBlock
+            price={price}
+            buttonText="Оформить заказ"
+            onClick={onClick}
+          />
+        </Box>
+      )}
 
-          <Group gap={8} align="center">
+      {!showPaymentBlock && (
+        <Button onClick={handleCreateOrder} w="100%" variant="accent" h={40}>
+          <Group gap={16} align="center">
             <Text fw="bold" fz={18}>
-              {curPrice + 10} ₽
+              {children}
             </Text>
-            <Delivery size={24} fill="var(--mantine-color-bg-2)" />
+
+            <Group gap={8} align="center">
+              <Text fw="bold" fz={18}>
+                {curPrice + 10} ₽
+              </Text>
+              <Delivery size={24} fill="var(--mantine-color-bg-2)" />
+            </Group>
           </Group>
-        </Group>
-      </Button>
+        </Button>
+      )}
     </Box>
   );
 };

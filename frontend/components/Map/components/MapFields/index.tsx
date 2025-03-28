@@ -4,12 +4,16 @@ import styles from "./MapFields.module.css";
 import { Button, Modal, Stack, useMatches } from "@mantine/core";
 import { City } from "../City";
 import { AdditionalFieldsForm } from "../AdditionalFieldsForm";
-import { memo, PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { Street } from "../Street";
 import { useMapStore } from "@/store/map";
 import { ModalHeader } from "../ModalHeader";
 
-export const MapFields = () => {
+type Props = {
+  onClick: () => void;
+};
+
+export const MapFields = ({ onClick }: Props) => {
   const isFieldsModalOpen = useMapStore((s) => s.isFieldsModalOpen);
   const setIsFieldsModalOpen = useMapStore((s) => s.setIsFieldsModalOpen);
 
@@ -53,7 +57,7 @@ export const MapFields = () => {
           <AdditionalFieldsForm />
         </Stack>
 
-        <Button type="submit" h={48} fz={18} variant="accent">
+        <Button onClick={onClick} type="submit" h={48} fz={18} variant="accent">
           Сохранить адрес
         </Button>
       </Stack>

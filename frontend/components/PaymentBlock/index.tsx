@@ -11,6 +11,7 @@ type Props = {
   onClick?: () => void;
   disabled?: boolean;
   price?: number;
+  visibleFrom?: string;
 };
 
 export const PaymentBlock = ({
@@ -43,7 +44,7 @@ export const PaymentBlock = ({
   };
 
   return (
-    <Stack visibleFrom="md" miw="100%" gap={0}>
+    <Stack miw="100%" gap={0}>
       <Title order={2} c="accent.0">
         Итого
       </Title>

@@ -99,7 +99,7 @@ export const Map = () => {
 
         <Modal.Body p={0} h="100%">
           <MapFormProvider form={form}>
-            <form className={styles.form} onSubmit={handleSubmit}>
+            <form className={styles.form}>
               <YmapsWrapper />
 
               <Box className={styles.mainBox}>
@@ -109,7 +109,7 @@ export const Map = () => {
                   overlayProps={{ radius: "sm", blur: 2 }}
                   loaderProps={{ color: "primary.0", type: "bars" }}
                 />
-                <MapFields />
+                <MapFields onClick={handleSubmit} />
 
                 <BottomCards />
               </Box>

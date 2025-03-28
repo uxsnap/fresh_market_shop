@@ -26,17 +26,21 @@ export const OrderMain = () => {
     );
   };
 
+  const calculatedDelivery = calculateDelivery();
+
   return (
     <Box className={styles.root} mt={12}>
       <Title order={1} c="accent.0">
         Оформление заказа
       </Title>
 
-      <Group mt={8} align="center" gap={12} className={styles.delivery}>
-        <Delivery size={24} fill="var(--mantine-color-accent-1)" />
+      {calculatedDelivery && (
+        <Group mt={8} align="center" gap={12} className={styles.delivery}>
+          <Delivery size={24} fill="var(--mantine-color-accent-1)" />
 
-        {calculateDelivery()}
-      </Group>
+          {calculatedDelivery}
+        </Group>
+      )}
 
       <Stack className={styles.main} gap={20}>
         <Stack gap={20}>

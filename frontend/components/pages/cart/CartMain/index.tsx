@@ -34,6 +34,8 @@ export const CartMain = ({ empty = true }: Props) => {
     );
   };
 
+  const calculatedDelivery = calculateDelivery();
+
   return (
     <Container
       p={0}
@@ -47,11 +49,11 @@ export const CartMain = ({ empty = true }: Props) => {
             Корзина
           </Title>
 
-          {!empty && (
+          {!empty && calculatedDelivery && (
             <Group align="center" gap={12} className={styles.delivery}>
               <Delivery size={24} fill="var(--mantine-color-accent-1)" />
 
-              {calculateDelivery()}
+              {calculatedDelivery}
             </Group>
           )}
         </Stack>

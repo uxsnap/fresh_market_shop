@@ -1,0 +1,7 @@
+.scrollArea {
+  @media (max-width: $mantine-breakpoint-md) {
+    > div {
+      display: block !important;
+    }
+  }
+}

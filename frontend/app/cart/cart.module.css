@@ -16,6 +16,10 @@
   @media ($mantine-breakpoint-md <= width <= $mantine-breakpoint-lg) {
     max-width: 210px;
   }
+
+  @media (max-width: $mantine-breakpoint-md) {
+    display: none;
+  }
 }
 
 .group {

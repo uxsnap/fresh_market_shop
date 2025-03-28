@@ -97,7 +97,13 @@ export default function OrderPage() {
         </Box>
       </Box>
 
-      <PayButton>Оплатить</PayButton>
+      <PayButton
+        onClick={handlePayment}
+        price={data?.data.sum}
+        showPaymentBlock
+      >
+        Оплатить
+      </PayButton>
     </>
   );
 }

@@ -12,12 +12,12 @@
     opacity: 0.8;
     pointer-events: none;
   }
+
+  @media (max-width: $mantine-breakpoint-xs) {
+    overflow-x: auto;
+  }
 }
 
 .text {
   max-width: 100%;
-
-  @media (max-width: $mantine-breakpoint-xs) {
-    max-width: 70%;
-  }
 }

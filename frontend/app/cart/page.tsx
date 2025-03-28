@@ -23,6 +23,7 @@ export default function CartPage() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
   const logged = useAuthStore((s) => s.logged);
+  const price = useCartStore((s) => s.getFullPrice());
 
   const [empty, setEmpty] = useState(false);
 
@@ -102,7 +103,7 @@ export default function CartPage() {
         </Box>
       </Box>
 
-      <PayButton />
+      <PayButton price={price} onClick={handleCreateOrder} />
     </>
   );
 }

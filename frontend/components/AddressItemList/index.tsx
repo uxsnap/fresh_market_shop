@@ -14,6 +14,7 @@ import { getDeliveryAddresses } from "@/api/user/getDeliveryAddresses";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { deleteDeliveryAddress } from "@/api/user/deleteDeliveryAddress";
+import styles from "./AddressItemList.module.css";
 
 type Props = {
   offsetScrollbars?: boolean;
@@ -82,7 +83,12 @@ export const AddressItemList = ({
         Добавить
       </Button>
 
-      <ScrollArea h={250} offsetScrollbars={offsetScrollbars} scrollbars="y">
+      <ScrollArea
+        classNames={{ viewport: styles.scrollArea }}
+        h={250}
+        offsetScrollbars={offsetScrollbars}
+        scrollbars="y"
+      >
         <Stack gap={12}>
           {data?.data?.map((address) => (
             <AddressItem
