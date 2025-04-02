@@ -126,7 +126,7 @@ func (r *ProductsRepository) GetProductsWithExtra(ctx context.Context, qFilters 
 		sql = sql.
 			Join(fmt.Sprintf(
 				// TODO: Убрать статус in_progress, когда будет добавлен 4 этап заказа
-				orderRow.Table()+" o on o.user_uid = '%v' and o.status in ('in_progress', 'done')", qFilters.UserUidForOrder,
+				orderRow.Table()+" o on o.user_uid = '%v' and o.status in ('paid', 'done')", qFilters.UserUidForOrder,
 			)).
 			Join(orderProductRow.Table() + " op on op.product_uid = p.uid and o.uid = op.order_uid")
 	}

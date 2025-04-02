@@ -1,12 +1,12 @@
 import { getOrderProducts } from "@/api/order/getOrderProducts";
 import { ItemList } from "@/components/ItemList";
 import { ProductItem } from "@/types";
-import { convertProductToProductItem, showErrorNotification } from "@/utils";
+import { convertProductToProductItem } from "@/utils";
 import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
 
 export const YouAlreadyOrdered = memo(() => {
-  const { data, isFetching, isError, error, isFetched } = useQuery({
+  const { data, isFetching, isError } = useQuery({
     queryKey: [getOrderProducts.queryKey],
     queryFn: getOrderProducts,
     select(data): ProductItem[] {

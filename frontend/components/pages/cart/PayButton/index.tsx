@@ -65,7 +65,7 @@ export const PayButton = ({
         <Box className={styles.paymentBlock} w="100%">
           <PaymentBlock
             price={price}
-            buttonText="Оформить заказ"
+            buttonText={children + ""}
             onClick={onClick}
           />
         </Box>

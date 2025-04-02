@@ -25,6 +25,7 @@ func (h *OrdersSubrouter) GetOrderedProducts(w http.ResponseWriter, r *http.Requ
 	products, err := h.OrdersService.GetOrderedProducts(ctx, entity.QueryFilters{
 		UserUidForOrder: userInfo.UserUid,
 		Limit:           consts.DEFAULT_LIMIT,
+		WithPhotos:      true,
 	})
 	if err != nil {
 		httpUtils.WriteErrorResponse(w, http.StatusInternalServerError, err)
